@@ -1,0 +1,170 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import ProRataCalculator from '../components/calculators/ProRataCalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META['pro-rata'];
+---
+
+<CalculatorLayout {...meta}>
+  <ProRataCalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>What Does Pro Rata Mean?</h2>
+      <p>
+        Pro rata is a Latin term meaning "in proportion." In the context of UK employment, a pro rata salary is the full-time equivalent salary adjusted for the number of hours you actually work. If a job is advertised as "£30,000 pro rata" for 3 days per week, your actual salary would be £18,000 — three-fifths of the full-time amount.
+      </p>
+      <p>
+        Pro rata calculations apply to anyone working fewer hours than the full-time equivalent: part-time employees, job-sharers, term-time workers, and people who start or leave a job partway through the year. Understanding your pro rata salary helps you compare part-time roles with full-time opportunities and ensure you're being paid fairly for the hours you work.
+      </p>
+
+      <h2>How Pro Rata Salary Is Calculated</h2>
+      <p>
+        The formula is:
+      </p>
+      <p>
+        <strong>Pro rata salary = Full-time salary × (Part-time hours ÷ Full-time hours)</strong>
+      </p>
+      <p>
+        For example, if the full-time salary is £35,000 based on 37.5 hours per week, and you work 22.5 hours:
+      </p>
+      <p>
+        £35,000 × (22.5 ÷ 37.5) = £35,000 × 0.6 = <strong>£21,000</strong>
+      </p>
+      <p>
+        This is your actual gross annual salary. Tax, NI, and other deductions are then calculated on this figure — not on the full-time equivalent.
+      </p>
+
+      <h2>Worked Examples</h2>
+
+      <h3>Example 1: 3 Days Per Week at £28,000 FTE</h3>
+      <table>
+        <tbody>
+          <tr><td>Full-time salary</td><td class="text-right">£28,000</td></tr>
+          <tr><td>Full-time hours</td><td class="text-right">37.5 hrs/week</td></tr>
+          <tr><td>Part-time hours</td><td class="text-right">22.5 hrs/week (3 days)</td></tr>
+          <tr><td><strong>Pro rata salary</strong></td><td class="text-right"><strong>£16,800</strong></td></tr>
+          <tr><td>Income tax</td><td class="text-right">£846</td></tr>
+          <tr><td>National Insurance</td><td class="text-right">£338</td></tr>
+          <tr><td><strong>Take-home pay</strong></td><td class="text-right"><strong>£15,616</strong></td></tr>
+          <tr><td>Monthly take-home</td><td class="text-right">£1,301</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 2: 4 Days Per Week at £45,000 FTE</h3>
+      <table>
+        <tbody>
+          <tr><td>Full-time salary</td><td class="text-right">£45,000</td></tr>
+          <tr><td>Full-time hours</td><td class="text-right">37.5 hrs/week</td></tr>
+          <tr><td>Part-time hours</td><td class="text-right">30 hrs/week (4 days)</td></tr>
+          <tr><td><strong>Pro rata salary</strong></td><td class="text-right"><strong>£36,000</strong></td></tr>
+          <tr><td>Income tax</td><td class="text-right">£4,686</td></tr>
+          <tr><td>National Insurance</td><td class="text-right">£1,874</td></tr>
+          <tr><td><strong>Take-home pay</strong></td><td class="text-right"><strong>£29,440</strong></td></tr>
+          <tr><td>Monthly take-home</td><td class="text-right">£2,453</td></tr>
+        </tbody>
+      </table>
+      <p>
+        By working 4 days instead of 5, you earn 80% of the salary but keep a higher proportion due to the progressive tax system. Your effective tax rate drops from 19.2% (at £45,000) to 18.2% (at £36,000).
+      </p>
+
+      <h3>Example 3: Term-Time Worker at £32,000 FTE</h3>
+      <p>
+        Term-time workers (common in schools) work during school terms only — typically 39 weeks per year plus 5.6 weeks holiday entitlement:
+      </p>
+      <table>
+        <tbody>
+          <tr><td>Full-time salary</td><td class="text-right">£32,000</td></tr>
+          <tr><td>Weeks worked (term-time + holiday)</td><td class="text-right">44.6 weeks</td></tr>
+          <tr><td>Full-time weeks</td><td class="text-right">52 weeks</td></tr>
+          <tr><td><strong>Pro rata salary</strong></td><td class="text-right"><strong>£27,446</strong></td></tr>
+          <tr><td>Monthly take-home</td><td class="text-right">£1,929</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Term-time workers typically receive their salary spread across 12 months, even though they only work during term time. This makes budgeting easier but means the monthly figure is lower than it would be if paid only during working months.
+      </p>
+
+      <h2>Pro Rata and Tax Bands</h2>
+      <p>
+        One benefit of working part-time is that your pro rata salary may fall into a lower tax band than the full-time equivalent. This means you keep a higher percentage of each pound you earn:
+      </p>
+      <table>
+        <thead>
+          <tr><th>FTE Salary</th><th>FTE Effective Rate</th><th>0.6 Pro Rata</th><th>Pro Rata Effective Rate</th><th>Saving</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>£30,000</td><td>16.3%</td><td>£18,000</td><td>8.8%</td><td>7.5pp</td></tr>
+          <tr><td>£50,000</td><td>21.0%</td><td>£30,000</td><td>16.3%</td><td>4.7pp</td></tr>
+          <tr><td>£80,000</td><td>28.8%</td><td>£48,000</td><td>20.5%</td><td>8.3pp</td></tr>
+          <tr><td>£110,000</td><td>34.0%</td><td>£66,000</td><td>25.7%</td><td>8.3pp</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The savings are particularly significant when the pro rata salary drops below key thresholds like £50,270 (avoiding the 40% higher rate) or £100,000 (avoiding the personal allowance taper).
+      </p>
+
+      <h2>Part-Time vs Full-Time: Financial Comparison</h2>
+      <p>
+        When deciding between full-time and part-time work, the financial picture is more nuanced than the headline salary suggests:
+      </p>
+      <ul>
+        <li><strong>Lower effective tax rate:</strong> As shown above, you keep a higher proportion of each pound earned.</li>
+        <li><strong>Reduced childcare costs:</strong> If you're working part-time to reduce childcare, the savings can be substantial. Full-time nursery costs average £14,000–£20,000 per year. Working 3 days instead of 5 could save £5,600–£8,000.</li>
+        <li><strong>Commuting costs:</strong> Fewer working days means fewer commutes. If your daily commute costs £15, working 3 days instead of 5 saves £1,560/year.</li>
+        <li><strong>Pension impact:</strong> Your pension contributions and employer contributions are based on your actual (pro rata) salary, not the FTE. Going from £40,000 to £24,000 reduces employer pension contributions by £480/year (at 3%).</li>
+        <li><strong>State Pension:</strong> As long as you earn above the Lower Earnings Limit (£6,708/year), your year still counts as a qualifying year for State Pension purposes.</li>
+      </ul>
+
+      <h2>Pro Rata Holiday Entitlement</h2>
+      <p>
+        UK employees are entitled to a minimum of 5.6 weeks of paid holiday per year (28 days for a 5-day worker). Part-time workers receive the same 5.6 weeks, but calculated on their working pattern:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Working Pattern</th><th>Holiday Days</th><th>Holiday Hours (7.5hrs/day)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>5 days/week</td><td>28 days</td><td>210 hours</td></tr>
+          <tr><td>4 days/week</td><td>22.4 days</td><td>168 hours</td></tr>
+          <tr><td>3 days/week</td><td>16.8 days</td><td>126 hours</td></tr>
+          <tr><td>2.5 days/week</td><td>14 days</td><td>105 hours</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Bank holidays are included in the statutory minimum. Your employer can choose to include or exclude them from your allocation. If your employer gives full-time staff 28 days plus bank holidays, your pro rata entitlement should include the same proportional bank holiday allowance.
+      </p>
+
+      <h2>Common Questions About Pro Rata Pay</h2>
+
+      <h3>Is the advertised salary always the full-time equivalent?</h3>
+      <p>
+        Usually, yes. When a job advert says "£35,000 pro rata," the £35,000 is the full-time salary. However, some adverts state the actual part-time salary. Check the job description carefully — it should specify the working hours and whether the figure is FTE or actual.
+      </p>
+
+      <h3>Do I get the same hourly rate as full-time colleagues?</h3>
+      <p>
+        Under the Part-Time Workers (Prevention of Less Favourable Treatment) Regulations 2000, you have the right to the same hourly rate as a comparable full-time worker doing the same job. You also have equal access to training, promotion, and benefits (on a pro rata basis).
+      </p>
+
+      <h3>How does pro rata work for mid-year starters?</h3>
+      <p>
+        If you start a full-time job partway through the tax year, your first year's pay is calculated pro rata based on the number of days or months worked. Your personal allowance still applies in full — it isn't pro-rated. This means your effective tax rate in a partial year is lower than in a full year, and you may receive a tax rebate.
+      </p>
+
+      <h2>Sources and Official References</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/part-time-worker-rights" target="_blank" rel="noopener">Part-time workers' rights — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/holiday-entitlement-rights" target="_blank" rel="noopener">Holiday entitlement — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+      </ul>
+      <p>
+        For a complete overview of all tax rates this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

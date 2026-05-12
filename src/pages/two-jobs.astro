@@ -1,0 +1,180 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import TwoJobsCalculator from '../components/calculators/TwoJobsCalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META['two-jobs'];
+---
+
+<CalculatorLayout {...meta}>
+  <TwoJobsCalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How Tax Works When You Have Two Jobs</h2>
+      <p>
+        Having two jobs in the UK is increasingly common — whether it's a second part-time role, freelance work alongside employment, or two part-time jobs adding up to full-time hours. The key challenge is understanding how your tax is split between the two employers, because getting this wrong can lead to large underpayments or overpayments of tax.
+      </p>
+      <p>
+        Each employer operates PAYE independently. They don't know about your other job, so they can only apply the tax rules to the pay they give you. HMRC coordinates between your two employments through your tax codes — but this only works correctly if your tax codes are right.
+      </p>
+
+      <h2>How HMRC Splits Your Tax Code</h2>
+      <p>
+        You only get one personal allowance (£12,570 in 2026/27), and HMRC must decide which employer applies it. The standard approach is:
+      </p>
+      <ul>
+        <li><strong>Primary job (main employer):</strong> Gets your personal allowance via the 1257L tax code. You pay no tax on the first £12,570.</li>
+        <li><strong>Secondary job:</strong> Gets a BR (Basic Rate) tax code. Every pound you earn is taxed at 20%. No personal allowance is applied.</li>
+      </ul>
+      <p>
+        This means if your primary job pays less than £12,570, some of your personal allowance is wasted. You can ask HMRC to split your personal allowance between both jobs to avoid overpaying tax during the year.
+      </p>
+
+      <h3>Splitting Your Personal Allowance</h3>
+      <p>
+        Contact HMRC to request a split. For example, if your first job pays £10,000 and your second pays £20,000, you could ask HMRC to apply:
+      </p>
+      <table>
+        <tbody>
+          <tr><td>Job 1 tax code</td><td>1000L (£10,000 allowance)</td></tr>
+          <tr><td>Job 2 tax code</td><td>257L (£2,570 allowance)</td></tr>
+          <tr><td>Total allowance</td><td>£12,570 (same as standard)</td></tr>
+        </tbody>
+      </table>
+      <p>
+        This ensures your full allowance is used and you don't overpay tax during the year. Without the split, your second job would be taxed from the first pound at 20%.
+      </p>
+
+      <h2>Worked Examples</h2>
+
+      <h3>Example 1: £25,000 + £10,000 (Both in Basic Rate)</h3>
+      <table>
+        <tbody>
+          <tr><td>Job 1 salary</td><td class="text-right">£25,000</td></tr>
+          <tr><td>Job 2 salary</td><td class="text-right">£10,000</td></tr>
+          <tr><td>Combined salary</td><td class="text-right">£35,000</td></tr>
+          <tr><td>Personal allowance</td><td class="text-right">£12,570</td></tr>
+          <tr><td>Taxable income</td><td class="text-right">£22,430</td></tr>
+          <tr><td>Income tax (20%)</td><td class="text-right">£4,486</td></tr>
+          <tr><td>NI (Job 1): 8% × (£25,000 − £12,570)</td><td class="text-right">£994</td></tr>
+          <tr><td>NI (Job 2): 0% (below threshold per job)</td><td class="text-right">£0</td></tr>
+          <tr><td><strong>Total take-home</strong></td><td class="text-right"><strong>£29,520</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        Notice the NI anomaly: Job 2 pays £10,000, which is below the £12,570 NI primary threshold, so no NI is charged on it — even though your combined earnings are well above the threshold. This is because NI is calculated per employment, not on combined income.
+      </p>
+
+      <h3>Example 2: £40,000 + £15,000 (Crossing Higher Rate)</h3>
+      <table>
+        <tbody>
+          <tr><td>Job 1 salary</td><td class="text-right">£40,000</td></tr>
+          <tr><td>Job 2 salary</td><td class="text-right">£15,000</td></tr>
+          <tr><td>Combined salary</td><td class="text-right">£55,000</td></tr>
+          <tr><td>Personal allowance</td><td class="text-right">£12,570</td></tr>
+          <tr><td>Taxable income</td><td class="text-right">£42,430</td></tr>
+          <tr><td>Tax at 20% (£37,700)</td><td class="text-right">£7,540</td></tr>
+          <tr><td>Tax at 40% (£4,730)</td><td class="text-right">£1,892</td></tr>
+          <tr><td>Total income tax</td><td class="text-right">£9,432</td></tr>
+          <tr><td>NI (Job 1): 8% × £27,430</td><td class="text-right">£2,194</td></tr>
+          <tr><td>NI (Job 2): 8% × £2,430</td><td class="text-right">£194</td></tr>
+          <tr><td><strong>Total take-home</strong></td><td class="text-right"><strong>£43,180</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        Your combined income crosses the higher rate threshold at £50,270. HMRC will typically assign a D0 code (40% on everything) to the second job if it pushes you into the higher rate. If they don't, you'll receive a tax bill after the year ends.
+      </p>
+
+      <h3>Example 3: £8,000 + £8,000 (Two Low-Paying Jobs)</h3>
+      <table>
+        <tbody>
+          <tr><td>Job 1 salary</td><td class="text-right">£8,000</td></tr>
+          <tr><td>Job 2 salary</td><td class="text-right">£8,000</td></tr>
+          <tr><td>Combined salary</td><td class="text-right">£16,000</td></tr>
+          <tr><td>Personal allowance</td><td class="text-right">£12,570</td></tr>
+          <tr><td>Income tax</td><td class="text-right">£686</td></tr>
+          <tr><td>NI (Job 1): £0 (below £12,570 threshold)</td><td class="text-right">£0</td></tr>
+          <tr><td>NI (Job 2): £0 (below £12,570 threshold)</td><td class="text-right">£0</td></tr>
+          <tr><td><strong>Total take-home</strong></td><td class="text-right"><strong>£15,314</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        With two jobs below the NI threshold, you pay zero National Insurance. If you worked one job at £16,000, you'd pay £274 in NI. The two-job setup saves you NI — but check that both jobs earn above the Lower Earnings Limit (£6,708) to protect your State Pension record.
+      </p>
+
+      <h2>National Insurance with Two Jobs</h2>
+      <p>
+        NI is calculated separately for each employment. This creates both advantages and disadvantages:
+      </p>
+
+      <h3>Advantages</h3>
+      <ul>
+        <li><strong>Possible NI savings:</strong> If both jobs pay below the Primary Threshold (£12,570), you pay zero NI even though combined earnings exceed it.</li>
+        <li><strong>State Pension protection:</strong> Each job above the Lower Earnings Limit (£6,708) counts as a qualifying year, even if you don't actually pay NI.</li>
+      </ul>
+
+      <h3>Disadvantages</h3>
+      <ul>
+        <li><strong>Possible NI overpayment:</strong> If both jobs pay above the Upper Earnings Limit (£50,270), you could pay 8% NI on income that should only be taxed at 2%. The maximum NI you should pay in a year is approximately £4,010 (at £100,000 combined). If you overpay, you can claim a refund after the tax year ends.</li>
+        <li><strong>Deferment:</strong> If your combined earnings exceed the Upper Earnings Limit, you can apply for NI deferment on your second job (form CA2700). This prevents overpayment during the year.</li>
+      </ul>
+
+      <h2>Common Tax Code Combinations</h2>
+      <table>
+        <thead>
+          <tr><th>Scenario</th><th>Job 1 Code</th><th>Job 2 Code</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Standard setup</td><td>1257L</td><td>BR</td><td>All allowance on Job 1, Job 2 taxed at 20%</td></tr>
+          <tr><td>Split allowance</td><td>800L</td><td>457L</td><td>Allowance split between both jobs</td></tr>
+          <tr><td>Higher rate on Job 2</td><td>1257L</td><td>D0</td><td>Job 2 taxed at 40% (when combined income is in higher band)</td></tr>
+          <tr><td>Underpayment collection</td><td>1100L</td><td>BR</td><td>Reduced allowance on Job 1 to collect previous underpayment</td></tr>
+        </tbody>
+      </table>
+
+      <h2>What Happens If You Don't Tell HMRC?</h2>
+      <p>
+        HMRC receives Real Time Information (RTI) from both employers every time you're paid, so they will know you have two jobs. However, automatic code adjustments can take several weeks. In the meantime:
+      </p>
+      <ul>
+        <li>Your second employer may apply an emergency tax code, potentially over-deducting tax.</li>
+        <li>If HMRC doesn't adjust your codes correctly, you may underpay tax during the year and receive a bill (P800) after April.</li>
+        <li>You can proactively call HMRC (0300 200 3300) or update your details through your Personal Tax Account to ensure the correct codes are applied from the start.</li>
+      </ul>
+
+      <h2>Two Jobs and Student Loan Repayments</h2>
+      <p>
+        Student loan repayments are only deducted from your primary employment (the job with the 1257L code). Your second employer does not deduct student loan repayments. However, if your combined earnings mean you've underpaid, you'll need to make up the difference through Self Assessment or HMRC will adjust your tax code the following year.
+      </p>
+
+      <h2>Two Jobs and Pension Auto-Enrolment</h2>
+      <p>
+        Each employer must auto-enrol you into a workplace pension separately, provided you earn above the auto-enrolment trigger (£10,000/year). If both jobs pay above £10,000, you'll be enrolled in two separate pension schemes. If one job pays below £10,000, that employer doesn't need to auto-enrol you (though you can opt in).
+      </p>
+
+      <h2>Tips for Managing Two Jobs</h2>
+      <ul>
+        <li><strong>Check your tax codes regularly.</strong> Log into your Personal Tax Account on GOV.UK to see both employments and their tax codes.</li>
+        <li><strong>Request a split allowance</strong> if your primary job pays less than £12,570 — otherwise you're overpaying tax during the year.</li>
+        <li><strong>Keep records.</strong> Save all payslips from both jobs. If there's a discrepancy at year end, you'll need these to support a refund claim.</li>
+        <li><strong>Watch the higher rate threshold.</strong> If your combined income exceeds £50,270, make sure HMRC applies a D0 code to your second job to avoid a tax bill later.</li>
+        <li><strong>Consider NI deferment</strong> if both jobs pay above £50,270 to prevent overpaying National Insurance.</li>
+      </ul>
+
+      <h2>Sources and Official References</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/tax-codes" target="_blank" rel="noopener">Understanding your tax code — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener">Check your income tax — GOV.UK</a></li>
+      </ul>
+      <p>
+        For a complete overview of all tax rates this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

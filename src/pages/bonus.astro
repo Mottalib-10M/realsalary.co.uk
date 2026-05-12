@@ -1,0 +1,195 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import BonusCalculator from '../components/calculators/BonusCalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META.bonus;
+---
+
+<CalculatorLayout {...meta}>
+  <BonusCalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How UK Bonus Tax Works</h2>
+      <p>
+        When you receive a bonus in the UK, it's taxed as part of your regular employment income. Your bonus is added to your salary for the pay period in which it's paid, and income tax, National Insurance, and any student loan repayments are deducted through PAYE before the bonus reaches your bank account. There is no special "bonus tax rate" — bonuses are simply subject to the same progressive tax bands as your salary.
+      </p>
+      <p>
+        However, the effective tax rate on your bonus is often higher than your average tax rate because your salary has already used up your personal allowance and lower tax bands. A bonus sits "on top" of your regular salary, so it's taxed at your marginal rate — the rate applying to the next pound you earn. This is why a £5,000 bonus often results in disappointment: if you're a higher rate taxpayer, you'll lose 42% (40% tax + 2% NI) of it before it reaches you, receiving only £2,900.
+      </p>
+
+      <h2>How Your Bonus Is Taxed Step by Step</h2>
+      <p>
+        Here's the process your employer's payroll follows when paying a bonus:
+      </p>
+      <ol>
+        <li><strong>Add the bonus to your salary</strong> for the current pay period (usually the month it's paid).</li>
+        <li><strong>Calculate tax on the combined total</strong> using the standard PAYE bands. Because PAYE is cumulative, the system knows how much tax you've already paid this year.</li>
+        <li><strong>Deduct the tax already collected</strong> on your regular salary for the year to date.</li>
+        <li><strong>The difference is the tax on your bonus.</strong></li>
+        <li><strong>National Insurance</strong> is calculated on the combined earnings for that pay period. If your salary plus bonus exceeds the NI thresholds, the full rates apply.</li>
+        <li><strong>Student loan repayments</strong> are recalculated on the higher monthly earnings, increasing the deduction for that month.</li>
+      </ol>
+
+      <h2>Marginal Tax Rates on Bonuses 2026/27</h2>
+      <p>
+        The tax you pay on your bonus depends on your total earnings (salary + bonus) and which tax bands the bonus falls into:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Your Salary + Bonus Falls In</th><th>Income Tax on Bonus</th><th>NI on Bonus</th><th>Total Marginal Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Up to £12,570</td><td>0%</td><td>0%</td><td>0%</td></tr>
+          <tr><td>£12,570 – £50,270</td><td>20%</td><td>8%</td><td>28%</td></tr>
+          <tr><td>£50,270 – £100,000</td><td>40%</td><td>2%</td><td>42%</td></tr>
+          <tr><td>£100,000 – £125,140</td><td>60%*</td><td>2%</td><td>62%</td></tr>
+          <tr><td>Over £125,140</td><td>45%</td><td>2%</td><td>47%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        *The 60% rate between £100,000 and £125,140 is caused by the personal allowance taper. If your bonus pushes you above £100,000, part of it will be taxed at this punishing rate.
+      </p>
+
+      <h2>Worked Examples: Bonus Tax at Different Salary Levels</h2>
+
+      <h3>Example 1: £30,000 Salary + £3,000 Bonus</h3>
+      <p>
+        Your salary is entirely within the basic rate band, and the bonus stays there too:
+      </p>
+      <table>
+        <tbody>
+          <tr><td>Base salary</td><td class="text-right">£30,000</td></tr>
+          <tr><td>Bonus</td><td class="text-right">£3,000</td></tr>
+          <tr><td>Total income</td><td class="text-right">£33,000</td></tr>
+          <tr><td>Tax on bonus (20%)</td><td class="text-right">−£600</td></tr>
+          <tr><td>NI on bonus (8%)</td><td class="text-right">−£240</td></tr>
+          <tr><td><strong>Bonus after deductions</strong></td><td class="text-right"><strong>£2,160</strong></td></tr>
+          <tr><td>Effective bonus tax rate</td><td class="text-right">28%</td></tr>
+        </tbody>
+      </table>
+      <p>You keep £2,160 of your £3,000 bonus — 72p in every pound.</p>
+
+      <h3>Example 2: £48,000 Salary + £5,000 Bonus</h3>
+      <p>
+        Your bonus straddles the basic and higher rate bands:
+      </p>
+      <table>
+        <tbody>
+          <tr><td>Base salary</td><td class="text-right">£48,000</td></tr>
+          <tr><td>Bonus</td><td class="text-right">£5,000</td></tr>
+          <tr><td>Total income</td><td class="text-right">£53,000</td></tr>
+          <tr><td>Bonus in basic rate band (£48,000 to £50,270)</td><td class="text-right">£2,270</td></tr>
+          <tr><td>Bonus in higher rate band (£50,270 to £53,000)</td><td class="text-right">£2,730</td></tr>
+          <tr><td>Tax: £2,270 × 20% + £2,730 × 40%</td><td class="text-right">−£1,546</td></tr>
+          <tr><td>NI: £2,270 × 8% + £2,730 × 2%</td><td class="text-right">−£236</td></tr>
+          <tr><td><strong>Bonus after deductions</strong></td><td class="text-right"><strong>£3,218</strong></td></tr>
+          <tr><td>Effective bonus tax rate</td><td class="text-right">35.6%</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 3: £95,000 Salary + £10,000 Bonus</h3>
+      <p>
+        This is the worst-case scenario — the bonus pushes you into the personal allowance taper zone:
+      </p>
+      <table>
+        <tbody>
+          <tr><td>Base salary</td><td class="text-right">£95,000</td></tr>
+          <tr><td>Bonus</td><td class="text-right">£10,000</td></tr>
+          <tr><td>Total income</td><td class="text-right">£105,000</td></tr>
+          <tr><td>Bonus £95k–£100k (40% tax + 2% NI)</td><td class="text-right">£5,000 → −£2,100</td></tr>
+          <tr><td>Bonus £100k–£105k (60% tax + 2% NI)</td><td class="text-right">£5,000 → −£3,100</td></tr>
+          <tr><td><strong>Bonus after deductions</strong></td><td class="text-right"><strong>£4,800</strong></td></tr>
+          <tr><td>Effective bonus tax rate</td><td class="text-right">52%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        You lose over half your bonus. The £5,000 that falls between £100,000 and £105,000 is taxed at an effective 62%, because each £2 earned costs you £1 of personal allowance.
+      </p>
+
+      <h3>Example 4: £60,000 Salary + £20,000 Bonus</h3>
+      <table>
+        <tbody>
+          <tr><td>Base salary</td><td class="text-right">£60,000</td></tr>
+          <tr><td>Bonus</td><td class="text-right">£20,000</td></tr>
+          <tr><td>Total income</td><td class="text-right">£80,000</td></tr>
+          <tr><td>Tax on bonus (all at 40%)</td><td class="text-right">−£8,000</td></tr>
+          <tr><td>NI on bonus (all at 2%)</td><td class="text-right">−£400</td></tr>
+          <tr><td><strong>Bonus after deductions</strong></td><td class="text-right"><strong>£11,600</strong></td></tr>
+          <tr><td>Effective bonus tax rate</td><td class="text-right">42%</td></tr>
+        </tbody>
+      </table>
+
+      <h2>How to Reduce Tax on Your Bonus</h2>
+      <p>
+        There are several legitimate strategies to reduce the tax hit on a bonus:
+      </p>
+
+      <h3>1. Pension Contributions via Salary Sacrifice</h3>
+      <p>
+        The most effective option. If your employer allows it, you can sacrifice some or all of your bonus into your pension. This reduces your taxable income before both income tax and NI. On a £10,000 bonus taxed at 42%, sacrificing it into your pension saves you £4,200 in tax and NI — the full £10,000 goes into your pension instead of £5,800 reaching your bank account.
+      </p>
+      <p>
+        This is particularly powerful if your bonus pushes you above £100,000. By sacrificing enough to stay below the threshold, you preserve your personal allowance and avoid the 62% marginal rate entirely.
+      </p>
+
+      <h3>2. Spread the Bonus Across Tax Years</h3>
+      <p>
+        If your employer is flexible on timing, receiving half the bonus in March and half in April means it falls across two tax years. This can keep you in a lower tax band in each year. However, this only works if your employer agrees and if the split genuinely crosses the 5 April boundary.
+      </p>
+
+      <h3>3. Charitable Donations via Gift Aid</h3>
+      <p>
+        Donating part of your bonus to charity via Gift Aid reduces your adjusted net income. This can be particularly tax-efficient if it brings you below the £100,000 personal allowance taper threshold. You get tax relief at your marginal rate, and the charity receives an additional 25% from HMRC.
+      </p>
+
+      <h2>Bonus vs Pay Rise: Which Is Better?</h2>
+      <p>
+        From a tax perspective, there's no difference — both are taxed as employment income at your marginal rate. However, there are practical differences:
+      </p>
+      <ul>
+        <li><strong>A pay rise is permanent.</strong> It increases your salary going forward, affecting pension contributions (if calculated as a percentage of salary), life insurance (often a multiple of salary), and future bonuses (if calculated as a percentage of salary).</li>
+        <li><strong>A bonus is one-off.</strong> It doesn't affect your base salary for other calculations. However, it's taxed in a single month, which can feel like a bigger hit.</li>
+        <li><strong>Pension implications:</strong> A pay rise increases your pension contributions automatically. A bonus might not, depending on your scheme rules — some employers only calculate pension on base salary.</li>
+        <li><strong>Mortgage applications:</strong> Lenders typically use 100% of base salary but may only count 50–60% of bonus income. A higher base salary can be more valuable for borrowing capacity.</li>
+      </ul>
+
+      <h2>Student Loan Repayments on Bonuses</h2>
+      <p>
+        Student loan repayments are calculated on your total earnings for each pay period. In the month you receive your bonus, your combined salary and bonus is used to calculate the repayment. This means you'll see a higher student loan deduction in that month.
+      </p>
+      <p>
+        For example, if your monthly salary is £3,000 and you receive a £6,000 bonus, your earnings for that month are £9,000. Your student loan repayment for that month will be based on the £9,000 figure (annualised), rather than your usual £3,000. On a Plan 2 loan, this could mean a repayment of £600+ for that month instead of the usual ~£5.
+      </p>
+
+      <h2>Common Questions About Bonus Tax</h2>
+
+      <h3>Will I get some tax back if my bonus is over-taxed?</h3>
+      <p>
+        PAYE is cumulative, so if your bonus is paid mid-year and your employer over-deducted tax (because they treated it as if you'd earn that much every month), the system will correct itself over subsequent months. By year end, the total tax should be correct. If not, HMRC will send you a P800 reconciliation.
+      </p>
+
+      <h3>Is my bonus taxed differently if paid in shares?</h3>
+      <p>
+        Bonuses paid in shares are still subject to income tax and NI at the point they vest or are awarded (depending on the scheme type). The value of the shares at that point is treated as employment income. Subsequent gains may be subject to Capital Gains Tax instead.
+      </p>
+
+      <h2>Sources and Official References</h2>
+      <p>
+        All tax rates used in this calculator are sourced from official HMRC publications:
+      </p>
+      <ul>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/tax-on-bonus" target="_blank" rel="noopener">Tax on bonus payments — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+      </ul>
+      <p>
+        For a complete overview of all tax rates and thresholds this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

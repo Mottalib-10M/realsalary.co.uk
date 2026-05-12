@@ -1,0 +1,181 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import HourlyRateCalculator from '../components/calculators/HourlyRateCalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META['hourly-rate'];
+---
+
+<CalculatorLayout {...meta}>
+  <HourlyRateCalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How to Convert Your Salary to an Hourly Rate</h2>
+      <p>
+        Knowing your hourly rate is essential for comparing job offers, evaluating overtime pay, deciding whether to go freelance, or simply understanding what your time is worth. The calculation is straightforward: divide your annual salary by the number of working hours in a year.
+      </p>
+      <p>
+        The standard assumption in the UK is 37.5 hours per week for 52 weeks, giving 1,950 working hours per year. A £30,000 salary works out to £15.38 per hour before tax. After tax and NI, the net hourly rate drops to around £12.87 — significantly less than the headline figure.
+      </p>
+
+      <h2>Hourly Rate Formula</h2>
+      <p>
+        The calculator uses this formula:
+      </p>
+      <p>
+        <strong>Gross hourly rate = Annual salary ÷ (Weekly hours × 52)</strong>
+      </p>
+      <p>
+        For the net (take-home) hourly rate, we first calculate your annual take-home pay after all deductions, then divide by the same number of working hours. This gives you a realistic picture of what you actually earn per hour of work.
+      </p>
+
+      <h2>Hourly Rate Conversion Table 2026/27</h2>
+      <p>
+        Here's a quick reference table showing gross and net hourly rates at common UK salary levels, assuming 37.5 hours per week and the standard 1257L tax code (England, no student loan, no pension):
+      </p>
+      <table>
+        <thead>
+          <tr><th>Annual Salary</th><th>Gross Hourly</th><th>Net Hourly</th><th>Daily (7.5hrs)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>£20,000</td><td>£10.26</td><td>£9.19</td><td>£68.92</td></tr>
+          <tr><td>£25,000</td><td>£12.82</td><td>£11.04</td><td>£82.77</td></tr>
+          <tr><td>£30,000</td><td>£15.38</td><td>£12.87</td><td>£96.62</td></tr>
+          <tr><td>£35,000</td><td>£17.95</td><td>£14.73</td><td>£110.46</td></tr>
+          <tr><td>£40,000</td><td>£20.51</td><td>£16.57</td><td>£124.31</td></tr>
+          <tr><td>£50,000</td><td>£25.64</td><td>£20.27</td><td>£152.00</td></tr>
+          <tr><td>£60,000</td><td>£30.77</td><td>£23.24</td><td>£174.31</td></tr>
+          <tr><td>£75,000</td><td>£38.46</td><td>£27.72</td><td>£207.92</td></tr>
+          <tr><td>£100,000</td><td>£51.28</td><td>£35.16</td><td>£263.68</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The gap between gross and net hourly rates widens as salary increases due to the progressive tax system. At £20,000, you keep about 90% of your gross hourly rate. At £100,000, you keep only about 69%.
+      </p>
+
+      <h2>Worked Examples</h2>
+
+      <h3>Example 1: £28,000 Salary, Standard 37.5-Hour Week</h3>
+      <table>
+        <tbody>
+          <tr><td>Annual salary</td><td class="text-right">£28,000</td></tr>
+          <tr><td>Weekly hours</td><td class="text-right">37.5</td></tr>
+          <tr><td>Annual hours (37.5 × 52)</td><td class="text-right">1,950</td></tr>
+          <tr><td><strong>Gross hourly rate</strong></td><td class="text-right"><strong>£14.36</strong></td></tr>
+          <tr><td>Annual take-home pay</td><td class="text-right">£24,320</td></tr>
+          <tr><td><strong>Net hourly rate</strong></td><td class="text-right"><strong>£12.47</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 2: £45,000 Salary, 40-Hour Week</h3>
+      <table>
+        <tbody>
+          <tr><td>Annual salary</td><td class="text-right">£45,000</td></tr>
+          <tr><td>Weekly hours</td><td class="text-right">40</td></tr>
+          <tr><td>Annual hours (40 × 52)</td><td class="text-right">2,080</td></tr>
+          <tr><td><strong>Gross hourly rate</strong></td><td class="text-right"><strong>£21.63</strong></td></tr>
+          <tr><td>Annual take-home pay</td><td class="text-right">£35,120</td></tr>
+          <tr><td><strong>Net hourly rate</strong></td><td class="text-right"><strong>£16.88</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        Notice how working 40 hours instead of 37.5 reduces your hourly rate. The additional 2.5 hours per week (130 hours per year) means you're earning less per hour even though the annual salary is higher than many 37.5-hour jobs.
+      </p>
+
+      <h3>Example 3: Hourly to Annual — Contractor at £25/hr</h3>
+      <table>
+        <tbody>
+          <tr><td>Hourly rate</td><td class="text-right">£25.00</td></tr>
+          <tr><td>Weekly hours</td><td class="text-right">37.5</td></tr>
+          <tr><td><strong>Annual equivalent</strong></td><td class="text-right"><strong>£48,750</strong></td></tr>
+          <tr><td>Tax and NI on £48,750</td><td class="text-right">−£10,230</td></tr>
+          <tr><td>Net annual</td><td class="text-right">£38,520</td></tr>
+          <tr><td><strong>Net hourly rate</strong></td><td class="text-right"><strong>£19.75</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Working Hours in the UK</h2>
+      <p>
+        The standard full-time working week in the UK varies by industry:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Sector</th><th>Typical Hours/Week</th><th>Hours/Year</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Office / Professional</td><td>37.5</td><td>1,950</td></tr>
+          <tr><td>Public Sector</td><td>37</td><td>1,924</td></tr>
+          <tr><td>Manufacturing</td><td>39–40</td><td>2,028–2,080</td></tr>
+          <tr><td>Retail</td><td>37.5–40</td><td>1,950–2,080</td></tr>
+          <tr><td>NHS</td><td>37.5</td><td>1,950</td></tr>
+          <tr><td>Finance</td><td>35–37.5</td><td>1,820–1,950</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Use the calculator above to adjust the weekly hours to match your actual working pattern. The hourly rate changes significantly — on a £35,000 salary, working 35 hours/week gives £19.23/hour, while 40 hours/week gives £16.83/hour. That's a 14% difference for the same annual pay.
+      </p>
+
+      <h2>Hourly Rate and National Minimum Wage</h2>
+      <p>
+        The National Minimum Wage and National Living Wage rates for 2026/27 are:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Age Group</th><th>Hourly Rate</th><th>Annual Equivalent (37.5hrs/week)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>21 and over (National Living Wage)</td><td>£12.21</td><td>£23,809</td></tr>
+          <tr><td>18 to 20</td><td>£10.00</td><td>£19,500</td></tr>
+          <tr><td>Under 18</td><td>£7.55</td><td>£14,723</td></tr>
+          <tr><td>Apprentice</td><td>£7.55</td><td>£14,723</td></tr>
+        </tbody>
+      </table>
+      <p>
+        If your hourly rate falls below these thresholds, your employer may be breaking the law. You can check your pay and report concerns through the <a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" rel="noopener">GOV.UK minimum wage checker</a>.
+      </p>
+
+      <h2>Comparing Job Offers: Why Hourly Rate Matters</h2>
+      <p>
+        When comparing job offers, the annual salary figure can be misleading. A £35,000 job requiring 40 hours/week pays £16.83/hour, while a £32,000 job at 35 hours/week pays £17.58/hour. The lower-paying job actually values your time more highly, and you get 5 extra hours of free time per week — 260 hours per year.
+      </p>
+      <p>
+        Other factors to consider beyond the headline salary:
+      </p>
+      <ul>
+        <li><strong>Commuting time:</strong> A job with a 1-hour commute each way adds 10 unpaid hours per week. If you factor commute time into your hourly rate, a £35,000 salary with a 1-hour commute (47.5 hours/week effective) drops to £14.18/hour.</li>
+        <li><strong>Pension contributions:</strong> An employer matching up to 8% is worth more than one offering minimum 3%. On a £35,000 salary, the difference is £1,750/year in employer contributions.</li>
+        <li><strong>Benefits in kind:</strong> Private medical insurance, company car, gym membership, and other perks have a monetary value that should be factored into total compensation.</li>
+        <li><strong>Annual leave:</strong> More holiday days effectively increase your hourly rate, because you're earning the same salary for fewer working days.</li>
+      </ul>
+
+      <h2>Hourly Rate for Freelancers and Contractors</h2>
+      <p>
+        If you're considering going freelance, your hourly rate needs to be significantly higher than your employed equivalent to account for:
+      </p>
+      <ul>
+        <li><strong>No paid holidays:</strong> 28 days of leave means ~5.4 weeks. You need to earn your annual target in ~46.6 weeks, not 52.</li>
+        <li><strong>No employer pension contribution:</strong> 3% minimum employer contribution on a £40,000 salary is £1,200/year you'd need to self-fund.</li>
+        <li><strong>No sick pay:</strong> Self-employed people have no access to Statutory Sick Pay.</li>
+        <li><strong>Business costs:</strong> Equipment, software, accountancy fees, insurance, workspace, and marketing all reduce your effective hourly rate.</li>
+        <li><strong>Unbillable time:</strong> Admin, invoicing, marketing, and business development time isn't billable. Most freelancers achieve 60–75% utilisation.</li>
+      </ul>
+      <p>
+        A common rule of thumb: your freelance rate should be roughly 1.5x–2x your employed hourly rate to maintain the same standard of living. On a £40,000 salary (£20.51/hr gross), you'd need to charge roughly £30–£41/hour as a freelancer.
+      </p>
+
+      <h2>Sources and Official References</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" rel="noopener">National Minimum Wage rates — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/maximum-weekly-working-hours" target="_blank" rel="noopener">Maximum weekly working hours — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+      </ul>
+      <p>
+        For a complete overview of all tax rates this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

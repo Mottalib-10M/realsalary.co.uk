@@ -1,0 +1,202 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import PensionCalculator from '../components/calculators/PensionCalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META['pension-contribution'];
+---
+
+<CalculatorLayout {...meta}>
+  <PensionCalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How UK Workplace Pensions Work</h2>
+      <p>
+        Since automatic enrolment was introduced in 2012, almost all UK employees are enrolled in a workplace pension. Both you and your employer make contributions, which are invested until you retire. The minimum total contribution is 8% of qualifying earnings — typically 5% from you and 3% from your employer.
+      </p>
+      <p>
+        How your contribution is collected depends on the method your employer uses: salary sacrifice or relief at source. The method significantly affects your take-home pay and the total amount that reaches your pension pot. This calculator shows you the exact difference between both methods so you can understand the true cost of your pension contributions.
+      </p>
+
+      <h2>Salary Sacrifice vs Relief at Source</h2>
+      <p>
+        These are the two main methods for making pension contributions. They produce the same gross pension contribution, but the tax savings differ:
+      </p>
+
+      <h3>Salary Sacrifice</h3>
+      <p>
+        With salary sacrifice, you agree to reduce your contractual salary. Your employer then pays the sacrificed amount directly into your pension. Because your gross pay is lower, you save both income tax and National Insurance on the contribution.
+      </p>
+      <ul>
+        <li>Your gross salary is reduced before tax and NI are calculated.</li>
+        <li>You save income tax (20%/40%/45% depending on your band) AND National Insurance (8% or 2%).</li>
+        <li>Your employer also saves on their NI (15%) — some employers pass this saving to you as an additional pension contribution.</li>
+        <li>Your P60 shows the reduced salary, which can affect mortgage applications.</li>
+        <li>Salary sacrifice cannot reduce your pay below National Minimum Wage.</li>
+      </ul>
+
+      <h3>Relief at Source</h3>
+      <p>
+        With relief at source, your contribution is deducted from your net pay (after tax). The pension provider then claims basic rate tax relief (20%) from HMRC and adds it to your pension pot.
+      </p>
+      <ul>
+        <li>You pay from your net salary — the money has already been taxed.</li>
+        <li>The pension provider claims 20% basic rate relief automatically. For every £80 you contribute, £100 goes into your pension.</li>
+        <li>Higher rate (40%) and additional rate (45%) taxpayers must claim the extra relief through Self Assessment.</li>
+        <li>You don't save on National Insurance — NI is calculated on your full gross pay.</li>
+        <li>Your P60 shows your full salary, which may help with mortgage applications.</li>
+      </ul>
+
+      <h2>Side-by-Side Comparison: 5% Pension on a £40,000 Salary</h2>
+      <table>
+        <thead>
+          <tr><th></th><th>Salary Sacrifice</th><th>Relief at Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Gross salary</td><td>£40,000</td><td>£40,000</td></tr>
+          <tr><td>Pension contribution</td><td>£2,000</td><td>£2,000</td></tr>
+          <tr><td>Taxable salary</td><td>£38,000</td><td>£40,000</td></tr>
+          <tr><td>Income tax</td><td>£5,086</td><td>£5,486</td></tr>
+          <tr><td>National Insurance</td><td>£2,034</td><td>£2,194</td></tr>
+          <tr><td>Net pension deduction from pay</td><td>£0 (already sacrificed)</td><td>£1,600</td></tr>
+          <tr><td><strong>Take-home pay</strong></td><td><strong>£30,880</strong></td><td><strong>£30,720</strong></td></tr>
+          <tr><td>Amount in pension pot</td><td>£2,000</td><td>£2,000</td></tr>
+          <tr><td><strong>Extra take-home with sacrifice</strong></td><td colspan="2"><strong>£160/year</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        The £160 difference is the NI saving from salary sacrifice (8% × £2,000). Both methods put £2,000 into your pension, but salary sacrifice costs you £160 less in take-home pay. Over a 30-year career, that's £4,800 in savings (before considering salary growth).
+      </p>
+
+      <h2>Worked Examples at Different Salary Levels</h2>
+
+      <h3>Example 1: £25,000 Salary, 5% Pension (Salary Sacrifice)</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£25,000</td></tr>
+          <tr><td>Pension contribution (5%)</td><td class="text-right">£1,250</td></tr>
+          <tr><td>Adjusted gross</td><td class="text-right">£23,750</td></tr>
+          <tr><td>Income tax</td><td class="text-right">£2,236</td></tr>
+          <tr><td>National Insurance</td><td class="text-right">£894</td></tr>
+          <tr><td><strong>Take-home pay</strong></td><td class="text-right"><strong>£20,620</strong></td></tr>
+          <tr><td>Cost to you (lost take-home)</td><td class="text-right">£900</td></tr>
+          <tr><td>Amount in pension</td><td class="text-right">£1,250</td></tr>
+          <tr><td><strong>Effective boost</strong></td><td class="text-right"><strong>39%</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        For every £1 of take-home pay you give up, £1.39 goes into your pension. The government effectively subsidises your saving through tax relief.
+      </p>
+
+      <h3>Example 2: £60,000 Salary, 5% Pension (Salary Sacrifice)</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£60,000</td></tr>
+          <tr><td>Pension contribution (5%)</td><td class="text-right">£3,000</td></tr>
+          <tr><td>Adjusted gross</td><td class="text-right">£57,000</td></tr>
+          <tr><td>Income tax saved</td><td class="text-right">£1,000 (£2,730 at 20% + £270 at 40%)</td></tr>
+          <tr><td>NI saved</td><td class="text-right">£60 (2% × £3,000 above UEL portion)</td></tr>
+          <tr><td>Cost to you (lost take-home)</td><td class="text-right">£1,940</td></tr>
+          <tr><td>Amount in pension</td><td class="text-right">£3,000</td></tr>
+          <tr><td><strong>Effective boost</strong></td><td class="text-right"><strong>55%</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 3: £105,000 Salary — The Personal Allowance Strategy</h3>
+      <p>
+        This is where pension contributions become strategically powerful. At £105,000, you've lost £2,500 of your personal allowance, creating an effective 60% tax rate on the £5,000 above £100,000. By making a 5% pension contribution via salary sacrifice:
+      </p>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£105,000</td></tr>
+          <tr><td>Pension contribution (5%)</td><td class="text-right">£5,250</td></tr>
+          <tr><td>Adjusted gross</td><td class="text-right">£99,750</td></tr>
+          <tr><td>Personal allowance restored</td><td class="text-right">£12,570 (full amount — now below £100k)</td></tr>
+          <tr><td>Income tax saved</td><td class="text-right">~£3,150</td></tr>
+          <tr><td>NI saved</td><td class="text-right">£105</td></tr>
+          <tr><td>Cost to you (lost take-home)</td><td class="text-right">~£1,995</td></tr>
+          <tr><td>Amount in pension</td><td class="text-right">£5,250</td></tr>
+          <tr><td><strong>Effective boost</strong></td><td class="text-right"><strong>163%</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        By sacrificing £5,250 of salary, you restore your full personal allowance and put £5,250 into your pension at an effective cost of only ~£2,000 in lost take-home pay. This is one of the most tax-efficient strategies available to UK employees earning between £100,000 and £125,140.
+      </p>
+
+      <h2>Auto-Enrolment Minimum Contributions 2026/27</h2>
+      <p>
+        The minimum pension contributions under auto-enrolment apply to "qualifying earnings" — the portion of your salary between £6,240 and £50,270:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Contributor</th><th>Minimum Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Employee</td><td>5% of qualifying earnings</td></tr>
+          <tr><td>Employer</td><td>3% of qualifying earnings</td></tr>
+          <tr><td><strong>Total minimum</strong></td><td><strong>8% of qualifying earnings</strong></td></tr>
+        </tbody>
+      </table>
+      <p>
+        On a £30,000 salary, qualifying earnings are £23,760 (£30,000 − £6,240). The minimum employee contribution is £1,188/year (5% × £23,760), and the employer contributes at least £713 (3% × £23,760). Many employers contribute based on total salary rather than qualifying earnings, which is more generous — check your pension scheme documentation.
+      </p>
+
+      <h2>Annual Allowance: How Much Can You Contribute?</h2>
+      <p>
+        The annual allowance for pension contributions is £60,000 in 2026/27. This is the maximum total amount that can be contributed (by you and your employer combined) while still receiving tax relief. If you exceed this limit, you'll face an Annual Allowance Charge — effectively, you pay tax on the excess at your marginal rate.
+      </p>
+      <p>
+        If you haven't used your full annual allowance in the previous three tax years, you can carry forward unused allowance. This is particularly useful if you receive a large bonus and want to shelter it from tax.
+      </p>
+      <p>
+        High earners face a tapered annual allowance. If your "threshold income" exceeds £200,000 and your "adjusted income" exceeds £260,000, your annual allowance is reduced by £1 for every £2 above £260,000, down to a minimum of £10,000.
+      </p>
+
+      <h2>Lifetime Allowance — What Changed?</h2>
+      <p>
+        The Lifetime Allowance (LTA), which previously capped the total amount you could hold in pensions at £1,073,100, was abolished from 6 April 2024. There is now no limit on how much you can accumulate in your pension pot. However, the tax-free lump sum you can take at retirement is capped at 25% of the old LTA — £268,275.
+      </p>
+
+      <h2>Pension Contributions and Mortgage Applications</h2>
+      <p>
+        How your pension contributions affect your mortgage depends on the method:
+      </p>
+      <ul>
+        <li><strong>Salary sacrifice:</strong> Your P60 and payslip show the reduced gross salary. Some lenders use the lower figure, potentially reducing your borrowing capacity. However, many lenders will "add back" pension contributions if you explain the arrangement.</li>
+        <li><strong>Relief at source:</strong> Your P60 shows your full gross salary. The pension deduction appears as a separate line item, similar to other deductions. This can be simpler for mortgage applications.</li>
+      </ul>
+      <p>
+        If you're planning to apply for a mortgage soon, discuss this with your broker before switching to salary sacrifice. The difference can be significant — on a £60,000 salary with 10% pension sacrifice, your P60 shows £54,000, which could reduce your maximum mortgage by £24,000–£30,000 depending on the lender's income multiple.
+      </p>
+
+      <h2>Should You Increase Your Pension Contributions?</h2>
+      <p>
+        Beyond the minimum 5%, consider increasing contributions if:
+      </p>
+      <ul>
+        <li><strong>Your employer matches additional contributions.</strong> If your employer will match up to 8%, contributing less means leaving free money on the table.</li>
+        <li><strong>You're near the £100,000 threshold.</strong> Using pension contributions to stay below £100,000 preserves your personal allowance, making contributions extremely tax-efficient.</li>
+        <li><strong>You're a higher rate taxpayer.</strong> The effective cost of pension saving drops as your tax rate increases. A higher rate taxpayer contributing £100 to a pension only loses £58 of take-home pay via salary sacrifice.</li>
+        <li><strong>You started saving late.</strong> General guidance suggests contributing half your age as a percentage — if you're 40 and just starting, aim for 20% combined contributions.</li>
+      </ul>
+
+      <h2>Sources and Official References</h2>
+      <p>
+        All pension-related figures are based on official UK government and HMRC publications:
+      </p>
+      <ul>
+        <li><a href="https://www.gov.uk/workplace-pensions" target="_blank" rel="noopener">Workplace pensions — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/tax-on-your-private-pension/annual-allowance" target="_blank" rel="noopener">Annual allowance — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/workplace-pensions/what-you-your-employer-and-the-government-pay" target="_blank" rel="noopener">Pension contribution rates — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+        <li><a href="https://www.thepensionsregulator.gov.uk/en/employers" target="_blank" rel="noopener">The Pensions Regulator — employer guidance</a></li>
+      </ul>
+      <p>
+        For a complete overview of tax changes this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

@@ -1,0 +1,45 @@
+---
+import GuideLayout from '../layouts/GuideLayout.astro';
+import { TAX_YEAR } from '../data/tax-rules-2026-27';
+---
+
+<GuideLayout
+  title="About Real Salary"
+  description="Real Salary provides free, accurate UK salary and tax calculators updated for the latest tax year."
+  slug="/about"
+>
+  <h1>About Real Salary</h1>
+
+  <p>
+    Real Salary is a free suite of UK salary, tax, and finance calculators.
+    Our goal is simple: help you understand what you actually take home from your pay.
+  </p>
+
+  <h2>Why we built this</h2>
+  <p>
+    The number on your employment contract is not what lands in your bank account.
+    Between income tax, National Insurance, student loan repayments, and pension
+    contributions, the gap between gross and net can be significant — and confusing.
+  </p>
+  <p>
+    We built Real Salary to make this transparent. Every calculator uses official
+    HMRC rates for the {TAX_YEAR} tax year, updated within days of any government
+    announcement.
+  </p>
+
+  <h2>Accuracy</h2>
+  <p>
+    All tax rates and thresholds are sourced directly from
+    <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">gov.uk</a>.
+    Calculations follow standard PAYE rules. While we strive for accuracy, this site
+    provides estimates — not financial advice. For your specific situation, consult
+    HMRC or a qualified accountant.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>
+    We don't store your salary data. All calculations happen in your browser.
+    We use privacy-friendly analytics with no cookies or personal data collection.
+    See our <a href="/privacy">privacy policy</a> for details.
+  </p>
+</GuideLayout>

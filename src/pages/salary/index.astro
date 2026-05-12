@@ -1,0 +1,129 @@
+---
+/**
+ * Hub page listing all 59 monthly salary landing pages.
+ * Groups salaries by range for easy browsing and internal linking.
+ */
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import '../../styles/global.css';
+import { generateMonthlySalaryPages } from '../../data/monthly-salary-pages';
+import {
+  buildTitle,
+  buildCanonical,
+  SITE_NAME,
+  SITE_URL,
+  OG_IMAGE,
+  OG_IMAGE_WIDTH,
+  OG_IMAGE_HEIGHT,
+  breadcrumbSchema,
+  LAST_UPDATED,
+} from '../../lib/seo';
+import { formatCurrency } from '../../lib/format';
+import { TAX_YEAR } from '../../data/tax-rules-2026-27';
+
+const pages = generateMonthlySalaryPages();
+
+// Title: 57 chars, keyword-rich, no site name
+const pageTitle = `Monthly Salary After Tax UK ${TAX_YEAR} - £100 to £3,000`;
+const metaTitle = buildTitle(pageTitle);
+// Description: 158 chars
+const description = `Browse UK take home pay for every monthly salary from £100 to £3,000. Income tax, National Insurance and net pay breakdowns for the ${TAX_YEAR} tax year. Free.`;
+const canonical = buildCanonical('/salary');
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Home', url: SITE_URL },
+  { name: 'Salary Pages', url: canonical },
+]);
+
+// Group pages by salary range
+const groups = [
+  { label: '£100 – £500', pages: pages.filter((p) => p.monthly >= 100 && p.monthly <= 500) },
+  { label: '£550 – £1,000', pages: pages.filter((p) => p.monthly >= 550 && p.monthly <= 1000) },
+  { label: '£1,050 – £2,000', pages: pages.filter((p) => p.monthly >= 1050 && p.monthly <= 2000) },
+  { label: '£2,050 – £3,000', pages: pages.filter((p) => p.monthly >= 2050 && p.monthly <= 3000) },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{metaTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content="UK monthly salary after tax - take home pay from £100 to £3,000" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <div class="prose prose-gray dark:prose-invert max-w-none">
+      <h1>UK Monthly Salary After Tax — Every Amount from £100 to £3,000</h1>
+      <p>
+        Browse our complete guide to monthly take-home pay in the UK. Each page below shows a detailed breakdown
+        of income tax, National Insurance, net pay, Scotland comparisons, and practical tips for the
+        <strong>{TAX_YEAR} tax year</strong>. Click any salary to see the full analysis.
+      </p>
+    </div>
+
+    {groups.map((group) => (
+      <section class="mt-10">
+        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{group.label} Per Month</h2>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {group.pages.map((p) => (
+            <a
+              href={`/salary/${p.slug}`}
+              class="group rounded-lg border border-gray-200 p-4 transition-all hover:border-navy-300 hover:shadow-md dark:border-gray-700 dark:hover:border-navy-600"
+            >
+              <div class="text-lg font-bold text-navy-700 group-hover:text-navy-600 dark:text-navy-300 dark:group-hover:text-navy-200">
+                {p.monthlyFormatted}<span class="text-sm font-normal text-gray-400">/mo</span>
+              </div>
+              <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Take-home: <span class="font-medium text-gray-700 dark:text-gray-200">{p.englandFormatted.netMonthly}</span>
+              </div>
+              <div class="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
+                {p.annualFormatted}/year &middot; {p.englandFormatted.effectiveTaxRate} tax rate
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <div class="prose prose-gray dark:prose-invert mt-12 max-w-none">
+      <h2>How These Figures Are Calculated</h2>
+      <p>
+        Every figure on these pages is calculated using official HMRC rates for the {TAX_YEAR} tax year
+        (6 April 2026 to 5 April 2027). We assume the standard tax code 1257L, no student loans, and no
+        pension deductions. The calculations include both income tax and employee National Insurance
+        contributions. Use our <a href="/">full salary calculator</a> to add student loans, pension
+        contributions, Scottish tax rates, and other options.
+      </p>
+    </div>
+
+    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+</body>
+</html>

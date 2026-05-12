@@ -1,0 +1,65 @@
+---
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
+import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, LAST_UPDATED } from '../lib/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  slug: string;
+}
+
+const { title, description, slug } = Astro.props;
+const pageTitle = buildTitle(title);
+const canonical = buildCanonical(slug);
+
+const schema = breadcrumbSchema([
+  { name: 'Home', url: SITE_URL },
+  { name: 'Guides', url: `${SITE_URL}/guides` },
+  { name: title, url: canonical },
+]);
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content={`${title} - UK Tax Guide`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <article class="prose prose-gray dark:prose-invert max-w-none">
+      <slot />
+    </article>
+    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+</body>
+</html>

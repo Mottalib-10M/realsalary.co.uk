@@ -1,0 +1,215 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import NICalculator from '../components/calculators/NICalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META['national-insurance'];
+---
+
+<CalculatorLayout {...meta}>
+  <NICalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>What Is National Insurance?</h2>
+      <p>
+        National Insurance (NI) is a UK payroll tax that funds the State Pension, NHS, and welfare benefits. Despite its name, it works like a tax — it's automatically deducted from your pay through the PAYE system alongside income tax. As an employee, you pay Class 1 National Insurance contributions based on how much you earn. Your employer also pays NI on your salary (at a higher rate), but that's their cost and doesn't reduce your pay.
+      </p>
+      <p>
+        NI is distinct from income tax in several important ways: it only applies to employment and self-employment earnings (not savings, dividends, or pensions), it doesn't have a personal allowance taper, and it stops entirely when you reach State Pension age. However, paying NI builds your entitlement to the State Pension and other contributory benefits like Statutory Sick Pay, Maternity Allowance, and contribution-based Jobseeker's Allowance.
+      </p>
+
+      <h2>National Insurance Rates for Employees 2026/27</h2>
+      <p>
+        As an employee in the 2026/27 tax year (6 April 2026 to 5 April 2027), you pay Class 1 National Insurance at the following rates:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Earnings Band</th><th>Weekly</th><th>Annual</th><th>NI Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Below Primary Threshold</td><td>Up to £242</td><td>Up to £12,570</td><td>0%</td></tr>
+          <tr><td>Primary Threshold to Upper Earnings Limit</td><td>£242 – £967</td><td>£12,570 – £50,270</td><td>8%</td></tr>
+          <tr><td>Above Upper Earnings Limit</td><td>Over £967</td><td>Over £50,270</td><td>2%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The maximum NI you'll pay at the main rate is £3,016 per year (8% × £37,700). Above £50,270, the rate drops sharply to 2% — so additional earnings above this point cost much less in NI. The total NI on a £100,000 salary is £4,010 (£3,016 at 8% plus £994 at 2%).
+      </p>
+
+      <h3>The Lower Earnings Limit</h3>
+      <p>
+        There's also a Lower Earnings Limit (LEL) of £6,708 per year (£129/week). If you earn between the LEL and the Primary Threshold, you don't actually pay any NI, but you're treated as having paid it — protecting your State Pension entitlement. This is an important distinction for part-time workers earning between £6,708 and £12,570.
+      </p>
+
+      <h2>Employer National Insurance Contributions</h2>
+      <p>
+        Your employer also pays NI on your salary, but at different rates and thresholds. Employer NI is a separate cost — it doesn't appear on your payslip and doesn't reduce your pay. However, it does affect the total cost of employing you, which can influence hiring and pay decisions.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Earnings Band</th><th>Annual</th><th>Employer NI Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Below Secondary Threshold</td><td>Up to £5,000</td><td>0%</td></tr>
+          <tr><td>Above Secondary Threshold</td><td>Over £5,000</td><td>15%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Notice that the employer rate (15%) is nearly double the employee rate (8%), and the employer's threshold (£5,000) is much lower than the employee's (£12,570). On a £50,000 salary, the employer pays £6,750 in NI — more than double the employee's £2,994. This means the true total cost of your employment is significantly higher than your gross salary.
+      </p>
+
+      <h2>Worked Examples: NI at Different Salary Levels</h2>
+
+      <h3>Example 1: £20,000 Salary</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£20,000</td></tr>
+          <tr><td>Earnings below £12,570</td><td class="text-right">£0 NI</td></tr>
+          <tr><td>Earnings £12,570 to £20,000 = £7,430 at 8%</td><td class="text-right">£594</td></tr>
+          <tr><td><strong>Total employee NI</strong></td><td class="text-right"><strong>£594</strong></td></tr>
+          <tr><td>Monthly NI deduction</td><td class="text-right">£50</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 2: £40,000 Salary</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£40,000</td></tr>
+          <tr><td>£27,430 at 8% (£12,570 to £40,000)</td><td class="text-right">£2,194</td></tr>
+          <tr><td><strong>Total employee NI</strong></td><td class="text-right"><strong>£2,194</strong></td></tr>
+          <tr><td>Monthly NI deduction</td><td class="text-right">£183</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 3: £70,000 Salary</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£70,000</td></tr>
+          <tr><td>£37,700 at 8% (£12,570 to £50,270)</td><td class="text-right">£3,016</td></tr>
+          <tr><td>£19,730 at 2% (£50,270 to £70,000)</td><td class="text-right">£395</td></tr>
+          <tr><td><strong>Total employee NI</strong></td><td class="text-right"><strong>£3,411</strong></td></tr>
+          <tr><td>Monthly NI deduction</td><td class="text-right">£284</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Notice how the NI increase slows dramatically above £50,270. Earning an extra £30,000 (from £40,000 to £70,000) only adds £1,217 in NI, because most of the additional income is taxed at 2% rather than 8%.
+      </p>
+
+      <h3>Example 4: £100,000 Salary</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£100,000</td></tr>
+          <tr><td>£37,700 at 8%</td><td class="text-right">£3,016</td></tr>
+          <tr><td>£49,730 at 2%</td><td class="text-right">£995</td></tr>
+          <tr><td><strong>Total employee NI</strong></td><td class="text-right"><strong>£4,011</strong></td></tr>
+          <tr><td>Monthly NI deduction</td><td class="text-right">£334</td></tr>
+          <tr><td>Effective NI rate</td><td class="text-right">4.0%</td></tr>
+        </tbody>
+      </table>
+
+      <h2>NI and the Combined Marginal Tax Rate</h2>
+      <p>
+        When you combine income tax and NI, the marginal rate you pay on each additional pound of earnings depends on which bands you're in:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Earnings Band</th><th>Income Tax</th><th>NI</th><th>Combined Marginal Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Up to £12,570</td><td>0%</td><td>0%</td><td>0%</td></tr>
+          <tr><td>£12,570 – £50,270</td><td>20%</td><td>8%</td><td>28%</td></tr>
+          <tr><td>£50,270 – £100,000</td><td>40%</td><td>2%</td><td>42%</td></tr>
+          <tr><td>£100,000 – £125,140</td><td>60%*</td><td>2%</td><td>62%</td></tr>
+          <tr><td>Over £125,140</td><td>45%</td><td>2%</td><td>47%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        *The 60% effective income tax rate between £100,000 and £125,140 is caused by the personal allowance taper. See our <a href="/income-tax">income tax calculator</a> for a full explanation.
+      </p>
+
+      <h2>How NI Differs from Income Tax</h2>
+      <ul>
+        <li><strong>NI only applies to employment earnings.</strong> Savings interest, dividends, rental income, and pensions are not subject to NI. Income tax applies to all of these.</li>
+        <li><strong>NI stops at State Pension age.</strong> Once you reach State Pension age, you stop paying employee NI entirely (though your employer continues paying). Income tax applies at any age.</li>
+        <li><strong>NI has no personal allowance taper.</strong> The thresholds are fixed at £12,570 and £50,270 regardless of your total income. There's no equivalent of the £100,000 trap.</li>
+        <li><strong>NI builds benefit entitlement.</strong> Paying NI contributes to your qualifying years for the State Pension (you need 35 years for the full amount). It also qualifies you for Statutory Sick Pay, Maternity Allowance, and contribution-based Jobseeker's Allowance.</li>
+        <li><strong>NI rate drops at higher earnings.</strong> Income tax rates go up as you earn more (20% → 40% → 45%). NI does the opposite — dropping from 8% to 2% above £50,270.</li>
+      </ul>
+
+      <h2>National Insurance and Your State Pension</h2>
+      <p>
+        Your NI contributions directly affect your State Pension entitlement. The full new State Pension requires 35 qualifying years. You need at least 10 qualifying years to get any State Pension at all. A qualifying year is one where you:
+      </p>
+      <ul>
+        <li>Earned above the Lower Earnings Limit (£6,708 in 2026/27) as an employee, or</li>
+        <li>Made sufficient Class 2 NI contributions as self-employed, or</li>
+        <li>Received National Insurance credits (e.g., while claiming certain benefits or Child Benefit for a child under 12).</li>
+      </ul>
+      <p>
+        You can check your NI record and see how many qualifying years you have through your <a href="https://www.gov.uk/check-national-insurance-record" target="_blank" rel="noopener">Personal Tax Account on GOV.UK</a>. If you have gaps, you may be able to make voluntary Class 3 contributions to fill them.
+      </p>
+
+      <h2>Salary Sacrifice and National Insurance Savings</h2>
+      <p>
+        One of the most effective ways to reduce your NI bill is through salary sacrifice — particularly for pension contributions. When you sacrifice salary for a pension contribution, your gross pay is reduced before NI is calculated. You save 8% NI on the sacrificed amount (or 2% if you're above the UEL).
+      </p>
+      <p>
+        For example, on a £40,000 salary with a 5% pension contribution (£2,000):
+      </p>
+      <ul>
+        <li><strong>Salary sacrifice:</strong> Gross pay drops to £38,000. You save £160 in NI (8% × £2,000) plus £400 in income tax. Total tax saving: £560.</li>
+        <li><strong>Relief at source:</strong> You pay £1,600 from net pay. The pension provider claims £400 tax relief. You save £400 in income tax but no NI saving.</li>
+      </ul>
+      <p>
+        The £160 NI saving is entirely attributable to salary sacrifice. Your employer also saves NI on the sacrificed amount — good employers pass some of this saving into your pension. Use our <a href="/pension-contribution">pension contribution calculator</a> to model the exact difference.
+      </p>
+
+      <h2>NI for People with Two Jobs</h2>
+      <p>
+        If you have two jobs, NI is calculated separately for each employment. Each job has its own Primary Threshold, meaning you could be paying 0% NI on a second job even though your combined earnings would be well above the threshold. However, there's an annual maximum — if you overpay NI across two jobs, you can apply for a refund after the tax year ends.
+      </p>
+      <p>
+        To avoid overpaying during the year, you can apply for a deferment certificate (form CA2700) if your combined earnings exceed the Upper Earnings Limit. See our <a href="/two-jobs">two jobs calculator</a> for more details.
+      </p>
+
+      <h2>NI Categories and Letters</h2>
+      <p>
+        Your NI category letter determines which rates apply. Most employees are Category A, but there are several categories:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Letter</th><th>Who It Applies To</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A</td><td>Most employees aged 21 to State Pension age</td></tr>
+          <tr><td>B</td><td>Married women and widows with reduced rate election</td></tr>
+          <tr><td>C</td><td>Employees over State Pension age</td></tr>
+          <tr><td>H</td><td>Apprentices under 25</td></tr>
+          <tr><td>M</td><td>Employees under 21</td></tr>
+          <tr><td>V</td><td>Veterans in first 12 months of civilian employment</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Categories H, M, and V have no employer NI below the Upper Secondary Threshold, making it cheaper for employers to hire people in these categories. Employee rates are the same as Category A.
+      </p>
+
+      <h2>Sources and Official References</h2>
+      <p>
+        All NI rates and thresholds used in this calculator are sourced from official HMRC publications for the 2026/27 tax year:
+      </p>
+      <ul>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/check-national-insurance-record" target="_blank" rel="noopener">Check your National Insurance record — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/new-state-pension" target="_blank" rel="noopener">The new State Pension — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-insurance/how-much-you-pay" target="_blank" rel="noopener">National Insurance: how much you pay — GOV.UK</a></li>
+      </ul>
+      <p>
+        For a complete overview of all tax changes this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

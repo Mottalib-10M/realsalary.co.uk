@@ -1,0 +1,115 @@
+---
+const navLinks = [
+  { href: '/', label: 'Salary Calculator' },
+  { href: '/take-home-pay', label: 'Take-Home Pay' },
+  { href: '/income-tax', label: 'Income Tax' },
+  { href: '/national-insurance', label: 'National Insurance' },
+  { href: '/student-loan', label: 'Student Loan' },
+  { href: '/pension-contribution', label: 'Pension' },
+  { href: '/bonus', label: 'Bonus' },
+];
+
+const moreLinks = [
+  { href: '/hourly-rate', label: 'Hourly Rate' },
+  { href: '/pro-rata', label: 'Pro-Rata' },
+  { href: '/required-salary', label: 'Required Salary' },
+  { href: '/two-jobs', label: 'Two Jobs' },
+  { href: '/salary', label: 'Monthly Salaries' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/95">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6" aria-label="Main navigation">
+    <a href="/" class="flex items-center gap-2 text-lg font-bold text-navy-700 dark:text-white">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect width="28" height="28" rx="6" fill="#dc2626" />
+        <text x="14" y="20" text-anchor="middle" fill="white" font-size="16" font-weight="700">£</text>
+      </svg>
+      Real Salary
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden items-center gap-1 lg:flex">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+            currentPath === link.href
+              ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+          ]}
+          aria-current={currentPath === link.href ? 'page' : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+      <div class="relative group">
+        <button class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white" aria-haspopup="true">
+          More ▾
+        </button>
+        <div class="invisible absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg group-hover:visible dark:border-gray-700 dark:bg-gray-900">
+          {moreLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                'block px-4 py-2 text-sm transition-colors',
+                currentPath === link.href
+                  ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button
+      id="mobile-menu-btn"
+      class="rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-800"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Open menu"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden border-t border-gray-200 bg-white px-4 pb-4 lg:hidden dark:border-gray-800 dark:bg-gray-950">
+    <div class="flex flex-col gap-1 pt-2">
+      {[...navLinks, ...moreLinks].map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            'rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+            currentPath === link.href
+              ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    menu?.classList.toggle('hidden');
+  });
+</script>

@@ -1,0 +1,256 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import IncomeTaxCalculator from '../components/calculators/IncomeTaxCalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META['income-tax'];
+---
+
+<CalculatorLayout {...meta}>
+  <IncomeTaxCalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How UK Income Tax Works</h2>
+      <p>
+        Income tax is the largest deduction most UK employees face. It's collected through the PAYE (Pay As You Earn) system — your employer calculates and deducts tax from each pay packet before you receive it, then sends the money directly to HMRC. The amount you pay depends on how much you earn, where you live in the UK, and your tax code.
+      </p>
+      <p>
+        The UK uses a progressive tax system, meaning different portions of your income are taxed at different rates. You don't pay 40% on your entire salary when you cross into the higher rate band — only the portion above the threshold is taxed at the higher rate. This is one of the most common misunderstandings about UK tax, and this calculator shows you exactly how the progressive system works by breaking down your tax band by band.
+      </p>
+
+      <h2>Income Tax Bands for England, Wales &amp; Northern Ireland 2026/27</h2>
+      <p>
+        The following income tax bands apply for the tax year running from 6 April 2026 to 5 April 2027. These rates apply to employees in England, Wales, and Northern Ireland. Scottish taxpayers have different rates (see below).
+      </p>
+      <table>
+        <thead>
+          <tr><th>Band</th><th>Taxable Income</th><th>Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Personal Allowance</td><td>Up to £12,570</td><td>0%</td></tr>
+          <tr><td>Basic Rate</td><td>£12,570 – £50,270</td><td>20%</td></tr>
+          <tr><td>Higher Rate</td><td>£50,270 – £125,140</td><td>40%</td></tr>
+          <tr><td>Additional Rate</td><td>Over £125,140</td><td>45%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The basic rate band covers £37,700 of taxable income (from £12,570 to £50,270). The maximum amount of basic rate tax you can pay is £7,540 (£37,700 × 20%). Any income above £50,270 is taxed at the higher rate of 40%, and income above £125,140 is taxed at the additional rate of 45%.
+      </p>
+
+      <h3>Personal Allowance</h3>
+      <p>
+        The personal allowance for 2026/27 is £12,570. This is the amount of income you can earn before you start paying any income tax. The personal allowance has been frozen at this level since 2021/22 — a policy known as "fiscal drag" that effectively increases the tax burden each year as wages rise but the allowance stays the same.
+      </p>
+      <p>
+        Everyone who earns under £100,000 gets the full £12,570 allowance, regardless of their employment status. It applies to employment income, self-employment profits, pension income, and most other taxable income.
+      </p>
+
+      <h3>Personal Allowance Taper (£100,000 – £125,140)</h3>
+      <p>
+        If your adjusted net income exceeds £100,000, your personal allowance is reduced by £1 for every £2 above the threshold. This continues until your allowance reaches zero at £125,140 (£100,000 + £12,570 × 2).
+      </p>
+      <p>
+        The practical effect is an eye-watering 60% marginal tax rate on income between £100,000 and £125,140. Here's why: for every extra £2 you earn, you lose £1 of personal allowance. That £1 of previously tax-free income now gets taxed at 40%, adding 20% to your effective rate on top of the 40% you already pay. Add in 2% National Insurance, and the true marginal rate is 62%.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Income Level</th><th>Personal Allowance</th><th>Marginal Rate (Tax + NI)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Up to £50,270</td><td>£12,570</td><td>28% (20% + 8%)</td></tr>
+          <tr><td>£50,270 – £100,000</td><td>£12,570</td><td>42% (40% + 2%)</td></tr>
+          <tr><td>£100,000 – £125,140</td><td>Tapering to £0</td><td>62% (60% + 2%)</td></tr>
+          <tr><td>£125,140 – £150,000</td><td>£0</td><td>42% (40% + 2%)</td></tr>
+          <tr><td>Over £150,000</td><td>£0</td><td>47% (45% + 2%)</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Scottish Income Tax Bands 2026/27</h2>
+      <p>
+        Scotland has had the power to set its own income tax rates since 2017. Scottish rates now differ significantly from the rest of the UK, with six bands instead of three (plus the personal allowance). If your tax code starts with "S" (e.g., S1257L), Scottish rates apply to you.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Band</th><th>Taxable Income</th><th>Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Personal Allowance</td><td>Up to £12,570</td><td>0%</td></tr>
+          <tr><td>Starter Rate</td><td>£12,570 – £16,537</td><td>19%</td></tr>
+          <tr><td>Basic Rate</td><td>£16,537 – £29,526</td><td>20%</td></tr>
+          <tr><td>Intermediate Rate</td><td>£29,526 – £43,662</td><td>21%</td></tr>
+          <tr><td>Higher Rate</td><td>£43,662 – £75,000</td><td>42%</td></tr>
+          <tr><td>Advanced Rate</td><td>£75,000 – £125,140</td><td>45%</td></tr>
+          <tr><td>Top Rate</td><td>Over £125,140</td><td>48%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Key differences from England: Scotland's higher rate starts at £43,662 (vs £50,270 in England) and is 42% (vs 40%). The top rate of 48% is 3 percentage points higher than England's 45% additional rate. Scottish taxpayers earning £50,000 pay about £900 more in income tax than someone on the same salary in England.
+      </p>
+
+      <h2>Worked Examples: Income Tax at Different Salaries</h2>
+
+      <h3>Example 1: £28,000 Salary (England)</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£28,000</td></tr>
+          <tr><td>Personal allowance</td><td class="text-right">£12,570</td></tr>
+          <tr><td>Taxable income</td><td class="text-right">£15,430</td></tr>
+        </tbody>
+      </table>
+      <p>All of the £15,430 falls within the basic rate band:</p>
+      <table>
+        <tbody>
+          <tr><td>£15,430 × 20%</td><td class="text-right">£3,086</td></tr>
+          <tr><td><strong>Total income tax</strong></td><td class="text-right"><strong>£3,086</strong></td></tr>
+          <tr><td>Monthly tax deduction</td><td class="text-right">£257</td></tr>
+          <tr><td>Effective income tax rate</td><td class="text-right">11.0%</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 2: £55,000 Salary (England)</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£55,000</td></tr>
+          <tr><td>Personal allowance</td><td class="text-right">£12,570</td></tr>
+          <tr><td>Taxable income</td><td class="text-right">£42,430</td></tr>
+        </tbody>
+      </table>
+      <p>The taxable income spans two bands:</p>
+      <table>
+        <tbody>
+          <tr><td>£37,700 × 20% (basic rate)</td><td class="text-right">£7,540</td></tr>
+          <tr><td>£4,730 × 40% (higher rate: £50,270 to £55,000)</td><td class="text-right">£1,892</td></tr>
+          <tr><td><strong>Total income tax</strong></td><td class="text-right"><strong>£9,432</strong></td></tr>
+          <tr><td>Monthly tax deduction</td><td class="text-right">£786</td></tr>
+          <tr><td>Effective income tax rate</td><td class="text-right">17.1%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Even though you're a "higher rate taxpayer," only £4,730 of your income is actually taxed at 40%. The bulk of your tax is at the basic rate.
+      </p>
+
+      <h3>Example 3: £110,000 Salary (England)</h3>
+      <table>
+        <tbody>
+          <tr><td>Gross salary</td><td class="text-right">£110,000</td></tr>
+          <tr><td>Personal allowance (reduced)</td><td class="text-right">£7,570</td></tr>
+          <tr><td>Taxable income</td><td class="text-right">£102,430</td></tr>
+        </tbody>
+      </table>
+      <p>
+        At £110,000, the personal allowance is reduced from £12,570 to £7,570. The £10,000 above the £100,000 threshold costs £5,000 of allowance (£10,000 ÷ 2):
+      </p>
+      <table>
+        <tbody>
+          <tr><td>£37,700 × 20% (basic rate)</td><td class="text-right">£7,540</td></tr>
+          <tr><td>£64,730 × 40% (higher rate: £50,270 to £110,000 adjusted)</td><td class="text-right">£25,892</td></tr>
+          <tr><td><strong>Total income tax</strong></td><td class="text-right"><strong>£33,432</strong></td></tr>
+          <tr><td>Monthly tax deduction</td><td class="text-right">£2,786</td></tr>
+          <tr><td>Effective income tax rate</td><td class="text-right">30.4%</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 4: £55,000 Salary (Scotland)</h3>
+      <p>
+        The same £55,000 salary is taxed differently in Scotland:
+      </p>
+      <table>
+        <tbody>
+          <tr><td>£3,967 × 19% (starter rate)</td><td class="text-right">£754</td></tr>
+          <tr><td>£12,989 × 20% (basic rate)</td><td class="text-right">£2,598</td></tr>
+          <tr><td>£14,136 × 21% (intermediate rate)</td><td class="text-right">£2,969</td></tr>
+          <tr><td>£11,338 × 42% (higher rate: £43,662 to £55,000)</td><td class="text-right">£4,762</td></tr>
+          <tr><td><strong>Total income tax</strong></td><td class="text-right"><strong>£11,083</strong></td></tr>
+          <tr><td>England equivalent</td><td class="text-right">£9,432</td></tr>
+          <tr><td><strong>Extra tax in Scotland</strong></td><td class="text-right"><strong>£1,651</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Tax Codes Explained</h2>
+      <p>
+        Your tax code tells your employer how much personal allowance to apply. The standard code for 2026/27 is <strong>1257L</strong>, which gives you the full £12,570 allowance. Here's how to read common tax codes:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Code</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1257L</td><td>Standard allowance of £12,570 (multiply the number by 10 and add 9)</td></tr>
+          <tr><td>1100L</td><td>Reduced allowance of £11,009 — often due to benefits in kind</td></tr>
+          <tr><td>BR</td><td>All income taxed at basic rate (20%) — no allowance. Common for second jobs.</td></tr>
+          <tr><td>D0</td><td>All income taxed at higher rate (40%)</td></tr>
+          <tr><td>D1</td><td>All income taxed at additional rate (45%)</td></tr>
+          <tr><td>0T</td><td>No personal allowance (allowance fully used or not determined)</td></tr>
+          <tr><td>NT</td><td>No tax deducted at all</td></tr>
+          <tr><td>S1257L</td><td>Scottish taxpayer with standard allowance</td></tr>
+          <tr><td>C1257L</td><td>Welsh taxpayer with standard allowance</td></tr>
+          <tr><td>K codes</td><td>Tax owed exceeds your allowance — extra tax deducted from pay</td></tr>
+        </tbody>
+      </table>
+      <p>
+        If your tax code is wrong, you could be overpaying or underpaying tax for months. Check your tax code on your payslip and compare it with your Personal Tax Account on GOV.UK. If it's incorrect, call HMRC on 0300 200 3300 to have it corrected.
+      </p>
+
+      <h2>How Income Tax Differs from National Insurance</h2>
+      <p>
+        Income tax and National Insurance are both deducted from your salary, but they are separate systems with different rules:
+      </p>
+      <ul>
+        <li><strong>Income tax</strong> has a personal allowance that can be tapered. NI thresholds are fixed.</li>
+        <li><strong>Income tax</strong> applies to all types of income (employment, savings, dividends, rental). NI applies only to employment and self-employment earnings.</li>
+        <li><strong>Income tax rates</strong> go up to 45% (48% in Scotland). NI drops from 8% to 2% above the upper earnings limit.</li>
+        <li><strong>Income tax</strong> is payable at any age. NI contributions stop when you reach State Pension age.</li>
+        <li><strong>NI contributions</strong> build your entitlement to State Pension, Maternity Allowance, and other benefits. Income tax is a general revenue tax.</li>
+      </ul>
+      <p>
+        Both taxes are deducted through PAYE and appear on your payslip. Use our <a href="/national-insurance">National Insurance calculator</a> for a dedicated NI breakdown.
+      </p>
+
+      <h2>Marriage Allowance and Income Tax</h2>
+      <p>
+        If you're married or in a civil partnership and one partner earns less than £12,570, the lower earner can transfer £1,260 of their personal allowance to the higher earner. This reduces the higher earner's tax bill by up to £252 per year (£1,260 × 20%). To qualify, the higher earner must be a basic rate taxpayer — if they earn above £50,270 (England) or £43,662 (Scotland), the transfer isn't available.
+      </p>
+      <p>
+        You can backdate your Marriage Allowance claim by up to four years. Apply through GOV.UK — it's free and doesn't require an accountant.
+      </p>
+
+      <h2>How to Reduce Your Income Tax Bill</h2>
+      <ul>
+        <li><strong>Pension contributions:</strong> Contributions to a pension scheme reduce your taxable income. Via salary sacrifice, a 5% contribution on a £50,000 salary moves £2,500 out of the basic rate band, saving £500 in income tax plus £200 in NI.</li>
+        <li><strong>Charitable giving via Gift Aid:</strong> If you donate through Gift Aid, the charity claims 25% on top. Higher rate taxpayers can claim back the difference between 40% and 20% through self-assessment.</li>
+        <li><strong>Professional subscriptions:</strong> Fees for HMRC-approved professional bodies can be deducted from your taxable income. Check the <a href="https://www.gov.uk/tax-relief-for-employees/professional-fees-and-subscriptions" target="_blank" rel="noopener">approved list on GOV.UK</a>.</li>
+        <li><strong>Working from home allowance:</strong> If your employer requires you to work from home, you can claim £6 per week (£312/year) without receipts.</li>
+        <li><strong>Cycle-to-work scheme:</strong> Salary sacrifice for a bike reduces your gross pay and therefore your tax and NI.</li>
+      </ul>
+
+      <h2>Income Tax on Other Types of Income</h2>
+      <p>
+        This calculator focuses on employment income, but income tax also applies to:
+      </p>
+      <ul>
+        <li><strong>Savings interest:</strong> The personal savings allowance gives basic rate taxpayers £1,000 tax-free, and higher rate taxpayers £500. Additional rate taxpayers get no allowance.</li>
+        <li><strong>Dividends:</strong> The first £500 of dividends is tax-free (the dividend allowance). Above that, basic rate taxpayers pay 8.75%, higher rate taxpayers 33.75%, and additional rate taxpayers 39.35%.</li>
+        <li><strong>Rental income:</strong> Taxed at your marginal rate after deducting allowable expenses. Landlords also get a £1,000 property income allowance.</li>
+        <li><strong>Pension income:</strong> Your State Pension and private pensions are taxable. The personal allowance applies, so if your pension is under £12,570, you won't pay tax on it.</li>
+      </ul>
+
+      <h2>Sources and Official References</h2>
+      <p>
+        All rates and thresholds used in this calculator are sourced directly from official HMRC and UK government publications:
+      </p>
+      <ul>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener">Scottish income tax — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/marriage-allowance" target="_blank" rel="noopener">Marriage Allowance — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener">Check your income tax for the current year — GOV.UK</a></li>
+      </ul>
+      <p>
+        For a complete guide to all tax changes this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

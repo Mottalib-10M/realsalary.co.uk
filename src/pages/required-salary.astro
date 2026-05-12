@@ -1,0 +1,175 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import RequiredSalaryCalculator from '../components/calculators/RequiredSalaryCalculator';
+import { CALCULATOR_META } from '../data/calculator-meta';
+
+const meta = CALCULATOR_META['required-salary'];
+---
+
+<CalculatorLayout {...meta}>
+  <RequiredSalaryCalculator client:load />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How the Reverse Salary Calculator Works</h2>
+      <p>
+        Most salary calculators work forwards: you enter a gross salary and see the take-home pay. This calculator does the opposite — you enter your desired take-home pay, and it calculates the gross salary you need to earn to achieve it. This is useful when budgeting, negotiating a pay rise, or assessing whether a job offer will cover your living costs.
+      </p>
+      <p>
+        The reverse calculation is more complex than the forward one because the UK tax system is progressive: each pound you earn pushes the next pound into a potentially higher tax band. Our calculator uses an iterative algorithm that converges on the correct gross salary within £1 accuracy.
+      </p>
+
+      <h2>Why Forward and Reverse Calculations Differ</h2>
+      <p>
+        Going from gross to net is straightforward — you apply the tax bands in order. Going from net to gross requires "unwinding" the progressive tax system. You can't simply divide by (1 − tax rate) because different portions of your income are taxed at different rates, and the personal allowance taper adds further complexity above £100,000.
+      </p>
+      <p>
+        For example, if you want £40,000 take-home pay, the answer isn't £40,000 ÷ 0.72 = £55,556. The actual required gross is approximately £53,040, because the calculation must account for the personal allowance (first £12,570 tax-free), the basic rate band (20%), and National Insurance (8% then 2%).
+      </p>
+
+      <h2>Required Gross Salary at Common Take-Home Targets</h2>
+      <p>
+        Here's a reference table showing the gross salary needed for various take-home amounts in England for 2026/27, assuming no student loan and no pension:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Desired Take-Home (Annual)</th><th>Monthly Target</th><th>Required Gross Salary</th><th>Total Deductions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>£18,000</td><td>£1,500</td><td>£20,145</td><td>£2,145</td></tr>
+          <tr><td>£24,000</td><td>£2,000</td><td>£28,472</td><td>£4,472</td></tr>
+          <tr><td>£30,000</td><td>£2,500</td><td>£37,778</td><td>£7,778</td></tr>
+          <tr><td>£36,000</td><td>£3,000</td><td>£47,083</td><td>£11,083</td></tr>
+          <tr><td>£42,000</td><td>£3,500</td><td>£57,581</td><td>£15,581</td></tr>
+          <tr><td>£48,000</td><td>£4,000</td><td>£67,581</td><td>£19,581</td></tr>
+          <tr><td>£60,000</td><td>£5,000</td><td>£87,581</td><td>£27,581</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Notice how the required gross salary accelerates: to increase your take-home from £30,000 to £36,000 (a £6,000 increase), you need a salary jump of roughly £9,300. The progressive tax system means each additional pound of take-home pay costs more in gross salary.
+      </p>
+
+      <h2>Worked Examples</h2>
+
+      <h3>Example 1: I Want £2,000/month Take-Home</h3>
+      <table>
+        <tbody>
+          <tr><td>Target monthly take-home</td><td class="text-right">£2,000</td></tr>
+          <tr><td>Target annual take-home</td><td class="text-right">£24,000</td></tr>
+          <tr><td><strong>Required gross salary</strong></td><td class="text-right"><strong>~£28,472</strong></td></tr>
+          <tr><td>Income tax</td><td class="text-right">£3,180</td></tr>
+          <tr><td>National Insurance</td><td class="text-right">£1,272</td></tr>
+          <tr><td>Verification: £28,472 − £3,180 − £1,272</td><td class="text-right">£24,020 ✓</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Example 2: I Want £3,500/month Take-Home</h3>
+      <table>
+        <tbody>
+          <tr><td>Target monthly take-home</td><td class="text-right">£3,500</td></tr>
+          <tr><td>Target annual take-home</td><td class="text-right">£42,000</td></tr>
+          <tr><td><strong>Required gross salary</strong></td><td class="text-right"><strong>~£57,581</strong></td></tr>
+          <tr><td>Income tax</td><td class="text-right">£12,344</td></tr>
+          <tr><td>National Insurance</td><td class="text-right">£3,162</td></tr>
+          <tr><td>Total deductions</td><td class="text-right">£15,506</td></tr>
+        </tbody>
+      </table>
+      <p>
+        To take home £3,500/month, you need to earn roughly £57,600 gross — meaning over 27% of your gross salary goes to tax and NI. Your salary needs to be in the higher rate tax band.
+      </p>
+
+      <h3>Example 3: I Want £5,000/month with a Student Loan (Plan 2)</h3>
+      <table>
+        <tbody>
+          <tr><td>Target monthly take-home</td><td class="text-right">£5,000</td></tr>
+          <tr><td>Target annual take-home</td><td class="text-right">£60,000</td></tr>
+          <tr><td>Student loan plan</td><td class="text-right">Plan 2</td></tr>
+          <tr><td><strong>Required gross salary</strong></td><td class="text-right"><strong>~£93,200</strong></td></tr>
+          <tr><td>Income tax</td><td class="text-right">£25,610</td></tr>
+          <tr><td>National Insurance</td><td class="text-right">£3,878</td></tr>
+          <tr><td>Student loan repayment</td><td class="text-right">£5,743</td></tr>
+          <tr><td>Total deductions</td><td class="text-right">£35,231</td></tr>
+        </tbody>
+      </table>
+      <p>
+        With a student loan, the required salary is significantly higher. Without the loan, you'd need about £87,600 — the student loan adds roughly £5,600 to the required gross salary for the same take-home target.
+      </p>
+
+      <h2>The Impact of Deductions on Required Salary</h2>
+      <p>
+        Each deduction type increases the gross salary you need. Here's how different factors affect the required gross for a £36,000 take-home target:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Scenario</th><th>Required Gross</th><th>Extra Gross Needed</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>No deductions (base)</td><td>£47,083</td><td>—</td></tr>
+          <tr><td>+ Student Loan Plan 2</td><td>£48,770</td><td>+£1,687</td></tr>
+          <tr><td>+ 5% Pension (sacrifice)</td><td>£49,561</td><td>+£2,478</td></tr>
+          <tr><td>+ Student Loan + Pension</td><td>£51,337</td><td>+£4,254</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Adding a student loan and pension means you need over £4,000 more in gross salary to achieve the same take-home pay. This table illustrates why it's important to factor in all deductions when evaluating a job offer.
+      </p>
+
+      <h2>Using This Calculator for Salary Negotiations</h2>
+      <p>
+        When negotiating a salary or evaluating a job offer, start from your required living costs:
+      </p>
+      <ol>
+        <li><strong>Calculate your monthly outgoings:</strong> Rent/mortgage, bills, food, transport, insurance, debt repayments, savings target.</li>
+        <li><strong>Add a buffer:</strong> 10–15% for unexpected costs and discretionary spending.</li>
+        <li><strong>That's your minimum monthly take-home.</strong> Enter it into this calculator.</li>
+        <li><strong>Factor in your deductions:</strong> Set your student loan plan and pension contribution percentage.</li>
+        <li><strong>The result is your minimum acceptable gross salary.</strong></li>
+      </ol>
+      <p>
+        If the job offer is below this figure, you know the gap between what's offered and what you need. This gives you a concrete number to negotiate from, rather than guessing.
+      </p>
+
+      <h2>Cost of Living Considerations</h2>
+      <p>
+        The required salary varies significantly by location in the UK. Here are typical monthly living costs for a single person renting:
+      </p>
+      <table>
+        <thead>
+          <tr><th>Location</th><th>Monthly Costs (Approx.)</th><th>Annual Take-Home Needed</th><th>Required Gross</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>London (Zone 1–2)</td><td>£2,800–£3,500</td><td>£33,600–£42,000</td><td>£43,000–£57,600</td></tr>
+          <tr><td>London (Zone 3–6)</td><td>£2,200–£2,800</td><td>£26,400–£33,600</td><td>£33,200–£43,000</td></tr>
+          <tr><td>South East</td><td>£1,800–£2,400</td><td>£21,600–£28,800</td><td>£26,000–£36,700</td></tr>
+          <tr><td>Midlands</td><td>£1,400–£1,800</td><td>£16,800–£21,600</td><td>£19,700–£26,000</td></tr>
+          <tr><td>North / Wales</td><td>£1,200–£1,600</td><td>£14,400–£19,200</td><td>£16,300–£22,600</td></tr>
+          <tr><td>Scotland</td><td>£1,300–£1,800</td><td>£15,600–£21,600</td><td>£17,700–£26,000</td></tr>
+        </tbody>
+      </table>
+      <p>
+        These are estimates for basic living costs. Family situations, mortgage payments, and lifestyle choices will affect your individual figure.
+      </p>
+
+      <h2>The £100,000 Cliff Edge</h2>
+      <p>
+        If your required gross salary falls between £100,000 and £125,140, be aware of the personal allowance taper. In this range, the marginal rate hits 62%, making it exceptionally expensive to increase take-home pay. To go from £68,558 take-home (at £100,000 gross) to £72,000 take-home, you'd need to earn about £109,000 — an extra £9,000 gross for just £3,442 extra take-home.
+      </p>
+      <p>
+        If you're near this threshold, consider whether pension contributions could bring your adjusted net income below £100,000 while still meeting your take-home target through reduced deductions.
+      </p>
+
+      <h2>Sources and Official References</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">Student loan repayment rates — GOV.UK</a></li>
+      </ul>
+      <p>
+        For a complete overview of all tax rates this year, see our <a href="/guides/uk-tax-year-2026-27">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

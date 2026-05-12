@@ -1,0 +1,951 @@
+---
+/**
+ * Dynamic route for monthly salary landing pages.
+ * Generates 59 static pages at build time (£100–£3,000 in £50 steps).
+ */
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import '../../styles/global.css';
+import { generateMonthlySalaryPages, type MonthlySalaryPageData } from '../../data/monthly-salary-pages';
+import {
+  buildTitle,
+  buildCanonical,
+  SITE_NAME,
+  SITE_URL,
+  OG_IMAGE,
+  OG_IMAGE_WIDTH,
+  OG_IMAGE_HEIGHT,
+  breadcrumbSchema,
+  articleSchema,
+  faqSchema,
+  LAST_UPDATED,
+} from '../../lib/seo';
+import { formatCurrency, formatPercent } from '../../lib/format';
+import {
+  PERSONAL_ALLOWANCE,
+  NI_PRIMARY_THRESHOLD,
+  NI_UPPER_EARNINGS_LIMIT,
+  NI_MAIN_RATE,
+  NI_ADDITIONAL_RATE,
+  TAX_YEAR,
+  INCOME_TAX_BANDS_ENGLAND,
+} from '../../data/tax-rules-2026-27';
+
+export function getStaticPaths() {
+  const pages = generateMonthlySalaryPages();
+  return pages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+interface Props {
+  page: MonthlySalaryPageData;
+}
+
+const { page } = Astro.props;
+
+// ─── SEO ──────────────────────────────────────────────────────────────────
+// Title: 50-60 chars, keyword-rich, no site name
+const title = `£${page.monthly.toLocaleString('en-GB')} a Month After Tax UK - Take Home Pay ${TAX_YEAR}`;
+const metaTitle = buildTitle(title);
+// Description: 150-160 chars, keyword-rich
+const description = `Earning £${page.monthly.toLocaleString('en-GB')} per month? See your UK take home pay after income tax and NI for ${TAX_YEAR}. Full salary breakdown with tax bands, Scotland rates and tips.`;
+const canonical = buildCanonical(`/salary/${page.slug}`);
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Home', url: SITE_URL },
+  { name: 'Salary Pages', url: `${SITE_URL}/salary` },
+  { name: `£${page.monthly.toLocaleString('en-GB')} Per Month`, url: canonical },
+]);
+
+const article = articleSchema({
+  headline: title,
+  description,
+  url: canonical,
+});
+
+// ─── FAQs (unique per salary level) ─────────────────────────────────────
+const faqs: { question: string; answer: string }[] = [];
+
+if (page.tier === 'below-pa') {
+  faqs.push(
+    {
+      question: `Do I pay tax on £${page.monthly.toLocaleString('en-GB')} a month?`,
+      answer: `No. A salary of ${page.monthlyFormatted} per month equals ${page.annualFormatted} per year, which is below the ${TAX_YEAR} Personal Allowance of ${formatCurrency(PERSONAL_ALLOWANCE)}. You pay no income tax on this amount. However, you may still pay National Insurance if your earnings exceed ${formatCurrency(NI_PRIMARY_THRESHOLD)} per year.`,
+    },
+    {
+      question: `How much is ${page.monthlyFormatted} a month per hour?`,
+      answer: `Based on a standard 37.5-hour working week, ${page.monthlyFormatted} per month (${page.annualFormatted} per year) works out to approximately ${page.hourlyGross} per hour before any deductions.`,
+    },
+    {
+      question: `Is ${page.monthlyFormatted} a month above minimum wage?`,
+      answer: `The National Living Wage for 2026/27 is £12.21 per hour for workers aged 21 and over, which equates to roughly £23,808 per year or £1,984 per month for a 37.5-hour week. At ${page.monthlyFormatted} per month (${page.hourlyGross} per hour), this salary is ${page.annual >= 23808 ? 'at or above' : 'below'} the full-time minimum wage equivalent.`,
+    },
+  );
+} else {
+  faqs.push(
+    {
+      question: `What is the take-home pay on £${page.monthly.toLocaleString('en-GB')} a month?`,
+      answer: `On a salary of ${page.monthlyFormatted} per month (${page.annualFormatted} per year) in England, your monthly take-home pay is approximately ${page.englandFormatted.netMonthly} after income tax and National Insurance deductions for the ${TAX_YEAR} tax year.`,
+    },
+    {
+      question: `How much tax do I pay on ${page.monthlyFormatted} a month?`,
+      answer: `On ${page.monthlyFormatted} per month (${page.annualFormatted} annual), you pay ${page.englandFormatted.incomeTax} in income tax and ${page.englandFormatted.nationalInsurance} in National Insurance per year. Your effective tax rate is ${page.englandFormatted.effectiveTaxRate}.`,
+    },
+    {
+      question: `How much is ${page.monthlyFormatted} a month per hour?`,
+      answer: `Based on a standard 37.5-hour working week, ${page.monthlyFormatted} per month (${page.annualFormatted} per year) works out to approximately ${page.hourlyGross} per hour before tax.`,
+    },
+    {
+      question: `Is ${page.monthlyFormatted} a month a good salary in the UK?`,
+      answer: `The UK median salary is approximately £35,000 per year (around £2,917 per month). At ${page.monthlyFormatted} per month (${page.annualFormatted} per year), this salary is ${page.annual >= 35000 ? 'at or above' : 'below'} the national median. Whether it is sufficient depends on your location, lifestyle, and financial commitments.`,
+    },
+  );
+}
+
+const faqStructuredData = faqSchema(faqs);
+
+// ─── CTA ────────────────────────────────────────────────────────────────
+const ctaUrl = `/?gross=${page.annual}`;
+
+// ─── Context helpers ────────────────────────────────────────────────────
+const medianAnnual = 35000;
+const medianMonthly = Math.round(medianAnnual / 12);
+const percentOfMedian = Math.round((page.annual / medianAnnual) * 100);
+
+// NI calculation details
+const niThresholdMonthly = formatCurrency(NI_PRIMARY_THRESHOLD / 12);
+const niUpperMonthly = formatCurrency(NI_UPPER_EARNINGS_LIMIT / 12);
+const paysNI = page.annual > NI_PRIMARY_THRESHOLD;
+const niableIncome = paysNI ? Math.min(page.annual, NI_UPPER_EARNINGS_LIMIT) - NI_PRIMARY_THRESHOLD : 0;
+
+// Tax calculation details
+const paysTax = page.annual > PERSONAL_ALLOWANCE;
+const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{metaTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content={`£${page.monthly.toLocaleString('en-GB')} per month after tax UK - salary breakdown`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqStructuredData)} />
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <article class="prose prose-gray dark:prose-invert max-w-none">
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 1. H1 + Intro -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h1>£{page.monthly.toLocaleString('en-GB')} Per Month After Tax &mdash; UK Take-Home Pay Breakdown</h1>
+
+      {page.tier === 'below-pa' ? (
+        <p>
+          If you earn <strong>{page.monthlyFormatted} per month</strong> in the United Kingdom, your annual gross salary
+          is <strong>{page.annualFormatted}</strong>. Because this is below the {TAX_YEAR} Personal Allowance
+          of {formatCurrency(PERSONAL_ALLOWANCE)}, <strong>you pay no income tax</strong> on this salary. This page
+          breaks down exactly what happens to your pay, whether you owe National Insurance, and how your take-home
+          compares to nearby salary levels. All figures use official HMRC rates for the {TAX_YEAR} tax year.
+        </p>
+      ) : (
+        <p>
+          If you earn <strong>{page.monthlyFormatted} per month</strong> in the United Kingdom, your annual gross salary
+          is <strong>{page.annualFormatted}</strong>. After income tax and National Insurance, your monthly take-home pay
+          is approximately <strong>{page.englandFormatted.netMonthly}</strong> in England. This page provides a complete
+          breakdown of your deductions, band-by-band tax analysis, a Scotland comparison, and practical context for
+          the {TAX_YEAR} tax year.
+        </p>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 2. Summary Results Table -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Your {page.monthlyFormatted} Salary at a Glance</h2>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="text-right">Annual</th>
+              <th class="text-right">Monthly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gross salary</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossMonthly}</td>
+            </tr>
+            <tr>
+              <td>Income tax</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+              <td class="text-right tabular-nums">{formatCurrency(page.england.incomeTax / 12)}</td>
+            </tr>
+            <tr>
+              <td>National Insurance</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.nationalInsurance}</td>
+              <td class="text-right tabular-nums">{formatCurrency(page.england.nationalInsurance / 12)}</td>
+            </tr>
+            <tr>
+              <td><strong>Total deductions</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.totalDeductions}</strong></td>
+              <td class="text-right tabular-nums"><strong>{formatCurrency(page.england.totalDeductions / 12)}</strong></td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Take-home pay</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netAnnual}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netMonthly}</strong></td>
+            </tr>
+            <tr>
+              <td>Effective tax rate</td>
+              <td class="text-right" colspan="2">{page.englandFormatted.effectiveTaxRate}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 3. CTA Button -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <div class="not-prose my-8 text-center">
+        <a
+          href={ctaUrl}
+          class="inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+        >
+          Calculate your exact take-home pay &rarr;
+        </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 4. How Your Salary Is Taxed -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>How Your {page.monthlyFormatted}/Month Salary Is Taxed</h2>
+
+      {page.tier === 'below-pa' ? (
+        <>
+          <p>
+            Your annual salary of {page.annualFormatted} falls entirely within the <strong>Personal Allowance</strong>,
+            which is the amount you can earn tax-free each year. For the {TAX_YEAR} tax year, the Personal Allowance
+            is <strong>{formatCurrency(PERSONAL_ALLOWANCE)}</strong>.
+          </p>
+          <p>
+            Since {page.annualFormatted} is less than {formatCurrency(PERSONAL_ALLOWANCE)}, your entire income is
+            covered by the Personal Allowance. This means:
+          </p>
+          <ul>
+            <li><strong>Income tax: {page.englandFormatted.incomeTax}</strong> &mdash; no tax is due because your salary is below the tax-free threshold.</li>
+            {paysNI ? (
+              <li>
+                <strong>National Insurance: {page.englandFormatted.nationalInsurance} per year</strong> &mdash;
+                you still pay NI because the NI threshold ({formatCurrency(NI_PRIMARY_THRESHOLD)}/year) is the same as the Personal
+                Allowance, but your earnings above this threshold are subject to the {(NI_MAIN_RATE * 100).toFixed(0)}% rate.
+              </li>
+            ) : (
+              <li>
+                <strong>National Insurance: {page.englandFormatted.nationalInsurance}</strong> &mdash;
+                your salary is also below the NI Primary Threshold of {formatCurrency(NI_PRIMARY_THRESHOLD)}/year,
+                so no NI is due either.
+              </li>
+            )}
+          </ul>
+          <p>
+            Even though no income tax is deducted, your employer will still operate PAYE (Pay As You Earn) and report
+            your earnings to HMRC. You will receive a tax code &mdash; typically 1257L &mdash; which tells your employer
+            that you have the full Personal Allowance available.
+          </p>
+          <p>
+            If this is a second job, your tax code may differ (e.g., BR), which could mean tax is deducted even on
+            income below the Personal Allowance. You can reclaim any overpaid tax through HMRC.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Understanding how UK income tax works on your {page.monthlyFormatted} monthly salary helps you see exactly
+            where your money goes. The UK uses a <strong>progressive tax system</strong>, meaning different portions of
+            your income are taxed at different rates.
+          </p>
+          <p>Here is how your {page.annualFormatted} annual salary is broken down step by step:</p>
+          <ol>
+            <li>
+              <strong>Personal Allowance ({formatCurrency(PERSONAL_ALLOWANCE)}):</strong> The first {formatCurrency(PERSONAL_ALLOWANCE)} of your
+              income is tax-free. This is your Personal Allowance for {TAX_YEAR}.
+            </li>
+            <li>
+              <strong>Basic Rate at 20%:</strong> Income above the Personal Allowance up to £50,270 is taxed at 20%.
+              For your salary, that means {formatCurrency(taxableIncome)} is taxed at the basic rate, producing
+              {page.englandFormatted.incomeTax} in income tax.
+            </li>
+          </ol>
+          <p>
+            Your total income tax for the year is <strong>{page.englandFormatted.incomeTax}</strong>,
+            or {formatCurrency(page.england.incomeTax / 12)} per month.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 5. Band-by-Band Analysis (taxable salaries only) -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      {page.tier === 'basic-rate' && page.england.incomeTaxBands.length > 0 && (
+        <>
+          <h2>Income Tax Band-by-Band Breakdown</h2>
+          <p>
+            The table below shows exactly how much of your {page.annualFormatted} salary falls in each income tax
+            band for England, Wales, and Northern Ireland in {TAX_YEAR}:
+          </p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tax Band</th>
+                  <th class="text-right">Rate</th>
+                  <th class="text-right">Taxable Amount</th>
+                  <th class="text-right">Tax</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Personal Allowance</td>
+                  <td class="text-right">0%</td>
+                  <td class="text-right tabular-nums">{formatCurrency(page.england.personalAllowance)}</td>
+                  <td class="text-right tabular-nums">£0</td>
+                </tr>
+                {page.england.incomeTaxBands.map((band) => (
+                  <tr>
+                    <td>{band.name}</td>
+                    <td class="text-right">{(band.rate * 100).toFixed(0)}%</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.taxableAmount)}</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.tax)}</td>
+                  </tr>
+                ))}
+                <tr class="font-semibold">
+                  <td>Total</td>
+                  <td class="text-right"></td>
+                  <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+                  <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            As the table shows, only the portion of your salary above the {formatCurrency(PERSONAL_ALLOWANCE)} Personal
+            Allowance is actually taxed. The first {formatCurrency(PERSONAL_ALLOWANCE)} is entirely tax-free, and the
+            remaining {formatCurrency(taxableIncome)} is taxed at 20% (the basic rate).
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 6. National Insurance Breakdown -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>National Insurance on {page.monthlyFormatted} Per Month</h2>
+      {paysNI ? (
+        <>
+          <p>
+            National Insurance Contributions (NICs) are calculated separately from income tax. For employees in
+            the {TAX_YEAR} tax year, Class 1 NICs are charged at:
+          </p>
+          <ul>
+            <li><strong>{(NI_MAIN_RATE * 100).toFixed(0)}%</strong> on earnings between {formatCurrency(NI_PRIMARY_THRESHOLD)} and {formatCurrency(NI_UPPER_EARNINGS_LIMIT)} per year</li>
+            <li><strong>{(NI_ADDITIONAL_RATE * 100).toFixed(0)}%</strong> on earnings above {formatCurrency(NI_UPPER_EARNINGS_LIMIT)} per year</li>
+          </ul>
+          <p>
+            On your annual salary of {page.annualFormatted}, National Insurance is calculated as follows:
+          </p>
+          <ul>
+            <li>Earnings below {formatCurrency(NI_PRIMARY_THRESHOLD)}: no NI due (this is the Primary Threshold).</li>
+            <li>
+              Earnings from {formatCurrency(NI_PRIMARY_THRESHOLD)} to {formatCurrency(Math.min(page.annual, NI_UPPER_EARNINGS_LIMIT))}:
+              {formatCurrency(niableIncome)} &times; {(NI_MAIN_RATE * 100).toFixed(0)}% = <strong>{formatCurrency(niableIncome * NI_MAIN_RATE)}</strong>.
+            </li>
+          </ul>
+          <p>
+            Your total NI for the year is <strong>{page.englandFormatted.nationalInsurance}</strong>,
+            or approximately {formatCurrency(page.england.nationalInsurance / 12)} per month. National Insurance
+            contributions help fund the State Pension, NHS, and other benefits.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            National Insurance Contributions (NICs) for employees are charged on earnings above the Primary Threshold,
+            which is {formatCurrency(NI_PRIMARY_THRESHOLD)} per year for {TAX_YEAR}. Since your annual salary of
+            {page.annualFormatted} is at or below this threshold, <strong>you pay no National Insurance</strong>.
+          </p>
+          <p>
+            However, you may still build up qualifying years for the State Pension if your earnings are above the
+            Lower Earnings Limit of £6,708 per year ({page.annual >= 6708 ? 'which your salary exceeds' : 'which your salary is below'}).
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 7. Period Breakdown Table -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What You Take Home Each Pay Period</h2>
+      <p>
+        Here is what {page.monthlyFormatted} per month looks like across different pay periods, showing both your
+        gross (before-tax) and net (after-tax) amounts for England in {TAX_YEAR}:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Period</th>
+              <th class="text-right">Gross</th>
+              <th class="text-right">Take-Home</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.periods.map((p) => (
+              <tr>
+                <td>{p.label}</td>
+                <td class="text-right tabular-nums">{p.gross}</td>
+                <td class="text-right tabular-nums">{p.net}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        At {page.monthlyFormatted} per month gross, your effective hourly rate is {page.hourlyGross} before tax
+        (based on a 37.5-hour week), or approximately {formatCurrency(page.england.netAnnual / (52 * 37.5))} per
+        hour after tax. Your daily take-home is roughly {formatCurrency(page.england.netAnnual / 365)}.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 8. Scotland Comparison -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>England vs Scotland: {page.monthlyFormatted} Per Month Comparison</h2>
+      <p>
+        Scotland has its own income tax rates that differ from England, Wales, and Northern Ireland. If you live in
+        Scotland and earn {page.monthlyFormatted} per month, your take-home pay may differ. National Insurance rates
+        are the same across the UK. Here is the comparison:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="text-right">England</th>
+              <th class="text-right">Scotland</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gross annual</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.grossAnnual}</td>
+            </tr>
+            <tr>
+              <td>Income tax</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.incomeTax}</td>
+            </tr>
+            <tr>
+              <td>National Insurance</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.nationalInsurance}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.nationalInsurance}</td>
+            </tr>
+            <tr>
+              <td>Total deductions</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.totalDeductions}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.totalDeductions}</td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Net annual</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netAnnual}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.scotlandFormatted.netAnnual}</strong></td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Net monthly</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netMonthly}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.scotlandFormatted.netMonthly}</strong></td>
+            </tr>
+            <tr>
+              <td>Effective rate</td>
+              <td class="text-right">{page.englandFormatted.effectiveTaxRate}</td>
+              <td class="text-right">{page.scotlandFormatted.effectiveTaxRate}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {page.england.incomeTax !== page.scotland.incomeTax ? (
+        <p>
+          The difference in take-home pay between England and Scotland on a {page.monthlyFormatted}/month salary
+          is <strong>{formatCurrency(Math.abs(page.england.netAnnual - page.scotland.netAnnual))} per year</strong>
+          ({formatCurrency(Math.abs(page.england.netAnnual - page.scotland.netAnnual) / 12)} per month).
+          {page.england.netAnnual > page.scotland.netAnnual
+            ? ' You take home more in England due to the lower starter/basic rate structure.'
+            : ' You take home more in Scotland at this income level.'}
+        </p>
+      ) : (
+        <p>
+          At this salary level, income tax is the same in both England and Scotland ({page.englandFormatted.incomeTax}),
+          so your take-home pay is identical regardless of where you live in the UK.
+        </p>
+      )}
+
+      <!-- Scottish tax bands detail for taxable salaries -->
+      {page.tier === 'basic-rate' && page.scotland.incomeTaxBands.length > 0 && (
+        <>
+          <h3>Scottish Income Tax Bands on {page.annualFormatted}</h3>
+          <p>Scotland uses a six-band income tax system for {TAX_YEAR}:</p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Band</th>
+                  <th class="text-right">Rate</th>
+                  <th class="text-right">Taxable Amount</th>
+                  <th class="text-right">Tax</th>
+                </tr>
+              </thead>
+              <tbody>
+                {page.scotland.incomeTaxBands.map((band) => (
+                  <tr>
+                    <td>{band.name}</td>
+                    <td class="text-right">{(band.rate * 100).toFixed(0)}%</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.taxableAmount)}</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.tax)}</td>
+                  </tr>
+                ))}
+                <tr class="font-semibold">
+                  <td>Total Scottish tax</td>
+                  <td></td>
+                  <td></td>
+                  <td class="text-right tabular-nums">{page.scotlandFormatted.incomeTax}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 9. Nearby Salary Comparison -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Nearby Monthly Salary Comparison</h2>
+      <p>
+        Wondering how a small change in salary affects your take-home? The table below compares monthly salaries
+        close to {page.monthlyFormatted}, showing the net monthly pay and the difference from your current salary:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Monthly Salary</th>
+              <th class="text-right">Net Monthly</th>
+              <th class="text-right">Net Annual</th>
+              <th class="text-right">vs {page.monthlyFormatted}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.nearby.map((n) => (
+              <tr>
+                <td><a href={`/salary/${n.slug}`} class="text-navy-600 hover:underline dark:text-navy-300">{n.monthlyFormatted}</a></td>
+                <td class="text-right tabular-nums">{n.netMonthly}</td>
+                <td class="text-right tabular-nums">{n.netAnnual}</td>
+                <td class="text-right tabular-nums">{n.difference}/mo</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        As you can see, each £50 increase in monthly gross salary does not result in a full £50 increase in
+        take-home pay. After income tax{paysTax ? ' (20%)' : ''} and National Insurance{paysNI ? ` (${(NI_MAIN_RATE * 100).toFixed(0)}%)` : ''},
+        you keep approximately {page.tier === 'basic-rate' ? '72p of every additional £1 earned' : 'most of any additional earnings until you reach the tax threshold'}.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10. Where This Salary Sits in UK Earnings -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Where {page.monthlyFormatted} Per Month Sits in UK Earnings</h2>
+      <p>
+        The median full-time salary in the UK is approximately <strong>£35,000 per year</strong>
+        (around <strong>{formatCurrency(medianMonthly)} per month</strong>), according to the most recent ONS data.
+        At {page.monthlyFormatted} per month ({page.annualFormatted} per year), your salary
+        is <strong>{percentOfMedian}% of the UK median</strong>.
+      </p>
+      {page.annual < 15000 ? (
+        <p>
+          This salary level is typical of part-time work, entry-level positions, or roles with reduced hours.
+          Many people earning in this range work in retail, hospitality, care work, or are supplementing other income.
+          At this level, you may also be eligible for Universal Credit or other means-tested benefits to top up your income.
+        </p>
+      ) : page.annual < 22000 ? (
+        <p>
+          This salary is common for entry-level full-time roles, apprenticeships nearing completion, or part-time
+          professional work. Typical roles at this level include junior administrative positions, retail supervisors,
+          teaching assistants, and entry-level customer service roles. Depending on your location, you may find
+          budgeting tight, particularly in high-cost areas like London and the South East.
+        </p>
+      ) : page.annual < 30000 ? (
+        <p>
+          This salary falls within the range of many full-time roles across the UK, including junior professionals,
+          skilled trades, NHS Band 3-5 positions, and experienced administrative staff. While below the national
+          median, this income provides a reasonable standard of living in most areas outside London.
+        </p>
+      ) : (
+        <p>
+          At {page.annualFormatted} per year, your salary is {page.annual >= medianAnnual ? 'at or above' : 'approaching'}
+          the national median. This level is typical for mid-career professionals, experienced public sector workers
+          (NHS Band 5-6, civil service HEO/SEO), skilled tradespeople, and many private sector roles. This income
+          supports a comfortable standard of living in most UK regions.
+        </p>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 11. Tax-Saving Tips -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Tax Tips for a {page.monthlyFormatted}/Month Salary</h2>
+
+      {page.tier === 'below-pa' ? (
+        <>
+          <p>
+            Since your {page.annualFormatted} salary is below the Personal Allowance, you do not owe income tax.
+            However, there are still important things to be aware of:
+          </p>
+          <ul>
+            <li>
+              <strong>Check your tax code:</strong> Make sure your employer is using the correct tax code (typically 1257L).
+              If you see BR or another code, contact HMRC &mdash; you may be having tax deducted unnecessarily. You can
+              reclaim overpaid tax.
+            </li>
+            <li>
+              <strong>Marriage Allowance:</strong> If your spouse or civil partner earns more than you, you can transfer
+              up to £1,260 of your unused Personal Allowance to them through the Marriage Allowance, saving them up to
+              £252 per year in tax.
+            </li>
+            <li>
+              <strong>Savings interest:</strong> With a salary below the basic rate threshold, your Personal Savings
+              Allowance is £1,000, meaning the first £1,000 of savings interest is tax-free. You may also be eligible
+              for the starting rate for savings of up to £5,000.
+            </li>
+            {page.annual < 23808 && (
+              <li>
+                <strong>Minimum wage check:</strong> If you are working full-time (37.5 hours per week), check that
+                your hourly rate of {page.hourlyGross} meets the National Minimum Wage or National Living Wage for your
+                age group. The NLW for workers aged 21+ is £12.21 per hour from April 2026.
+              </li>
+            )}
+            <li>
+              <strong>Benefits eligibility:</strong> On this salary, you may be eligible for means-tested benefits
+              such as Universal Credit, Council Tax Reduction, or Housing Benefit. Use the gov.uk benefits calculator
+              to check.
+            </li>
+          </ul>
+        </>
+      ) : (
+        <>
+          <p>
+            Here are practical ways to keep more of your {page.monthlyFormatted}/month salary:
+          </p>
+          <ul>
+            <li>
+              <strong>Pension salary sacrifice:</strong> If your employer offers salary sacrifice for pension
+              contributions, this reduces your gross pay before tax and NI are calculated. For every £100 you
+              sacrifice, you save £20 in income tax and £8 in NI &mdash; so a £100 pension contribution only
+              costs you £72 in take-home pay. This is one of the most effective tax-saving strategies for
+              basic-rate taxpayers.
+            </li>
+            <li>
+              <strong>Check your tax code:</strong> Your tax code should be 1257L for the standard Personal Allowance.
+              If it contains a different number, HMRC may have adjusted your allowance. Log in to your Personal Tax
+              Account on gov.uk to check and correct it.
+            </li>
+            <li>
+              <strong>Use your ISA allowance:</strong> You can save or invest up to £20,000 per year in an ISA
+              (Individual Savings Account) where all returns are tax-free. A Cash ISA, Stocks & Shares ISA, or
+              Lifetime ISA (if you are under 40 and saving for a first home or retirement) can shelter your savings
+              from tax.
+            </li>
+            <li>
+              <strong>Claim work expenses:</strong> If you have to buy equipment, uniforms, or professional
+              subscriptions for work that your employer does not reimburse, you may be able to claim tax relief.
+              For example, a flat-rate deduction of £60 per year is available for uniform maintenance.
+            </li>
+            {page.annual >= 40000 && (
+              <li>
+                <strong>Watch the higher-rate threshold:</strong> The higher rate of income tax (40%) kicks in at
+                £50,270 per year. Your salary of {page.annualFormatted} is {formatCurrency(50270 - page.annual)} below
+                this threshold. If you receive a pay rise or bonus that pushes you over, the extra income above £50,270
+                will be taxed at 40% instead of 20%. Increasing pension contributions can keep you in the basic rate band.
+              </li>
+            )}
+            <li>
+              <strong>Childcare schemes:</strong> If you have children, Tax-Free Childcare tops up your payments by
+              25% (up to £2,000 per child per year). Alternatively, childcare vouchers through salary sacrifice can
+              save on both tax and NI.
+            </li>
+          </ul>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12. Practical Context -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What {page.monthlyFormatted} Per Month Means in Practice</h2>
+
+      {page.tier === 'below-pa' ? (
+        <>
+          <p>
+            With a take-home pay of {page.englandFormatted.netMonthly} per month, budgeting carefully is essential.
+            Here is how this income level typically breaks down in terms of major expenses:
+          </p>
+          <ul>
+            <li>
+              <strong>Housing:</strong> The general rule of thumb is spending no more than 30% of your net income on
+              rent or mortgage. At {page.englandFormatted.netMonthly} per month, that would be approximately
+              {formatCurrency(page.england.netAnnual / 12 * 0.3)}. In many parts of the UK, this makes flat-sharing
+              or living in lower-cost regions necessary.
+            </li>
+            <li>
+              <strong>Council Tax:</strong> Council Tax bills vary significantly by area and property band. On a low
+              income, you may qualify for Council Tax Reduction, which can reduce your bill by up to 100%.
+            </li>
+            <li>
+              <strong>Energy bills:</strong> Average UK household energy bills are approximately £1,700 per year
+              (£142/month). At this salary level, energy costs represent a significant proportion of your income.
+            </li>
+          </ul>
+          <p>
+            If this is your sole income, exploring benefit entitlements through the gov.uk benefits calculator is
+            strongly recommended. Many people at this income level receive top-up support through Universal Credit.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Your monthly take-home of {page.englandFormatted.netMonthly} gives you a practical budget to work with.
+            Here is how common expenses relate to this income:
+          </p>
+          <ul>
+            <li>
+              <strong>Housing (30% rule):</strong> Spending 30% of your net income on housing means a budget of
+              approximately <strong>{formatCurrency(page.england.netAnnual / 12 * 0.3)}/month</strong> for rent or
+              mortgage payments. This is achievable in most UK cities outside London, where average rents for a
+              one-bedroom flat range from £500 to £800 per month.
+            </li>
+            <li>
+              <strong>Mortgage affordability:</strong> Lenders typically offer 4 to 4.5 times your gross annual salary.
+              On {page.annualFormatted}, you could potentially borrow <strong>{formatCurrency(page.annual * 4)} to
+              {formatCurrency(page.annual * 4.5)}</strong> for a mortgage (subject to deposit, credit score, and other
+              factors).
+            </li>
+            <li>
+              <strong>Student loan repayments:</strong> If you have a student loan, repayments are not included in the
+              figures above (as they depend on your specific plan). Plan 2 repayments start at 9% of earnings above
+              £29,385 per year. {page.annual > 29385
+                ? `On your salary, that would be ${formatCurrency((page.annual - 29385) * 0.09)} per year (${formatCurrency((page.annual - 29385) * 0.09 / 12)}/month).`
+                : `Your salary is below the Plan 2 threshold, so no repayments would be due.`}
+            </li>
+            <li>
+              <strong>Disposable income:</strong> After housing (30%), bills (15%), food (15%), and transport (10%),
+              you would have roughly 30% of your net pay ({formatCurrency(page.england.netAnnual / 12 * 0.3)}/month)
+              for savings, entertainment, and other spending.
+            </li>
+          </ul>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12b. Understanding Your Payslip -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Understanding Your Payslip on {page.monthlyFormatted} Per Month</h2>
+      <p>
+        Your payslip is the official record of what you earn and what is deducted each pay period. If you are paid
+        monthly on a {page.monthlyFormatted} gross salary, here is what each line on your payslip means and approximately
+        what you should expect to see:
+      </p>
+      <ul>
+        <li>
+          <strong>Gross pay:</strong> This is your total pay before any deductions. On a monthly payslip, this
+          will show {page.monthlyFormatted}. If you receive overtime, bonuses, or commission, these will be added
+          to your gross figure for that month.
+        </li>
+        <li>
+          <strong>Tax code:</strong> Displayed as 1257L for most employees, this tells your employer how much of your
+          income is tax-free. The number 1257 means you have a Personal Allowance of £12,570. The letter L confirms
+          you are entitled to the standard allowance. If your code is different, it may affect your take-home pay.
+        </li>
+        <li>
+          <strong>PAYE tax:</strong> This is the income tax deducted under the Pay As You Earn system. Your employer
+          calculates this based on your tax code and earnings.{paysTax
+            ? ` Expect to see approximately ${formatCurrency(page.england.incomeTax / 12)} deducted each month.`
+            : ' At your salary level, this should show £0 as you are within the Personal Allowance.'}
+        </li>
+        <li>
+          <strong>National Insurance:</strong> Shown as "NI" or "Employee NI" on your payslip.{paysNI
+            ? ` You should see approximately ${formatCurrency(page.england.nationalInsurance / 12)} deducted monthly.`
+            : ' At your salary level, this should show £0 as your earnings are below the Primary Threshold.'}
+          Your NI category letter (usually A for most employees) determines which rates apply.
+        </li>
+        <li>
+          <strong>Net pay:</strong> This is the amount actually paid into your bank account after all deductions.
+          On {page.monthlyFormatted} gross, your net monthly pay should be approximately <strong>{page.englandFormatted.netMonthly}</strong>.
+          This is sometimes labelled "take-home pay" or "total payment".
+        </li>
+      </ul>
+      <p>
+        If any of these figures do not match what you expect based on this breakdown, check your tax code first. Common
+        reasons for discrepancies include an incorrect tax code, student loan deductions, workplace pension contributions,
+        or benefits in kind. You can view and update your tax code through your HMRC Personal Tax Account online.
+      </p>
+
+      {page.tier === 'below-pa' && (
+        <>
+          <h2>Why You Might Still Need to File a Tax Return</h2>
+          <p>
+            Even though you earn below the Personal Allowance and pay no income tax, there are situations where HMRC
+            may require you to complete a Self Assessment tax return. These include:
+          </p>
+          <ul>
+            <li>
+              <strong>Self-employment income:</strong> If you have any freelance or self-employment income alongside
+              your employed earnings, you must file a return if your total self-employment income exceeds £1,000
+              (the trading allowance).
+            </li>
+            <li>
+              <strong>Rental income:</strong> If you receive income from renting out property, you may need to declare
+              it even if your total income is below the Personal Allowance.
+            </li>
+            <li>
+              <strong>Savings and investment income:</strong> While the Personal Savings Allowance and dividend allowance
+              cover most situations, unusually high returns may trigger a filing requirement.
+            </li>
+            <li>
+              <strong>Reclaiming overpaid tax:</strong> If tax has been deducted incorrectly (for instance, you
+              started a new job mid-year with an emergency tax code), filing a return or contacting HMRC can help
+              you get a refund.
+            </li>
+          </ul>
+        </>
+      )}
+
+      {page.tier === 'basic-rate' && (
+        <>
+          <h2>How a Pay Rise Would Affect Your Take-Home</h2>
+          <p>
+            If you are earning {page.monthlyFormatted} per month and considering negotiating a pay rise, it helps to
+            understand how additional income is taxed. At your current salary level, your <strong>marginal tax
+            rate</strong> is {page.englandFormatted.marginalTaxRate}. This means for every extra £1 you earn, you
+            keep {formatCurrency(1 - (page.england.marginalTaxRate / 100), true)} after tax and NI.
+          </p>
+          <p>
+            For example, a £100 per month pay rise ({formatCurrency(1200)} per year) would increase your annual gross
+            from {page.annualFormatted} to {formatCurrency(page.annual + 1200)}. After the basic rate income tax (20%)
+            and NI ({(NI_MAIN_RATE * 100).toFixed(0)}%), you would keep approximately {formatCurrency(1200 * (1 - page.england.marginalTaxRate / 100))} of
+            that £1,200, adding roughly {formatCurrency(1200 * (1 - page.england.marginalTaxRate / 100) / 12)} to your
+            monthly take-home pay.
+          </p>
+          <p>
+            This is why understanding marginal rates matters when evaluating job offers or negotiating salary increases.
+            The headline increase is always more than what you actually receive in your bank account.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 13. FAQs -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Frequently Asked Questions</h2>
+      {faqs.map((faq) => (
+        <details class="group border-b border-gray-200 py-4 dark:border-gray-700">
+          <summary class="cursor-pointer list-none font-semibold text-gray-900 dark:text-white [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center justify-between">
+              {faq.question}
+              <svg class="ml-2 h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">{faq.answer}</p>
+        </details>
+      ))}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 14. Second CTA -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <div class="not-prose my-8 text-center">
+        <a
+          href={ctaUrl}
+          class="inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+        >
+          Try the full salary calculator &rarr;
+        </a>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Add student loans, pension, Scotland rates, and more.
+        </p>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 15. Related Calculators -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Related Calculators</h2>
+      <div class="not-prose grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <a href="/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Salary Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Full UK salary calculator with all options.</p>
+        </a>
+        <a href="/take-home-pay" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Take-Home Pay</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">See your net pay after all deductions.</p>
+        </a>
+        <a href="/income-tax" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Income Tax Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your UK income tax band by band.</p>
+        </a>
+        <a href="/national-insurance" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">National Insurance Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your NI contributions for {TAX_YEAR}.</p>
+        </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 16. Sources -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; Income Tax rates and Personal Allowances</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; National Insurance rates</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; Scottish Income Tax</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; Rates and thresholds for employers {TAX_YEAR}</a></li>
+        <li><a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours" target="_blank" rel="noopener noreferrer">ONS &mdash; Earnings and working hours</a></li>
+      </ul>
+
+    </article>
+    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+</body>
+</html>
