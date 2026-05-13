@@ -25,7 +25,8 @@ export function buildTitle(pageTitle: string): string {
 
 export function buildCanonical(path: string): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${SITE_URL}${cleanPath}`;
+  const withSlash = cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`;
+  return `${SITE_URL}${withSlash}`;
 }
 
 export function webApplicationSchema(name: string, description: string, url: string) {

@@ -59,8 +59,8 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     title: 'Take-Home Pay Calculator',
     // 58 chars
     metaTitle: `UK Take Home Pay Calculator ${TAX_YEAR} - Net Salary After Tax`,
-    // 153 chars
-    metaDescription: `Calculate your UK take home pay for ${TAX_YEAR}. Full breakdown of income tax, National Insurance, student loan repayments and pension. Free HMRC rates.`,
+    // 159 chars
+    metaDescription: `Calculate your UK take home pay for ${TAX_YEAR}. Full breakdown of income tax, National Insurance, student loan repayments and pension deductions. Free HMRC rates.`,
     h1: `Take-Home Pay Calculator ${TAX_YEAR}`,
     intro: 'See exactly how much of your salary you keep after all deductions. Full breakdown included.',
     faqs: [
@@ -189,8 +189,8 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     title: 'Student Loan Calculator',
     // 58 chars
     metaTitle: `Student Loan Repayment Calculator UK ${TAX_YEAR} - All Plans`,
-    // 156 chars
-    metaDescription: `Calculate student loan repayments for ${TAX_YEAR}. Plan 1, 2, 4, 5 and Postgraduate loan thresholds and rates. See monthly deductions from your salary.`,
+    // 156 chars (with TAX_YEAR)
+    metaDescription: `Calculate UK student loan repayments for ${TAX_YEAR}. Plan 1, 2, 4, 5 and Postgraduate loan thresholds and rates. See your exact monthly deductions from salary.`,
     h1: `Student Loan Repayment Calculator ${TAX_YEAR}`,
     intro: 'See how much you repay each month on your student loan based on your salary and loan plan.',
     faqs: [
@@ -267,8 +267,8 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     title: 'Required Salary Calculator',
     // 57 chars
     metaTitle: `Gross to Net Salary Calculator UK ${TAX_YEAR} - Reverse Tax`,
-    // 157 chars
-    metaDescription: `Reverse salary calculator: find the gross salary you need to take home a specific net amount in the UK. Updated for ${TAX_YEAR} tax year with HMRC rates.`,
+    // 153 chars
+    metaDescription: `Reverse salary calculator: find the gross salary you need to take home a specific net amount in the UK. Updated for the ${TAX_YEAR} tax year with HMRC rates.`,
     h1: 'Required Salary Calculator',
     intro: 'Know what you need to take home? Work backwards to find the gross salary required.',
     faqs: [
@@ -293,8 +293,8 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     title: 'Two Jobs Tax Calculator',
     // 56 chars
     metaTitle: `Two Jobs Tax Calculator UK ${TAX_YEAR} - Combined Tax Bill`,
-    // 156 chars
-    metaDescription: `Calculate your combined tax across two jobs in the UK for ${TAX_YEAR}. See if you are underpaying or overpaying tax and what you owe HMRC at year end.`,
+    // 153 chars
+    metaDescription: `Calculate your combined income tax across two jobs in the UK for ${TAX_YEAR}. See if you are underpaying or overpaying tax and what you owe HMRC at year end.`,
     h1: `Two Jobs Tax Calculator ${TAX_YEAR}`,
     intro: 'Working two jobs? See your combined tax position and whether you could have an underpayment at the end of the year.',
     faqs: [

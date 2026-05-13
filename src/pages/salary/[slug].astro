@@ -47,10 +47,10 @@ const { page } = Astro.props;
 
 // ─── SEO ──────────────────────────────────────────────────────────────────
 // Title: 50-60 chars, keyword-rich, no site name
-const title = `£${page.monthly.toLocaleString('en-GB')} a Month After Tax UK - Take Home Pay ${TAX_YEAR}`;
+const title = `£${page.monthly.toLocaleString('en-GB')} Per Month After Tax UK - Take Home Pay ${TAX_YEAR}`;
 const metaTitle = buildTitle(title);
 // Description: 150-160 chars, keyword-rich
-const description = `Earning £${page.monthly.toLocaleString('en-GB')} per month? See your UK take home pay after income tax and NI for ${TAX_YEAR}. Full salary breakdown with tax bands, Scotland rates and tips.`;
+const description = `Earning £${page.monthly.toLocaleString('en-GB')} per month? See your UK take home pay after income tax and NI for ${TAX_YEAR}. Full salary breakdown with tax bands, Scotland comparison and tips.`;
 const canonical = buildCanonical(`/salary/${page.slug}`);
 
 const breadcrumbs = breadcrumbSchema([
@@ -572,7 +572,7 @@ const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
           <tbody>
             {page.nearby.map((n) => (
               <tr>
-                <td><a href={`/salary/${n.slug}`} class="text-navy-600 hover:underline dark:text-navy-300">{n.monthlyFormatted}</a></td>
+                <td><a href={`/salary/${n.slug}/`} class="text-navy-600 hover:underline dark:text-navy-300">{n.monthlyFormatted}</a></td>
                 <td class="text-right tabular-nums">{n.netMonthly}</td>
                 <td class="text-right tabular-nums">{n.netAnnual}</td>
                 <td class="text-right tabular-nums">{n.difference}/mo</td>
@@ -916,15 +916,15 @@ const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
           <h3 class="font-semibold text-navy-700 dark:text-navy-300">Salary Calculator</h3>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Full UK salary calculator with all options.</p>
         </a>
-        <a href="/take-home-pay" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+        <a href="/take-home-pay/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
           <h3 class="font-semibold text-navy-700 dark:text-navy-300">Take-Home Pay</h3>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">See your net pay after all deductions.</p>
         </a>
-        <a href="/income-tax" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+        <a href="/income-tax/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
           <h3 class="font-semibold text-navy-700 dark:text-navy-300">Income Tax Calculator</h3>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your UK income tax band by band.</p>
         </a>
-        <a href="/national-insurance" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+        <a href="/national-insurance/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
           <h3 class="font-semibold text-navy-700 dark:text-navy-300">National Insurance Calculator</h3>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your NI contributions for {TAX_YEAR}.</p>
         </a>
