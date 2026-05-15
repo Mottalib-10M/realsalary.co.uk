@@ -123,6 +123,21 @@ const niableIncome = paysNI ? Math.min(page.annual, NI_UPPER_EARNINGS_LIMIT) - N
 // Tax calculation details
 const paysTax = page.annual > PERSONAL_ALLOWANCE;
 const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
+
+// Extended content helpers
+const monthlyNet = page.england.netAnnual / 12;
+const rentBudget30 = formatCurrency(monthlyNet * 0.3);
+const mortgageMax = formatCurrency(page.annual * 4.5);
+const emergencyFund3mo = formatCurrency(monthlyNet * 3);
+const emergencyFund6mo = formatCurrency(monthlyNet * 6);
+const savingsAt10pct = formatCurrency(monthlyNet * 0.1);
+const hourlyNet = formatCurrency(page.england.netAnnual / (52 * 37.5));
+const weeklyNet = formatCurrency(page.england.netAnnual / 52);
+const dailyNet = formatCurrency(page.england.netAnnual / 365);
+const hoursFor50 = Math.round(50 / (page.england.netAnnual / (52 * 37.5)));
+const hoursFor500 = Math.round(500 / (page.england.netAnnual / (52 * 37.5)));
+const lifeBracket = page.monthly <= 300 ? 'minimal' : page.monthly <= 700 ? 'parttime' : page.monthly <= 1050 ? 'nearpa' : page.monthly <= 1800 ? 'lower' : 'upper';
+const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid' : 'high';
 ---
 
 <!DOCTYPE html>
@@ -626,6 +641,364 @@ const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
       )}
 
       <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10b. Daily Life on This Salary -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What Daily Life Looks Like on {page.monthlyFormatted} Per Month in the UK</h2>
+
+      <p>
+        Beyond the tax figures and deduction tables, what does {page.monthlyFormatted} per month actually feel like
+        in your day to day life? Your take home pay of {page.englandFormatted.netMonthly} per month works out
+        to {weeklyNet} per week and {dailyNet} per day after all deductions. These are the real numbers that
+        determine what you can afford for housing, food, transport, and everything else that makes up life in the
+        United Kingdom.
+      </p>
+
+      {lifeBracket === 'minimal' ? (
+        <>
+          <p>
+            An income of {page.monthlyFormatted} per month adds up to {page.annualFormatted} over a full year. For most
+            people earning at this level, the work involves a handful of shifts per week or a small freelance gig on the
+            side. Students, semi retired individuals, and parents who work around school hours often find themselves in
+            this range. Your take home of {page.englandFormatted.netMonthly} represents spending money rather than a
+            primary wage, and understanding that distinction matters when planning your finances.
+          </p>
+          <p>
+            If this is your only source of income, managing everyday costs requires careful planning and usually some
+            outside support. Room rentals in shared houses across the UK start at around £300 to £400 per month outside
+            of London, which alone would consume your entire earnings. Most people earning {page.monthlyFormatted} are
+            either living with family, sharing costs with a partner, or receiving housing support through the benefits
+            system. Groceries for one person can be kept to around £25 to £35 per week by shopping at budget
+            supermarkets, cooking from scratch, and avoiding convenience foods.
+          </p>
+          <p>
+            Transport costs at this income level need to be minimal. Walking and cycling are the most affordable options.
+            A monthly bus pass costs between £50 and £70 in most UK cities, which represents a large chunk of your
+            {page.monthlyFormatted} salary. Keeping transport below £30 per month through walking, cycling, or lift
+            sharing is realistic in many areas. Despite the modest size of this income, it is worth checking whether you
+            qualify for the National Living Wage if you are employed, as workers aged 21 and over are entitled to at
+            least £12.21 per hour from April 2026.
+          </p>
+          <p>
+            For those using this role as a stepping stone, the experience you gain matters more than the pay right now.
+            Building a track record of reliability, learning transferable skills, and expanding your professional network
+            all contribute to future earning potential. Many people who started at {page.monthlyFormatted} per month move
+            to significantly higher salaries within two to three years by taking on more responsibility or transitioning
+            to roles that value the skills they developed along the way.
+          </p>
+        </>
+      ) : lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            Earning {page.monthlyFormatted} per month puts your annual income at {page.annualFormatted}, which typically
+            reflects part time work of around 15 to 25 hours per week. Many people in this range work in retail,
+            hospitality, cleaning, or care sectors, often fitting their job around childcare, education, or health needs.
+            Your take home of {page.englandFormatted.netMonthly} each month gives you a modest but real income to work
+            with. For someone sharing housing costs with a partner or housemates, this can cover your share of rent and
+            contribute to household bills. On your own, however, the numbers become tight.
+          </p>
+          <p>
+            Grocery shopping on this salary requires deliberate planning. Weekly food budgets of around £30 to £40 are
+            realistic if you cook at home and take advantage of supermarket deals. Meal planning, buying seasonal
+            produce, and batch cooking can stretch your food budget considerably. Many people at this income level also
+            benefit from community resources such as surplus food apps that connect you with discounted items from local
+            shops. A typical room in a shared house outside London costs between £400 and £600, which would leave little
+            from your monthly pay for other expenses.
+          </p>
+          <p>
+            Getting around on {page.monthlyFormatted} per month means prioritising cost effective transport. If you live
+            close to work, cycling saves a meaningful amount each month. For longer commutes, a combination of walking
+            and buses works for most people. Many local authorities offer discounted travel for low income residents, and
+            the Cycle to Work scheme through your employer can help you purchase a bike through salary sacrifice. Your
+            mobile phone bill can be kept under £10 per month with a SIM only deal, and energy costs depend on your
+            housing situation, though £50 to £80 per month is typical for a share of household bills.
+          </p>
+          <p>
+            If you are claiming Universal Credit alongside this employment, your earnings are assessed each month through
+            the Real Time Information system that HMRC operates. Every pound you earn does not reduce your Universal
+            Credit by a full pound. There is a taper rate of 55%, meaning for every £1 you earn above your work
+            allowance, your benefit reduces by 55p. Understanding this taper is essential for knowing your true effective
+            income at {page.monthlyFormatted} per month and for deciding whether additional hours are financially
+            worthwhile.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            With {page.monthlyFormatted} arriving in your bank account each month, your annual income of
+            {page.annualFormatted} sits near the Personal Allowance threshold. This means you keep almost everything
+            you earn, with little or no income tax being deducted. For many people, this salary represents the sweet
+            spot of part time professional work or full time employment at entry level, where you earn enough to
+            contribute meaningfully to your household while maintaining a manageable cost of living.
+          </p>
+          <p>
+            Your take home of {page.englandFormatted.netMonthly} provides genuine spending power. In affordable parts of
+            the UK such as the North East, Wales, or parts of Scotland, this income can cover a room in shared
+            accommodation, your food bill, and basic living expenses. In cities like Hull, Sunderland, Stoke, Dundee,
+            and Swansea, you can find a studio or small one bedroom flat for £350 to £500. In larger cities like
+            Manchester or Leeds, a room in a shared house is the more realistic option at £400 to £600.
+          </p>
+          <p>
+            At this level, you start to notice the practical impact of small financial decisions. Switching energy
+            providers can save £100 to £200 per year. Choosing a SIM only phone deal instead of a contract saves £20 to
+            £30 per month. Small savings like these add up quickly when your total income is {page.monthlyFormatted}, and
+            they can mean the difference between ending the month comfortably or dipping into an overdraft. Utilities,
+            council tax, and broadband form the backbone of your monthly fixed costs after housing, typically running
+            between £200 and £350 combined.
+          </p>
+          <p>
+            Many workers earning around {page.monthlyFormatted} per month hold roles such as teaching assistants on term
+            time contracts, healthcare support workers on part time hours, administrative staff on reduced schedules, or
+            skilled freelancers who set their own pace. If this income supports your lifestyle and goals, it represents a
+            perfectly valid choice. The UK tax system recognises this by ensuring you pay no income tax below the
+            {formatCurrency(PERSONAL_ALLOWANCE)} annual threshold, letting you keep the maximum possible share of what
+            you earn.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            With a take home of {page.englandFormatted.netMonthly} per month after tax and National Insurance, you are
+            in the part of the income spectrum where real financial choices become available. Your annual income of
+            {page.annualFormatted} is taxed at the basic rate on everything above the Personal Allowance, but the
+            effective rate of {page.englandFormatted.effectiveTaxRate} means the majority of your earnings still reach
+            your bank account. This is a proper working salary that many people across the UK live on full time, and it
+            supports a comfortable, if modest, standard of living.
+          </p>
+          <p>
+            Housing options at {page.englandFormatted.netMonthly} per month present a genuine range of possibilities.
+            Your housing budget of {rentBudget30} (following the 30% guideline) secures a comfortable one bedroom flat
+            in cities across the North of England, Wales, Northern Ireland, and much of Scotland. In cities like Bristol,
+            Brighton, or Cambridge, you would more likely be looking at a room in a shared house or a studio flat. The
+            gap between what {rentBudget30} buys in Sheffield versus what it buys in London is striking, and many people
+            at this salary level find that geography is one of the most powerful financial levers available to them.
+          </p>
+          <p>
+            At {page.monthlyFormatted} per month, your grocery budget can be more relaxed than at lower income levels.
+            Spending £45 to £65 per week on food allows for fresh vegetables, quality protein, and the occasional treat.
+            You can shop at mainstream supermarkets without sticking strictly to value ranges. Eating out once or twice
+            per month at an affordable restaurant, or ordering a takeaway, fits comfortably into this budget without
+            causing financial strain. Transport becomes a question of preference rather than pure necessity, as running a
+            modest car is feasible alongside public transport options.
+          </p>
+          <p>
+            Entertainment and social life can genuinely feature in your budget at this level. Allocating £100 to £200 per
+            month for leisure gives you room for a gym membership, streaming services, drinks with friends, and perhaps
+            one cultural outing such as cinema, theatre, or a sporting event each month. This is not luxury living, but
+            it is a balanced life where you are not constantly monitoring every pound. The key at {page.monthlyFormatted}
+            per month is making deliberate choices about your priorities rather than feeling constrained across the board.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Earning {page.monthlyFormatted} per month places you at or near the UK median salary. Your annual gross of
+            {page.annualFormatted} and monthly take home of {page.englandFormatted.netMonthly} provide a genuine sense
+            of financial stability. At this level, you are not just covering your bills. You have real choices about how
+            to shape your lifestyle and plan for the future. Most people earning in this range work in professional,
+            technical, or supervisory roles where their skills and experience command a respectable wage.
+          </p>
+          <p>
+            Your housing budget of {rentBudget30} per month (following the 30% guideline) opens up comfortable options
+            in most British cities. In Manchester, Bristol, or Edinburgh, this covers a quality one or two bedroom flat
+            in a desirable neighbourhood. Even in London, you can find a decent one bedroom in Zones 3 to 5 at this
+            price point, though the best value often lies just outside the centre. If you are considering buying rather
+            than renting, mortgage lenders typically offer up to 4.5 times your annual salary, giving you a potential
+            borrowing capacity of up to {mortgageMax} before factoring in your deposit.
+          </p>
+          <p>
+            Food, transport, and utilities become manageable without constant monitoring. A weekly grocery shop of £50 to
+            £80 keeps the fridge stocked, and there is room for dining out once or twice a week without guilt. Travel and
+            holidays become realistic: setting aside £100 to £200 per month allows for one or two holidays per year,
+            whether that means a week in southern Europe, a city break elsewhere in the UK, or a longer trip if you plan
+            well in advance. Many budget airlines serve UK airports with fares starting from £30 to £50 for short haul
+            European flights, making weekend breaks accessible.
+          </p>
+          <p>
+            What truly distinguishes this salary bracket from lower levels is the ability to build genuine financial
+            resilience. You can save several hundred pounds each month without feeling deprived, and those savings
+            compound over time. An emergency fund of three to six months of expenses, which at your spending level might
+            mean {emergencyFund3mo} to {emergencyFund6mo}, is achievable within a year or two of focused saving. Hobbies,
+            personal development, gym memberships, and regular social activities all fit within a sensible budget at
+            {page.monthlyFormatted} per month.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10c. Sample Monthly Budget -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Sample Monthly Budget on {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Seeing how your {page.englandFormatted.netMonthly} take home pay breaks down into a realistic monthly budget
+        helps you plan with confidence. The table below shows a suggested allocation based on commonly recommended
+        spending guidelines, adjusted for UK living costs. Every figure is calculated from your actual take home pay
+        at {page.monthlyFormatted} gross per month.
+      </p>
+
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th class="text-right">Monthly</th>
+              <th class="text-right">% of Net</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Housing (rent or mortgage)</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.30)}</td>
+              <td class="text-right">30%</td>
+            </tr>
+            <tr>
+              <td>Bills (council tax, energy, broadband, phone)</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.15)}</td>
+              <td class="text-right">15%</td>
+            </tr>
+            <tr>
+              <td>Food and groceries</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.12)}</td>
+              <td class="text-right">12%</td>
+            </tr>
+            <tr>
+              <td>Transport</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.10)}</td>
+              <td class="text-right">10%</td>
+            </tr>
+            <tr>
+              <td>Savings and emergency fund</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.10)}</td>
+              <td class="text-right">10%</td>
+            </tr>
+            <tr>
+              <td>Personal (clothing, toiletries, haircuts)</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.05)}</td>
+              <td class="text-right">5%</td>
+            </tr>
+            <tr>
+              <td>Leisure and social</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.08)}</td>
+              <td class="text-right">8%</td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Buffer (unexpected costs)</strong></td>
+              <td class="text-right tabular-nums"><strong>{formatCurrency(monthlyNet * 0.10)}</strong></td>
+              <td class="text-right"><strong>10%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {lifeBracket === 'minimal' || lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, the budget above is theoretical rather than strictly practical for
+            independent living. A housing allocation of {formatCurrency(monthlyNet * 0.30)} is well below what even the
+            cheapest rooms cost in most UK areas. This is why most people earning at this level share costs with family
+            or a partner, live in subsidised housing, or receive housing support. The budget works best as a guide for
+            allocating whatever portion of your income goes toward personal expenses after your housing situation is
+            accounted for separately.
+          </p>
+          <p>
+            The food allocation of {formatCurrency(monthlyNet * 0.12)} per month, or roughly
+            {formatCurrency(monthlyNet * 0.12 / 4.33)} per week, is tight but workable for one person if you plan meals
+            carefully. Budget supermarkets, cooking in batches, and avoiding food waste are essential strategies at this
+            level. The savings allocation of {formatCurrency(monthlyNet * 0.10)} per month may feel impossible right now,
+            but even saving half that amount builds a useful emergency buffer over time. The most important thing is
+            creating the habit of putting something aside regularly, however small the amount.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            With a take home of {page.englandFormatted.netMonthly}, this budget starts to become realistic for
+            independent living in affordable parts of the UK. Your housing allocation of {formatCurrency(monthlyNet * 0.30)}
+            can cover a room in a shared house in most cities or a studio flat in lower cost areas. The food budget of
+            {formatCurrency(monthlyNet * 0.12)} per month works out to {formatCurrency(monthlyNet * 0.12 / 4.33)} per
+            week, which is enough for basic home cooking with fresh ingredients if you shop wisely.
+          </p>
+          <p>
+            Your transport budget of {formatCurrency(monthlyNet * 0.10)} covers a monthly bus pass in most areas or
+            the running costs of a bicycle. The savings allocation of {formatCurrency(monthlyNet * 0.10)} builds to
+            {formatCurrency(monthlyNet * 0.10 * 12)} over a full year, which creates a meaningful emergency fund. The
+            buffer of {formatCurrency(monthlyNet * 0.10)} provides breathing room for months when unexpected costs arise,
+            from a dental appointment to a replacement for a broken appliance.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            On your take home of {page.englandFormatted.netMonthly}, this budget provides a workable framework for
+            comfortable living. The housing allocation of {formatCurrency(monthlyNet * 0.30)} covers a decent one bedroom
+            flat in most cities outside London and the South East. Your food budget of {formatCurrency(monthlyNet * 0.12)}
+            per month, equivalent to {formatCurrency(monthlyNet * 0.12 / 4.33)} per week, allows for varied meals with
+            quality ingredients. The leisure allocation of {formatCurrency(monthlyNet * 0.08)} gives you genuine spending
+            money for socialising, hobbies, and entertainment each month.
+          </p>
+          <p>
+            The savings line of {formatCurrency(monthlyNet * 0.10)} per month accumulates to
+            {formatCurrency(monthlyNet * 0.10 * 12)} per year, which is enough to build a solid emergency fund and begin
+            saving toward longer term goals such as a house deposit, a car, or a holiday. Combined with the 10% buffer
+            of {formatCurrency(monthlyNet * 0.10)}, you have a 20% cushion built into your budget for both planned savings
+            and unexpected costs, which is a strong position for financial stability.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Your take home of {page.englandFormatted.netMonthly} supports a genuinely comfortable budget. The housing
+            allocation of {formatCurrency(monthlyNet * 0.30)} secures a good quality one or two bedroom property in most
+            UK cities. Your food budget of {formatCurrency(monthlyNet * 0.12)} per month, or
+            {formatCurrency(monthlyNet * 0.12 / 4.33)} per week, allows for quality groceries, dining out occasionally,
+            and trying new recipes without worrying about cost. The leisure allocation of
+            {formatCurrency(monthlyNet * 0.08)} supports a full social life including gym membership, entertainment
+            subscriptions, and regular outings.
+          </p>
+          <p>
+            Saving {formatCurrency(monthlyNet * 0.10)} per month grows to {formatCurrency(monthlyNet * 0.10 * 12)}
+            over a year. Over five years of consistent saving at this rate, you would accumulate roughly
+            {formatCurrency(monthlyNet * 0.10 * 60)} before any investment returns. If you invest through a stocks and
+            shares ISA earning a long term average of 7% annually, that figure grows substantially through compound
+            returns. The combination of your 10% savings and 10% buffer means 20% of your take home, or
+            {formatCurrency(monthlyNet * 0.20)} per month, is working toward your financial security and future goals.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10d. Salary Trends and Inflation Context -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>How Inflation Affects Your {page.monthlyFormatted} Salary Over Time</h2>
+
+      <p>
+        A salary of {page.monthlyFormatted} per month does not buy the same amount of goods and services every year.
+        Inflation gradually erodes the purchasing power of any fixed income. Between 2020 and 2025, UK inflation
+        averaged around 5% per year, driven by energy prices, supply chain disruptions, and rising food costs. This
+        means that {page.monthlyFormatted} in 2020 had roughly 25% more purchasing power than the same amount today.
+        If your salary has not increased over that period, you have effectively taken a pay cut in real terms.
+      </p>
+
+      <p>
+        For workers earning {page.monthlyFormatted} per month in the {TAX_YEAR} tax year, keeping pace with inflation
+        requires annual pay increases of at least 2% to 3% per year under normal economic conditions. Without those
+        increases, your take home of {page.englandFormatted.netMonthly} buys slightly less each year. Over a decade,
+        even modest inflation of 2.5% per year compounds to a total erosion of roughly 22%, meaning your salary
+        would need to rise from {page.monthlyFormatted} to approximately
+        {formatCurrency(page.monthly * Math.pow(1.025, 10))} just to maintain the same living standard.
+      </p>
+
+      <p>
+        This is one of the strongest arguments for proactive career management. Staying in the same role at the same
+        salary for several years almost always means losing ground financially, even if the nominal number on your
+        payslip stays the same. Requesting annual pay reviews, seeking promotions, developing new skills, and being
+        willing to change employers when appropriate are all strategies that help your income grow at or above the
+        rate of inflation. For employees on {page.monthlyFormatted} per month, even small percentage increases
+        translate to meaningful improvements in daily spending power because the base amount is one you rely on for
+        essential costs.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
       <!-- 11. Tax-Saving Tips -->
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <h2>Tax Tips for a {page.monthlyFormatted}/Month Salary</h2>
@@ -780,6 +1153,150 @@ const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
       )}
 
       <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12a. Career Paths at This Salary -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Typical Jobs and Career Paths at {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Knowing what kinds of roles typically pay {page.monthlyFormatted} per month helps you benchmark your own
+        position and plan your next career move. Salaries in the UK vary widely by industry, region, and experience
+        level, but certain patterns emerge at each pay bracket. Here is what the employment landscape looks like
+        at {page.annualFormatted} per year.
+      </p>
+
+      {lifeBracket === 'minimal' ? (
+        <>
+          <p>
+            A monthly income of {page.monthlyFormatted} typically comes from a few hours of work each week. The most
+            common roles at this level include casual retail shifts, weekend hospitality work, evening cleaning jobs,
+            and freelance tasks such as tutoring, dog walking, or delivery driving. Many students work these hours
+            alongside their studies, and parents often choose minimal hours to fit around school schedules. Even a few
+            hours per week builds valuable experience and keeps your CV active, which matters when you are ready to
+            take on more hours.
+          </p>
+          <p>
+            For those looking to increase their earnings from this starting point, the retail and hospitality sectors
+            offer the most accessible pathways. Supermarket chains, restaurant groups, and high street retailers
+            regularly offer additional shifts to reliable employees. If you demonstrate punctuality, a positive
+            attitude, and a willingness to handle varied tasks, supervisors tend to offer you first refusal on
+            available hours. Moving from {page.monthlyFormatted} to double that amount is often a matter of asking
+            for more shifts rather than changing jobs entirely.
+          </p>
+          <p>
+            Volunteering alongside paid work at this level is a strategy that many successful career builders use. If
+            you are earning {page.monthlyFormatted} from a few paid shifts, spending additional time volunteering in a
+            field you want to enter opens doors that job applications alone cannot. Charities, community organisations,
+            and NHS trusts all offer volunteer roles that provide genuine experience, strong references, and networking
+            opportunities that translate directly into paid employment.
+          </p>
+        </>
+      ) : lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, you are earning what many part time roles across the UK pay for steady
+            weekly work. Common jobs at this level include care home assistants working three or four shifts per week,
+            retail team members on reduced hour contracts, classroom teaching assistants on term time schedules, library
+            assistants, receptionists with limited hours, and administrative support staff. These are real roles with
+            defined responsibilities, and they form the backbone of many essential services across the country.
+          </p>
+          <p>
+            The care sector is one of the largest employers of people earning in this range. Care assistants, domiciliary
+            carers, and support workers frequently earn between £11 and £13 per hour on part time contracts, placing
+            their monthly income squarely around {page.monthlyFormatted}. While the work is demanding, it offers regular
+            shifts, opportunities for training including NVQ qualifications at no cost, and clear progression routes into
+            senior care roles, team leader positions, or nursing qualifications over time.
+          </p>
+          <p>
+            Retail remains one of the most accessible industries for part time work at this salary level. Major chains
+            such as Tesco, Sainsbury's, Boots, and Marks and Spencer employ thousands of part time staff across the UK.
+            Starting pay is typically at or just above the National Living Wage, with opportunities for overtime during
+            peak periods like Christmas and summer sales. Internal promotion into supervisor or team leader roles can
+            increase your hourly rate by £1 to £3, lifting your monthly income meaningfully without needing to change
+            employers.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            Earning {page.monthlyFormatted} per month often indicates full time work at or near the minimum wage, or
+            skilled part time work at a higher hourly rate. Typical roles include warehouse operatives, delivery drivers,
+            security guards, nursery practitioners, hairdressers, fitness instructors, and junior kitchen staff. In the
+            public sector, entry level NHS Band 2 and Band 3 roles, junior council positions, and school support staff
+            commonly earn in this range when employed on a full time basis.
+          </p>
+          <p>
+            The construction trades also feature prominently at this salary level, particularly for apprentices and
+            newly qualified tradespeople. A first year electrician, plumber, or carpenter can expect to earn between
+            {page.monthlyFormatted} and £1,200 per month during their training period. The investment in qualification
+            pays off significantly: fully qualified tradespeople regularly earn £30,000 to £45,000 once they complete
+            their apprenticeship and gain experience. The UK faces a persistent shortage of skilled tradespeople, which
+            means qualified workers enjoy strong job security and genuine negotiating power over their wages.
+          </p>
+          <p>
+            Customer service roles, both in person and in contact centres, frequently pay around {page.monthlyFormatted}
+            per month for full time positions. These roles develop transferable skills in communication, problem solving,
+            and performing under pressure that employers across many sectors value highly. Moving from a front line
+            customer service position into quality assurance, training delivery, or team management is a well trodden
+            path that can increase your salary by 30% to 50% within two to three years of focused development.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            A monthly salary of {page.monthlyFormatted} places you in the territory of established full time roles
+            across a wide range of industries. Typical positions include office managers, experienced teaching
+            assistants, NHS Band 4 and Band 5 staff, police community support officers, junior accountants, marketing
+            assistants, IT support technicians, and skilled manufacturing workers. These are roles where you bring
+            specific knowledge or experience that employers need, and your pay reflects that contribution.
+          </p>
+          <p>
+            In the public sector, this salary range covers a significant portion of the workforce. NHS administrative
+            staff, social work assistants, local authority officers, and further education lecturers all commonly earn
+            between {page.monthlyFormatted} and £2,000 per month. Public sector roles offer structured career
+            progression, generous pension contributions from your employer (typically 20% to 27% of your salary), and
+            clear pathways into more senior positions. The pension benefit alone adds substantial value beyond what your
+            payslip displays.
+          </p>
+          <p>
+            The technology sector offers multiple entry points at this salary level. Junior web developers, IT helpdesk
+            analysts, data entry specialists, and digital marketing assistants typically start in this range. The
+            progression potential in technology is particularly strong because the demand for digital skills continues to
+            outstrip supply. Within three to five years, many people who started at {page.monthlyFormatted} per month in
+            a tech role find themselves earning £30,000 to £40,000 as they gain experience with specific tools,
+            platforms, and programming languages that employers seek.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your salary of {page.annualFormatted} per year places you among the
+            core professional workforce of the United Kingdom. This is the salary range where experience, qualifications,
+            and sector expertise are clearly reflected in your pay. Common roles include experienced nurses at NHS Band 5
+            and 6, secondary school teachers in their mid career years, police officers, civil service executive
+            officers, project managers, qualified accountants, software developers, and senior administrative
+            professionals.
+          </p>
+          <p>
+            Career progression from {page.monthlyFormatted} per month usually follows one of two paths. The management
+            route involves taking on responsibility for a team or department, developing leadership skills, and moving
+            into positions where you manage people and budgets. The specialist route involves deepening your expertise in
+            a particular technical area, regulatory specialism, or industry niche until your knowledge commands a
+            premium. Both paths can lead to salaries above £40,000, but they require different aptitudes and suit
+            different personalities. Understanding which direction appeals to you helps focus your professional
+            development.
+          </p>
+          <p>
+            Continuing professional development is a hallmark of careers at this salary level. Whether it is a
+            professional qualification such as ACCA, CIPD, or PRINCE2, a postgraduate degree, or industry specific
+            training, investing in your skills delivers a measurable return. Research consistently shows that professional
+            qualifications add between £3,000 and £8,000 to annual salaries on average, and they unlock access to senior
+            roles that are simply closed without them. Many employers will contribute to or fully fund professional
+            development for their employees, so it is always worth raising the question.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
       <!-- 12b. Understanding Your Payslip -->
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <h2>Understanding Your Payslip on {page.monthlyFormatted} Per Month</h2>
@@ -875,6 +1392,283 @@ const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
           </p>
         </>
       )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12d. Building Financial Security -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Building Financial Security on {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Whatever your salary level, building financial security is about making consistent, informed decisions over
+        time. On a take home of {page.englandFormatted.netMonthly} per month, the strategies that work best depend
+        on your current situation, your goals, and how much flexibility your budget allows. Here is how to think
+        about money management at {page.annualFormatted} per year.
+      </p>
+
+      {lifeBracket === 'minimal' ? (
+        <>
+          <p>
+            Financial planning on {page.monthlyFormatted} per month starts with understanding exactly where your money
+            goes. With {page.englandFormatted.netMonthly} coming in, every pound counts. Track your income and spending
+            for a full month, writing down every purchase however small. Many people are surprised to find that daily
+            expenses like a coffee or a bus ticket add up to a significant portion of their monthly income. This
+            awareness alone can change how you spend.
+          </p>
+          <p>
+            Even at {page.monthlyFormatted} per month, building a savings habit is worthwhile. Starting with £5 or £10
+            per month might feel insignificant, but the habit itself is what matters. Once you are accustomed to putting
+            money aside before spending, increasing the amount as your income grows becomes natural. Many banks now offer
+            round up savings features on debit cards, which automatically save the spare change from each transaction.
+            Over the course of a year, these small amounts can accumulate into a useful emergency buffer.
+          </p>
+          <p>
+            Looking ahead from {page.monthlyFormatted} per month, consider what steps would increase your earning
+            potential. Even modest investments in skills or qualifications, many of which are available free through
+            local colleges and online platforms, can lead to better paid opportunities within months. The UK government
+            funds free courses for adults through the National Skills Fund, covering areas from digital literacy to
+            business management. These cost you nothing but time and can meaningfully shift your income trajectory.
+          </p>
+        </>
+      ) : lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            Managing finances on {page.monthlyFormatted} per month requires a structured approach that separates
+            essential spending from everything else. Start by listing your fixed monthly obligations: housing, council
+            tax share, energy bills, phone, and transport. Subtract these from your take home of
+            {page.englandFormatted.netMonthly}, and the remaining amount is what you have for food, personal items,
+            and discretionary spending. Knowing this number precisely removes the anxiety of guessing and helps you
+            avoid the end of month crunch.
+          </p>
+          <p>
+            Debt management deserves special attention at this salary level. If you carry any balances on credit cards,
+            overdrafts, or personal loans, the interest reduces your effective income further. Prioritising repayment
+            starting with the highest interest rate balances frees up money over time. If multiple debts feel
+            overwhelming, free advice services such as StepChange, National Debtline, and Citizens Advice can help
+            you create a manageable repayment plan and may negotiate with creditors on your behalf.
+          </p>
+          <p>
+            Building an emergency fund on {page.monthlyFormatted} per month is challenging but not impossible. Aim for
+            an initial target of £200 to £500, enough to cover a minor emergency such as an urgent dental bill, a
+            broken appliance, or an unexpected travel cost. Setting up a standing order for £20 per month on payday
+            means this target is reachable within one to two years. The security of knowing you have a small financial
+            cushion reduces stress noticeably and gives you more confidence when making decisions about your work.
+          </p>
+          <p>
+            State pension contributions matter even at this income. If you earn above the Lower Earnings Limit of £6,708
+            per year, your employer reports your earnings to HMRC and the year counts towards your State Pension
+            qualifying years. You need 35 qualifying years for the full amount. Checking your National Insurance record
+            online through the government website shows how many qualifying years you have and whether any action is
+            needed to protect your future pension.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your financial planning can move beyond basic survival budgeting into
+            building genuine security. With {page.englandFormatted.netMonthly} per month, you have enough income to
+            create a proper budget with categories for housing, food, transport, bills, savings, and personal spending.
+            The 50/30/20 framework, which allocates 50% to needs, 30% to wants, and 20% to savings, is a useful
+            starting point, although you may need to adjust the ratios to reflect housing costs in your particular area.
+          </p>
+          <p>
+            Your workplace pension is one of the most valuable financial tools available to you. Under auto enrolment
+            rules, your employer must contribute at least 3% of your qualifying earnings, while you contribute 5%. This
+            means that for every £100 of qualifying earnings, your pension pot grows by £8 before investment returns are
+            even considered. If your employer offers to match additional contributions beyond the legal minimum, that is
+            effectively free money and one of the best financial decisions you can make at any income level.
+          </p>
+          <p>
+            An ISA is the natural next step once you have a basic emergency fund in place. Cash ISAs offer a safe home
+            for savings with interest that is completely free from tax. For longer term goals, a Lifetime ISA adds a
+            25% government bonus to your contributions (up to £1,000 per year on a maximum of £4,000). If you are under
+            40 and saving for your first home, the Lifetime ISA is particularly attractive because the government tops
+            up every pound you save by 25p. That is a guaranteed 25% return before any interest is earned.
+          </p>
+          <p>
+            Contents insurance is worth considering even at {page.monthlyFormatted} per month. It costs as little as
+            £5 to £10 per month and protects your belongings against theft, fire, and water damage. Replacing a laptop,
+            a phone, and basic furniture after a burglary or flood could easily cost £1,000 to £2,000, which would be
+            devastating on this salary without insurance. The small monthly premium buys significant peace of mind.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            Financial planning on {page.monthlyFormatted} per month shifts from managing scarcity to making strategic
+            choices. Your take home of {page.englandFormatted.netMonthly} provides enough headroom to pursue multiple
+            financial goals at once. The most effective approach is to automate your finances so that savings, pension
+            contributions, and bill payments leave your account on payday. Whatever remains after these automatic
+            transfers is genuinely available to spend, and you can use it freely knowing that your essentials and future
+            are already covered.
+          </p>
+          <p>
+            Building an emergency fund of three to six months of essential expenses should be a top priority. At your
+            spending level, this means accumulating between {emergencyFund3mo} and {emergencyFund6mo} in an easily
+            accessible savings account. This fund serves as your personal safety net against job loss, illness, or
+            unexpected major expenses. Without it, a single financial shock can push you into debt that takes years to
+            clear. With it, you can handle most emergencies from a position of strength rather than panic.
+          </p>
+          <p>
+            If you are considering buying a home, understanding the numbers at {page.monthlyFormatted} per month is
+            essential. Mortgage lenders typically offer 4 to 4.5 times your annual gross salary, which means you could
+            potentially borrow up to {mortgageMax}. Combined with a deposit, this determines the property value you can
+            target. Government schemes such as the First Homes programme and shared ownership can bridge the gap if
+            property prices in your area exceed what your salary alone supports. Starting your deposit savings early
+            demonstrates the financial discipline that lenders assess favourably.
+          </p>
+          <p>
+            Tax efficient saving and investing deserve attention at this income level. Your annual ISA allowance of
+            £20,000 lets you shelter a meaningful amount of savings from tax. For basic rate taxpayers, a stocks and
+            shares ISA offers the potential for higher returns than cash over the long term, with all gains and
+            dividends remaining tax free. For pension savings, contributing above the auto enrolment minimum through
+            salary sacrifice builds your retirement fund faster and simultaneously reduces your income tax and National
+            Insurance deductions.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your financial planning can incorporate strategies that are simply not
+            available at lower income levels. Your take home of {page.englandFormatted.netMonthly} supports a comfortable
+            lifestyle while also allowing for serious wealth building. The key distinction at this level is moving from
+            merely saving money to actively investing it, because cash sitting in a current account loses purchasing
+            power to inflation over time. Making your surplus income work for you is the single most important
+            financial shift at this salary level.
+          </p>
+          <p>
+            Your pension strategy deserves careful thought. Every £80 you contribute to a pension becomes £100 in your
+            pot thanks to basic rate tax relief, and if your employer matches additional contributions, the returns
+            multiply further. Consider increasing your pension contribution by 1% each time you receive a pay rise. This
+            gradual approach builds a substantial retirement fund over your career without any noticeable impact on your
+            lifestyle, because you never become accustomed to spending the additional income in the first place.
+          </p>
+          <p>
+            Investment diversification becomes genuinely relevant at this salary level. Beyond your workplace pension and
+            a cash emergency fund, consider allocating {savingsAt10pct} per month to a stocks and shares ISA invested in
+            diversified index funds. The long term average return of global stock markets has historically exceeded 7%
+            per year before inflation, compared to cash savings that typically lag behind the rising cost of living. A
+            consistent monthly investment maintained over 20 years can grow into a significant sum through compound
+            returns.
+          </p>
+          <p>
+            Estate planning and protection insurance become worthwhile as your income and assets grow. A basic will
+            costs between £150 and £300 through a solicitor and ensures your assets are distributed according to your
+            wishes. Life insurance, if you have dependents, provides financial security for your family. Critical
+            illness cover pays a lump sum if you are diagnosed with a specified serious condition. At
+            {page.monthlyFormatted} per month, the premiums for these policies are affordable relative to the
+            protection they provide, and they form a responsible part of any comprehensive financial plan.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12e. Regional Cost of Living -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>How {page.monthlyFormatted} Per Month Compares Across UK Regions</h2>
+
+      <p>
+        The purchasing power of {page.monthlyFormatted} per month varies enormously depending on where you live in
+        the United Kingdom. Housing costs drive the biggest regional differences, but food, transport, childcare,
+        and entertainment also vary. The ONS publishes regional price parities showing that London prices sit
+        roughly 10% to 15% above the national average, while the North East is around 5% below. Here is what
+        that means in practice for your take home of {page.englandFormatted.netMonthly}.
+      </p>
+
+      {regionBracket === 'low' ? (
+        <>
+          <p>
+            For someone earning {page.monthlyFormatted} per month, choosing where to live can effectively change the
+            value of your salary. The same take home pay of {page.englandFormatted.netMonthly} stretches much further
+            in Burnley or Blackpool than in Bath or Brighton. The most affordable regions include the North East of
+            England, where a studio flat in cities like Middlesbrough or Sunderland costs as little as £300 per month,
+            and Northern Ireland, where Belfast offers significantly cheaper rents than any major English city. Wales
+            provides excellent value too, particularly in the Valleys and smaller coastal towns.
+          </p>
+          <p>
+            The South East and Greater London present a starkly different picture. In these areas, housing costs alone
+            can exceed your entire monthly salary of {page.monthlyFormatted}. If you live in a high cost area and earn
+            this amount, remote or hybrid work arrangements can allow you to earn a city wage while paying rural
+            housing costs. Even jobs that were traditionally location specific, such as customer service and data
+            processing, now frequently offer working from home options that can transform your financial situation
+            without changing your actual pay.
+          </p>
+        </>
+      ) : regionBracket === 'mid' ? (
+        <>
+          <p>
+            Your salary of {page.monthlyFormatted} per month goes furthest in the regions where housing costs are
+            lowest. In the North East, Yorkshire, the East Midlands, and the North West, average rents for a one
+            bedroom flat range from £400 to £550, leaving you with a meaningful portion of your
+            {page.englandFormatted.netMonthly} take home for other expenses. Scotland offers particularly good value
+            in cities like Aberdeen, Inverness, and Perth, where rents are lower than Edinburgh and Glasgow but local
+            amenities and job markets remain strong. Wales and Northern Ireland also provide excellent value at
+            this salary level.
+          </p>
+          <p>
+            London sits at the other extreme. Average rents for a one bedroom flat in the capital exceed £1,500, which
+            is more than your entire gross monthly salary. Even outer London boroughs like Havering, Bromley, and
+            Bexley see studio rents starting around £800. If your job requires proximity to London, exploring satellite
+            towns with fast commuter rail links, such as Luton, Stevenage, or Reading, can dramatically reduce your
+            housing costs while keeping the capital within reach for work. The difference between what
+            {rentBudget30} buys in Sheffield versus central London is remarkable.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your choice of UK region has a direct and measurable impact on your
+            quality of life. Cities in the Midlands and the North offer the best combination of affordable living and
+            strong job markets. Birmingham, Manchester, Leeds, Sheffield, and Nottingham all have thriving economies
+            with opportunities across multiple sectors, while housing costs remain significantly below southern levels.
+            A two bedroom flat in Sheffield costs roughly half what a similar property in Reading would command. Your
+            housing budget of {rentBudget30} per month rents a spacious property in most northern cities, while the
+            same amount barely covers a studio in parts of the South East.
+          </p>
+          <p>
+            Scotland offers a compelling proposition for workers at {page.monthlyFormatted} per month. The Scottish
+            income tax system applies different rates, but as the comparison table above shows, the difference in take
+            home is often modest. Scotland compensates with several advantages including free prescriptions, more
+            generous student finance support, and generally lower housing costs outside Edinburgh. Glasgow, Aberdeen,
+            and Dundee all maintain strong job markets with notably lower living costs than their English equivalents.
+            If remote work allows you to choose your location freely, the financial case for Scotland is strong at
+            this salary level.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12f. Understanding Your True Hourly Rate -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Your True Hourly Rate on {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Many people focus on their monthly or annual salary without considering what they actually earn per hour
+        after tax. On a gross salary of {page.monthlyFormatted} per month, your headline hourly rate is
+        {page.hourlyGross} based on a standard 37.5 hour working week. Once income tax and National Insurance are
+        deducted, your real hourly earning drops to approximately {hourlyNet}. This is your true hourly rate: the
+        amount you genuinely receive for each hour of your working time.
+      </p>
+
+      <p>
+        Understanding this number helps you make better decisions about both work and spending. If you earn
+        {hourlyNet} per hour after tax, then a £50 purchase represents roughly {hoursFor50} hours of your working
+        life. A £500 purchase represents {hoursFor500} hours. Thinking about spending in terms of hours worked
+        rather than pounds spent adds useful context to buying decisions. This does not mean you should never treat
+        yourself, but it gives you a concrete way to evaluate whether a purchase is genuinely worth the time you
+        traded to earn the money.
+      </p>
+
+      <p>
+        Your effective hourly rate also matters when evaluating overtime or additional work opportunities. If
+        overtime is paid at time and a half, your gross hourly rate of {page.hourlyGross} would increase to
+        approximately {formatCurrency(page.annual / (52 * 37.5) * 1.5)} per hour for those extra hours. However,
+        the additional income is taxed at your marginal rate, so the true benefit is less than the headline figure.
+        {page.tier === 'basic-rate'
+          ? ` At your current salary level, each extra pound earned is subject to 20% income tax and ${(NI_MAIN_RATE * 100).toFixed(0)}% National Insurance, meaning you keep about 72p of every additional pound.`
+          : ` Since your salary is within the Personal Allowance, any extra earnings remain largely untaxed until you cross the ${formatCurrency(PERSONAL_ALLOWANCE)} annual threshold.`}
+        Knowing this helps you decide whether extra hours are worth the time, or whether that time would be better
+        invested in rest, family, or professional development that could lead to a higher base salary in the future.
+      </p>
 
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <!-- 13. FAQs -->
