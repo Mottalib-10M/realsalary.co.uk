@@ -1,8 +1,12 @@
 /**
  * URL State Encoding/Decoding
  *
- * Encodes calculator state into URL query params for shareable, bookmarkable URLs.
- * Uses history.replaceState to avoid polluting browser history.
+ * Encodes calculator state into the URL hash fragment (#) for shareable,
+ * bookmarkable URLs. Hash fragments are invisible to search-engine crawlers,
+ * so Google never indexes query-string variants of calculator pages.
+ *
+ * For backward compatibility, readUrlParams also checks query-string params
+ * (e.g. old shared links with ?gross=30000) and migrates them to the hash.
  */
 
 type ParamValue = string | number | boolean | string[] | undefined;
@@ -26,11 +30,23 @@ export function readUrlParams<T extends Record<string, ParamValue>>(
     return defaults as T;
   }
 
-  const params = new URLSearchParams(window.location.search);
+  // Prefer hash params; fall back to query-string params (legacy shared URLs).
+  const hashString = window.location.hash.startsWith('#')
+    ? window.location.hash.slice(1)
+    : '';
+  const hashParams = new URLSearchParams(hashString);
+  const queryParams = new URLSearchParams(window.location.search);
+
   const result: Record<string, ParamValue> = {};
+  let hadLegacyQueryParams = false;
 
   for (const [key, cfg] of Object.entries(config)) {
-    const raw = params.get(key);
+    // Hash takes priority, then query-string.
+    let raw = hashParams.get(key);
+    if (raw === null && queryParams.has(key)) {
+      raw = queryParams.get(key);
+      hadLegacyQueryParams = true;
+    }
 
     if (raw === null) {
       result[key] = cfg.default;
@@ -56,6 +72,31 @@ export function readUrlParams<T extends Record<string, ParamValue>>(
     }
   }
 
+  // Migrate: strip query params and move values into the hash so the clean
+  // canonical URL stays in the address bar (and any subsequent share uses #).
+  if (hadLegacyQueryParams) {
+    const url = new URL(window.location.href);
+    for (const key of Object.keys(config)) {
+      url.searchParams.delete(key);
+    }
+    // Build hash from parsed result (non-default values only).
+    const hash = new URLSearchParams();
+    for (const [key, cfg] of Object.entries(config)) {
+      const val = result[key];
+      if (val === undefined || val === cfg.default) continue;
+      if (Array.isArray(val)) {
+        if (val.length > 0) hash.set(key, val.join(','));
+      } else if (typeof val === 'boolean') {
+        if (val) hash.set(key, 'true');
+      } else {
+        hash.set(key, String(val));
+      }
+    }
+    const hashStr = hash.toString();
+    url.hash = hashStr ? hashStr : '';
+    window.history.replaceState({}, '', url.toString());
+  }
+
   return result as T;
 }
 
@@ -70,22 +111,33 @@ export function writeUrlParams(
   if (debounceTimer) clearTimeout(debounceTimer);
 
   debounceTimer = setTimeout(() => {
-    const url = new URL(window.location.href);
+    const hash = new URLSearchParams(
+      window.location.hash.startsWith('#')
+        ? window.location.hash.slice(1)
+        : '',
+    );
 
     for (const [key, value] of Object.entries(params)) {
       if (value === undefined || value === '' || value === false) {
-        url.searchParams.delete(key);
+        hash.delete(key);
       } else if (Array.isArray(value)) {
         if (value.length === 0) {
-          url.searchParams.delete(key);
+          hash.delete(key);
         } else {
-          url.searchParams.set(key, value.join(','));
+          hash.set(key, value.join(','));
         }
       } else {
-        url.searchParams.set(key, String(value));
+        hash.set(key, String(value));
       }
     }
 
+    const hashStr = hash.toString();
+    const url = new URL(window.location.href);
+    // Also clean up any leftover query params.
+    for (const key of Object.keys(params)) {
+      url.searchParams.delete(key);
+    }
+    url.hash = hashStr ? hashStr : '';
     window.history.replaceState({}, '', url.toString());
   }, debounceMs);
 }

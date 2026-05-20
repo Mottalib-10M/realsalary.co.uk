@@ -107,7 +107,9 @@ if (page.tier === 'below-pa') {
 const faqStructuredData = faqSchema(faqs);
 
 // ─── CTA ────────────────────────────────────────────────────────────────
-const ctaUrl = `/?gross=${page.annual}`;
+// Link is plain "/" in static HTML so Google doesn't index query-string variants.
+// JS adds ?gross= on click so the calculator is pre-filled for real users.
+const ctaGross = page.annual;
 
 // ─── Context helpers ────────────────────────────────────────────────────
 const medianAnnual = 35000;
@@ -252,8 +254,9 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <div class="not-prose my-8 text-center">
         <a
-          href={ctaUrl}
-          class="inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+          href="/"
+          data-gross={ctaGross}
+          class="cta-calc inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
         >
           Calculate your exact take-home pay &rarr;
         </a>
@@ -1691,8 +1694,9 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <div class="not-prose my-8 text-center">
         <a
-          href={ctaUrl}
-          class="inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+          href="/"
+          data-gross={ctaGross}
+          class="cta-calc inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
         >
           Try the full salary calculator &rarr;
         </a>
@@ -1741,5 +1745,18 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
   </main>
 
   <Footer />
+
+  <script>
+    // Append ?gross= only on real user clicks so crawlers never see query-string URLs.
+    document.querySelectorAll('a.cta-calc').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const gross = (a as HTMLAnchorElement).dataset.gross;
+        if (gross) {
+          e.preventDefault();
+          window.location.href = `/#gross=${gross}`;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
