@@ -1,5 +1,6 @@
 ---
 import GuideLayout from '../layouts/GuideLayout.astro';
+import { SITE_NAME, SITE_URL } from '../lib/seo';
 ---
 
 <GuideLayout
@@ -8,54 +9,153 @@ import GuideLayout from '../layouts/GuideLayout.astro';
   slug="/privacy"
 >
   <h1>Privacy Policy</h1>
-  <p><em>Last updated: May 2026</em></p>
+  <p><em>Last updated: June 2026</em></p>
 
-  <h2>What data we collect</h2>
   <p>
-    <strong>Short answer: almost nothing.</strong> All calculator inputs are processed
-    entirely in your browser. We never see, store, or transmit your salary figures.
+    This privacy policy explains how {SITE_NAME} ({SITE_URL}) handles your personal data in compliance
+    with the UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018, and the
+    Privacy and Electronic Communications Regulations 2003 (PECR).
   </p>
 
-  <h2>Analytics</h2>
+  <h2>1. Data Controller</h2>
+  <ul>
+    <li><strong>Controller:</strong> Mottalib Radif</li>
+    <li><strong>Website:</strong> {SITE_URL}</li>
+    <li><strong>Email:</strong> <a href="mailto:contact@realsalary.co.uk">contact@realsalary.co.uk</a></li>
+  </ul>
+  <p>
+    The data controller is the person who determines the purposes and means of the processing of
+    personal data, within the meaning of the UK GDPR.
+  </p>
+
+  <h2>2. Data Protection Officer</h2>
+  <p>
+    Given the nature of the website and the absence of large-scale processing of personal data, the
+    appointment of a Data Protection Officer (DPO) is not legally required under Article 37 of the
+    UK GDPR. For data protection enquiries, please contact the controller using the details above.
+  </p>
+
+  <h2>3. What Data We Collect</h2>
+  <p>
+    <strong>Short answer: almost nothing.</strong> All calculator inputs are processed entirely in your
+    browser using client-side JavaScript. We never see, store, or transmit your salary figures, tax
+    codes, pension contributions, or any other financial information you enter into our calculators.
+    The technical architecture is designed according to the principle of "privacy by design".
+  </p>
+  <p>
+    For clarity, the website does not collect or process the following categories of data:
+  </p>
+  <ul>
+    <li><strong>Financial data:</strong> salary, tax code, pension contributions, National Insurance number</li>
+    <li><strong>Identification data:</strong> name, address, phone number (unless voluntarily provided by email)</li>
+    <li><strong>Browsing data:</strong> tracking cookies, unique device identifiers</li>
+  </ul>
+
+  <h2>4. Analytics</h2>
   <p>
     We use <a href="https://plausible.io" target="_blank" rel="noopener">Plausible Analytics</a>,
-    a privacy-friendly analytics tool. Plausible does not use cookies, does not collect
-    personal data, and is fully compliant with GDPR, CCPA, and PECR. This means
-    <strong>no cookie banner is needed</strong>.
+    a privacy-friendly analytics tool. Plausible does not use cookies, does not collect personal data,
+    does not store IP addresses, does not use fingerprinting, and is fully compliant with UK GDPR,
+    GDPR, CCPA, and PECR. This means <strong>no cookie banner is needed</strong>.
   </p>
   <p>
-    Plausible collects only aggregate, anonymous data: page views, referral sources,
-    browser type, and country. No individual visitors can be identified.
-  </p>
-
-  <h2>Cookies</h2>
-  <p>
-    We do not set any cookies. No first-party cookies, no third-party cookies,
-    no tracking cookies.
+    Plausible collects only aggregate, anonymous data: page views, referral sources, browser type,
+    device type, and country. No individual visitors can be identified. Plausible processes all data
+    on servers within the European Union. For more information:
+    <a href="https://plausible.io/data-policy" target="_blank" rel="noopener">https://plausible.io/data-policy</a>.
   </p>
 
-  <h2>Third-party services</h2>
+  <h2>5. Cookies</h2>
   <p>
-    This site is hosted on Cloudflare Pages. Cloudflare may collect minimal technical
-    data (IP address, request headers) as part of their CDN service. See
+    We do not set any tracking cookies. No first-party cookies, no third-party cookies, no tracking
+    cookies. User preferences (such as dark/light mode) are stored in the browser's localStorage,
+    which is not a cookie and is never transmitted to our servers.
+  </p>
+  <p>
+    Our hosting provider Cloudflare may use a technical cookie (__cf_bm) for bot detection and DDoS
+    protection. This cookie is strictly necessary for security, contains no personal information,
+    expires after 30 minutes, and does not require consent under PECR.
+  </p>
+
+  <h2>6. Third-Party Services</h2>
+  <p>
+    This site is hosted on Cloudflare Pages. Cloudflare may collect minimal technical data (IP address,
+    request headers) as part of their CDN service. Cloudflare is certified under the EU-U.S. Data
+    Privacy Framework. See
     <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's privacy policy</a>.
   </p>
   <p>
-    Google Fonts are loaded for typography. Google may collect standard web request
-    data. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.
+    Google Fonts may be loaded for typography. Google may collect standard web request data. See
+    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.
+    This usage is based on our legitimate interest in a uniform presentation of our website.
+  </p>
+  <p>
+    We do not integrate any third-party services that profile users. There are no social media buttons,
+    advertising widgets, remarketing services, or other tools that allow third parties to track users.
   </p>
 
-  <h2>Advertising</h2>
+  <h2>7. Server Log Files</h2>
   <p>
-    We may display ads via Google AdSense in the future. If enabled, Google's ad
-    personalisation and cookie policies will apply. We will update this page
-    before activating any advertising.
+    Our hosting provider automatically collects and stores information in server log files, which your
+    browser transmits. These include: browser type and version, operating system, referrer URL, hostname,
+    time of request, and IP address (anonymised). This data is not merged with other data sources and
+    is based on legitimate interest (Art. 6(1)(f) UK GDPR). Server log files are automatically deleted
+    after 30 days.
   </p>
 
-  <h2>Your rights</h2>
+  <h2>8. Legal Basis for Processing</h2>
   <p>
-    Since we don't collect personal data, there is nothing to request, correct,
-    or delete. If you have any privacy-related questions, contact us at
-    <strong>hello@realsalary.co.uk</strong>.
+    Since no identifiable personal data is processed through the calculators, no specific legal basis
+    is required under Article 6 of the UK GDPR. For the anonymous statistical data collected by
+    Plausible Analytics and for server log files, the applicable legal basis is legitimate interest
+    (Article 6(1)(f) UK GDPR).
+  </p>
+
+  <h2>9. Your Rights Under UK GDPR</h2>
+  <p>
+    Under the UK GDPR and Data Protection Act 2018, you have the following rights:
+  </p>
+  <ul>
+    <li><strong>Right of access</strong> (Art. 15): obtain confirmation of whether personal data is being processed and access to that data.</li>
+    <li><strong>Right to rectification</strong> (Art. 16): obtain correction of inaccurate or incomplete data.</li>
+    <li><strong>Right to erasure</strong> (Art. 17, "right to be forgotten"): obtain deletion of personal data.</li>
+    <li><strong>Right to restriction of processing</strong> (Art. 18): restrict processing in certain cases.</li>
+    <li><strong>Right to data portability</strong> (Art. 20): receive data in a structured, commonly used and machine-readable format.</li>
+    <li><strong>Right to object</strong> (Art. 21): object to processing on grounds relating to your particular situation.</li>
+    <li><strong>Right to withdraw consent</strong> (Art. 7(3)): withdraw consent at any time.</li>
+    <li><strong>Right to lodge a complaint</strong>: with the Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</li>
+  </ul>
+  <p>
+    Since we don't collect personal data through our calculators, most of these rights are satisfied
+    by default. For any privacy-related questions, contact us at
+    <a href="mailto:contact@realsalary.co.uk">contact@realsalary.co.uk</a>. We undertake to respond
+    within 30 days.
+  </p>
+
+  <h2>10. Data Transfer Outside the UK</h2>
+  <p>
+    Cloudflare, our hosting provider, is certified under the EU-U.S. Data Privacy Framework, ensuring
+    compliance with data protection standards. Should it become necessary to use services outside
+    adequate jurisdictions, the controller will ensure appropriate safeguards are in place.
+  </p>
+
+  <h2>11. Data Retention</h2>
+  <p>
+    Since no personal data is stored from calculator usage, no specific retention period applies. Server
+    log files are automatically deleted after 30 days. Plausible Analytics data is aggregated and
+    anonymous, falling outside the scope of UK GDPR provisions on personal data retention.
+  </p>
+
+  <h2>12. Children's Privacy</h2>
+  <p>
+    Our website is not directed to children under 13 and we do not knowingly collect personal
+    information from children.
+  </p>
+
+  <h2>13. Changes and Contact</h2>
+  <p>
+    We may update this privacy policy to reflect changes in our practices or applicable law. The
+    current version is always available on this page. For questions, contact us at:<br />
+    <a href="mailto:contact@realsalary.co.uk">contact@realsalary.co.uk</a>
   </p>
 </GuideLayout>

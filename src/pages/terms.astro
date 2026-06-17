@@ -1,5 +1,6 @@
 ---
 import GuideLayout from '../layouts/GuideLayout.astro';
+import { SITE_NAME, SITE_URL } from '../lib/seo';
 ---
 
 <GuideLayout
@@ -8,52 +9,129 @@ import GuideLayout from '../layouts/GuideLayout.astro';
   slug="/terms"
 >
   <h1>Terms of Use</h1>
-  <p><em>Last updated: May 2026</em></p>
+  <p><em>Last updated: June 2026</em></p>
 
-  <h2>Estimates only</h2>
   <p>
-    All calculations on this site are <strong>estimates</strong> based on standard
-    PAYE rules and HMRC published rates. Your actual take-home pay may differ due
-    to factors including but not limited to: benefits in kind, employer-specific
-    pension arrangements, overtime, bonuses, HMRC adjustments to your tax code,
-    and self-assessment obligations.
+    Welcome to <strong>{SITE_NAME}</strong> ({SITE_URL}). By accessing and using this website, you agree
+    to be bound by the following terms and conditions. If you do not agree with any part of these terms,
+    please do not use this website. These terms are governed by the UK General Data Protection Regulation
+    (UK GDPR), the Data Protection Act 2018, and the Privacy and Electronic Communications Regulations
+    2003 (PECR).
   </p>
 
-  <h2>Not financial advice</h2>
+  <h2>1. Purpose of the Website</h2>
   <p>
-    This website does not provide financial, tax, or legal advice. The information
-    is provided for general informational purposes only. For advice specific to
-    your circumstances, consult HMRC, a chartered accountant, or a qualified tax advisor.
+    {SITE_NAME} is an independent information platform providing free online tools for calculating
+    take-home pay, income tax, National Insurance contributions, student loan repayments, pension
+    contributions, and other PAYE-related estimates for the United Kingdom. The website also publishes
+    informational guides about the UK tax system. All tools and content are provided for informational
+    and educational purposes only and do not constitute professional tax, legal, or financial advice.
   </p>
 
-  <h2>Accuracy</h2>
+  <h2>2. Estimates Only</h2>
   <p>
-    We make every effort to keep rates and thresholds up to date with the latest
-    HMRC publications. However, we cannot guarantee that all information is accurate,
-    complete, or current at all times. Use at your own risk.
+    All calculations on this site are <strong>estimates</strong> based on standard PAYE rules and HMRC
+    published rates for the current tax year. Your actual take-home pay may differ due to factors
+    including but not limited to: benefits in kind, employer-specific pension arrangements, overtime,
+    bonuses, HMRC adjustments to your tax code, Scottish or Welsh income tax rates, and self-assessment
+    obligations. Tax legislation is subject to frequent amendments, and individual circumstances can
+    affect actual outcomes.
   </p>
 
-  <h2>Intellectual property</h2>
+  <h2>3. Not Financial Advice</h2>
   <p>
-    The content, design, and code of this website are the property of Real Salary.
-    You may not reproduce, distribute, or create derivative works without permission.
+    <strong>This website does not provide financial, tax, or legal advice.</strong> The information is
+    provided for general informational purposes only. The calculations, results, and content do not
+    constitute professional advice of any kind. For advice specific to your circumstances, consult
+    HMRC, a chartered accountant, or a qualified tax advisor. We recommend verifying results via the
+    official HMRC tax calculator.
   </p>
 
-  <h2>Limitation of liability</h2>
+  <h2>4. Privacy and Data Protection</h2>
   <p>
-    To the fullest extent permitted by law, Real Salary and its operators shall not
-    be liable for any loss or damage arising from the use of this website or reliance
-    on its calculations.
+    All calculations are performed entirely in your browser using client-side JavaScript. No salary
+    data, tax code selections, or other personal financial information is transmitted to our servers.
+    We use Plausible Analytics, a privacy-friendly service that uses no cookies and is fully UK GDPR
+    compliant. See our full <a href="/privacy/">Privacy Policy</a> for details.
   </p>
 
-  <h2>Changes</h2>
+  <h2>5. Cookies and Local Storage</h2>
   <p>
-    We may update these terms at any time. Continued use of the site constitutes
-    acceptance of the current terms.
+    This website uses no tracking cookies. No advertising, profiling, or third-party cookies are placed.
+    User preferences (such as dark/light mode) are stored in the browser's localStorage, which is not a
+    cookie and is never transmitted to our servers. Cloudflare may use a strictly necessary security
+    cookie (__cf_bm) for bot detection. Since no tracking cookies are used, a cookie consent banner is
+    not legally required under PECR.
   </p>
 
-  <h2>Contact</h2>
+  <h2>6. Accuracy</h2>
   <p>
-    Questions about these terms? Email <strong>hello@realsalary.co.uk</strong>.
+    We make every effort to keep rates and thresholds up to date with the latest HMRC publications.
+    However, we cannot guarantee that all information is accurate, complete, or current at all times.
+    Tax rates, thresholds, and allowances may change during a tax year. Use at your own risk and always
+    verify with official sources.
+  </p>
+
+  <h2>7. User Responsibilities</h2>
+  <p>
+    Users agree to use this website in a lawful manner and in accordance with these terms. Users shall
+    not: (a) use the website for any illegal or unauthorised purpose; (b) attempt to gain unauthorised
+    access to any part of the website, its servers, or any connected systems; (c) reproduce, distribute,
+    or modify any content without prior written authorisation; or (d) use automated systems to extract
+    data from the website (scraping) without express permission.
+  </p>
+
+  <h2>8. Intellectual Property</h2>
+  <p>
+    All content, design, code, logos, calculation algorithms, and trademarks on this website are the
+    property of Mottalib Radif and are protected by copyright under the Copyright, Designs and Patents
+    Act 1988. Users may access and use the website for personal, non-commercial purposes only. Any other
+    use requires prior written consent. Brief quotations for informational purposes are permitted
+    provided the source is credited.
+  </p>
+
+  <h2>9. UK GDPR Rights</h2>
+  <p>
+    Under the UK GDPR and Data Protection Act 2018, you have the right to access, rectify, erase,
+    restrict processing, data portability, object to processing, and withdraw consent at any time.
+    Since no personal data is collected through our calculators, these rights are satisfied by default.
+    You have the right to lodge a complaint with the Information Commissioner's Office (ICO) at
+    <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>. For enquiries, contact
+    us at contact@realsalary.co.uk.
+  </p>
+
+  <h2>10. Limitation of Liability</h2>
+  <p>
+    To the fullest extent permitted by law, {SITE_NAME} and its operators shall not be liable for any
+    direct, indirect, incidental, consequential, or punitive damages arising from the use of or inability
+    to use this website, including but not limited to damages resulting from reliance on calculation
+    results or informational content. The website is provided on an "as is" and "as available" basis
+    without warranties of any kind, express or implied.
+  </p>
+  <p>
+    The publisher is not responsible for data loss, service interruptions, or damages to user equipment
+    resulting from the use of the website.
+  </p>
+
+  <h2>11. External Links</h2>
+  <p>
+    This site may contain links to external websites, including gov.uk, HMRC, and other authoritative
+    sources. The publisher has no control over the content of these sites and disclaims all responsibility
+    for their content, privacy practices, or availability.
+  </p>
+
+  <h2>12. Governing Law</h2>
+  <p>
+    These terms are governed by and construed in accordance with the laws of England and Wales. Any
+    disputes arising from the use of this website shall be subject to the exclusive jurisdiction of the
+    courts of England and Wales, after any attempt at amicable resolution. The potential invalidity of
+    any clause shall not affect the remaining provisions.
+  </p>
+
+  <h2>13. Changes and Contact</h2>
+  <p>
+    We may update these terms at any time. Continued use of the site constitutes acceptance of the
+    current terms. For questions, contact us at:<br />
+    Email: <a href="mailto:contact@realsalary.co.uk">contact@realsalary.co.uk</a>
   </p>
 </GuideLayout>
