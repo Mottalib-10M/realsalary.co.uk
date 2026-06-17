@@ -1,0 +1,13 @@
+{
+  "name": "Real Salary - Free UK Salary & Tax Calculators",
+  "short_name": "Real Salary",
+  "description": "Free UK salary, tax, and finance calculators. See what you actually take home.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3561",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }
+  ]
+}

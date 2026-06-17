@@ -1,45 +1,182 @@
 ---
 import GuideLayout from '../layouts/GuideLayout.astro';
 import { TAX_YEAR } from '../data/tax-rules-2026-27';
+import { SITE_NAME, SITE_URL } from '../lib/seo';
 ---
 
 <GuideLayout
-  title="About Us - Free UK Salary and Income Tax Calculators"
-  description="Free UK salary and tax calculators built with official HMRC rates for 2026/27. Calculate take home pay, income tax, National Insurance and pension instantly."
+  title="About Real Salary - Free UK Salary and Income Tax Calculators"
+  description="Free UK salary and tax calculators built with official HMRC rates. Founded by Mottalib Radif, MBA INSEAD. Calculate take-home pay, income tax, National Insurance and pension instantly."
   slug="/about"
 >
-  <h1>About Real Salary</h1>
 
+  <h1>About {SITE_NAME}</h1>
+
+  <!-- Author Card -->
+  <div class="not-prose my-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 rounded-2xl border border-navy-100 bg-gradient-to-br from-navy-50 to-gray-50 p-8 dark:border-gray-700 dark:from-gray-800 dark:to-gray-900">
+    <div class="shrink-0">
+      <img
+        src="/team/mottalib-radif.jpg"
+        alt="Mottalib Radif, founder of Real Salary"
+        width="120"
+        height="120"
+        class="rounded-full border-4 border-white shadow-lg"
+        loading="eager"
+      />
+    </div>
+    <div>
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white mt-0">Mottalib Radif</h2>
+      <p class="text-sm font-medium text-navy-600 dark:text-navy-400">Founder of {SITE_NAME} &middot; MBA, INSEAD</p>
+      <p class="mt-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+        INSEAD MBA graduate and personal finance advocate. I built {SITE_NAME} because
+        understanding your take-home pay should not require a tax accountant. Every UK worker
+        deserves free, transparent tools to see exactly what lands in their bank account after
+        tax, National Insurance, student loans, and pension contributions.
+      </p>
+    </div>
+  </div>
+
+  <h2>Our Mission</h2>
   <p>
-    Real Salary is a free suite of UK salary, tax, and finance calculators.
-    Our goal is simple: help you understand what you actually take home from your pay.
+    {SITE_NAME} is a free suite of UK salary, tax, and finance calculators. Our goal is simple:
+    help you understand what you actually take home from your pay. The number on your employment
+    contract is not what lands in your bank account. Between income tax, National Insurance
+    contributions, student loan repayments, and pension deductions, the gap between gross and
+    net can be significant and confusing. We built {SITE_NAME} to make this transparent for
+    every worker in the United Kingdom.
+  </p>
+  <p>
+    Our mission goes beyond a single calculator. We want to be the definitive resource for anyone
+    in the UK who needs to understand how their salary translates into take-home pay. Whether you
+    are a graduate starting your first job, a mid-career professional evaluating a pay rise, or a
+    contractor deciding between PAYE and limited company structures, our tools are designed to give
+    you clarity. Financial literacy begins with understanding your own paycheck, and we believe
+    this understanding should be free and accessible to everyone.
   </p>
 
-  <h2>Why we built this</h2>
+  <h2>What We Offer</h2>
   <p>
-    The number on your employment contract is not what lands in your bank account.
-    Between income tax, National Insurance, student loan repayments, and pension
-    contributions, the gap between gross and net can be significant — and confusing.
+    Our platform provides a comprehensive collection of calculators covering every aspect of UK
+    personal finance taxation:
   </p>
+  <ul>
+    <li><strong>Salary calculator</strong>: The core tool. Enter your annual, monthly, or weekly salary and see a complete breakdown of income tax, National Insurance, student loan repayments, and pension contributions across all pay frequencies.</li>
+    <li><strong>Take-home pay calculator</strong>: Focused on the bottom line. See exactly what hits your bank account each month after all deductions.</li>
+    <li><strong>Income tax calculator</strong>: Detailed breakdown of Personal Allowance, basic rate, higher rate, and additional rate tax bands, including the tapered Personal Allowance for high earners.</li>
+    <li><strong>National Insurance calculator</strong>: Class 1 employee contributions with the Primary Threshold, Upper Earnings Limit, and applicable rates for the current tax year.</li>
+    <li><strong>Student loan calculator</strong>: Plan 1, Plan 2, Plan 4, Plan 5, and Postgraduate Loan repayment calculations based on current HMRC thresholds.</li>
+    <li><strong>Pension contribution calculator</strong>: Model the impact of workplace pension contributions on your take-home pay, including salary sacrifice and relief at source methods.</li>
+    <li><strong>Bonus tax calculator</strong>: Understand how a one-off bonus affects your tax position for the year.</li>
+    <li><strong>Hourly rate calculator</strong>: Convert annual salary to hourly rate accounting for working hours and holiday entitlement.</li>
+    <li><strong>Pro-rata calculator</strong>: Calculate part-time equivalent salary from full-time figures.</li>
+    <li><strong>Required salary calculator</strong>: Work backwards from a desired take-home amount to find the gross salary needed.</li>
+    <li><strong>Two jobs calculator</strong>: Model the tax implications of holding two concurrent employments.</li>
+  </ul>
   <p>
-    We built Real Salary to make this transparent. Every calculator uses official
-    HMRC rates for the {TAX_YEAR} tax year, updated within days of any government
-    announcement.
+    Every calculator runs instantly in your browser. There is no sign-up, no account creation,
+    and no email required. Enter your figures and see results in real time.
   </p>
 
-  <h2>Accuracy</h2>
+  <h2>Our Methodology and Accuracy</h2>
   <p>
-    All tax rates and thresholds are sourced directly from
-    <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">gov.uk</a>.
-    Calculations follow standard PAYE rules. While we strive for accuracy, this site
-    provides estimates — not financial advice. For your specific situation, consult
-    HMRC or a qualified accountant.
+    All tax rates and thresholds on {SITE_NAME} are sourced directly from official HMRC
+    publications and the gov.uk website. We do not estimate, approximate, or use outdated
+    figures. Our calculations follow standard PAYE rules as published by Her Majesty's Revenue
+    and Customs.
+  </p>
+  <h3>Primary Sources</h3>
+  <ul>
+    <li><strong>HMRC tax rates and thresholds</strong>: Published annually on gov.uk, including income tax bands, Personal Allowance, National Insurance thresholds, and student loan repayment thresholds.</li>
+    <li><strong>The Pensions Regulator</strong>: Minimum workplace pension contribution rates and qualifying earnings thresholds.</li>
+    <li><strong>Student Loans Company</strong>: Current repayment thresholds for all plan types.</li>
+    <li><strong>National Living Wage and National Minimum Wage</strong>: Official rates published by the Department for Business and Trade.</li>
+  </ul>
+  <h3>Validation</h3>
+  <p>
+    Each calculator is tested against HMRC's own PAYE tools and validated with reference
+    scenarios covering standard cases, edge cases around thresholds, and high-income scenarios
+    where the Personal Allowance tapers. We verify every calculator at the start of each tax
+    year when new rates are announced. The current data reflects the {TAX_YEAR} tax year, and
+    every page clearly displays which tax year rates are being used.
   </p>
 
-  <h2>Privacy</h2>
+  <h2>How We Are Different</h2>
   <p>
-    We don't store your salary data. All calculations happen in your browser.
-    We use privacy-friendly analytics with no cookies or personal data collection.
-    See our <a href="/privacy/">privacy policy</a> for details.
+    There are other salary calculators available online. Here is what sets {SITE_NAME} apart:
   </p>
+  <ul>
+    <li><strong>Privacy-first</strong>: All calculations happen in your browser. We never see, store, or transmit your salary data. Your financial information never leaves your device.</li>
+    <li><strong>No accounts or paywalls</strong>: Every tool is free, immediately accessible, with no registration required.</li>
+    <li><strong>Modern, fast design</strong>: Built with modern web technology, the site loads quickly on any device. No bloated frameworks, no third-party tracking scripts, no intrusive pop-ups.</li>
+    <li><strong>Transparent calculations</strong>: We show you the full breakdown, not just a final number. Understand exactly how much goes to income tax at each band, National Insurance, student loans, and pension.</li>
+    <li><strong>Comprehensive</strong>: We handle the details that simpler calculators miss, including the tapered Personal Allowance, Scottish income tax rates, multiple student loan plans, and salary sacrifice pension arrangements.</li>
+    <li><strong>Updated promptly</strong>: When HMRC announces new rates, we update within days. We clearly label the applicable tax year on every page.</li>
+    <li><strong>No conflicts of interest</strong>: We do not sell financial products, insurance, or investment services. We are not a comparison site earning commission from referrals. Our revenue comes from contextual advertising only.</li>
+  </ul>
+
+  <h2>Understanding UK Taxation</h2>
+  <p>
+    The UK tax system, while simpler than some countries, still presents complexity that catches
+    many workers off guard. Income tax operates on a progressive basis with a tax-free Personal
+    Allowance (currently reduced by one pound for every two pounds earned over one hundred
+    thousand pounds), basic rate, higher rate, and additional rate bands. On top of income tax,
+    employees pay Class 1 National Insurance contributions, which fund the state pension, NHS,
+    and other benefits.
+  </p>
+  <p>
+    For graduates, student loan repayments add another layer of complexity. The UK currently has
+    five different student loan repayment plans, each with its own threshold and rate. A graduate
+    on Plan 2 with a Postgraduate Loan faces two separate repayment deductions on top of income
+    tax and National Insurance. Understanding the combined impact of these deductions on take-home
+    pay is essential for budgeting and financial planning, yet many graduates are surprised by
+    how much the gap between gross and net pay can be.
+  </p>
+  <p>
+    Pension contributions introduce further complexity. Auto-enrolment means most employees now
+    contribute to a workplace pension, with the method of contribution (relief at source versus
+    salary sacrifice) affecting both the amount of tax relief received and the net impact on
+    take-home pay. For higher-rate taxpayers, salary sacrifice can provide significant savings
+    by reducing taxable income, but many workers are unaware of this option or its implications.
+  </p>
+  <p>
+    {SITE_NAME} handles all of these interactions. Our calculators model the combined effect of
+    income tax, National Insurance, student loans, and pension contributions simultaneously, so
+    you see the accurate net figure rather than a rough approximation. We believe every worker
+    deserves to understand precisely how their salary is allocated before committing to financial
+    obligations.
+  </p>
+
+  <h2>Our Commitment to Quality</h2>
+  <p>
+    We treat each calculator as a product that real people use for real financial decisions. A
+    small error in a tax calculation can lead to incorrect budgeting, unexpected shortfalls, or
+    poor career choices made on inaccurate salary comparisons. That is why accuracy is our
+    highest priority. Every formula is implemented from primary HMRC sources, tested against
+    official tools, and reviewed at the start of each tax year.
+  </p>
+  <p>
+    Our commitment extends to performance and accessibility. We self-host our web fonts to
+    eliminate render-blocking requests to external CDNs. We optimise our code for fast initial
+    page loads. The site works on any modern browser, on any device, without requiring JavaScript
+    for the initial page render. We follow web accessibility guidelines to ensure our tools are
+    usable by everyone, including keyboard-only navigation and screen reader compatibility.
+  </p>
+
+  <h2>Important Disclaimer</h2>
+  <p>
+    While we strive for accuracy, {SITE_NAME} provides estimates based on standard PAYE rules.
+    Your actual tax position may differ due to factors our calculators do not capture, including
+    benefits in kind, multiple employments processed on a non-cumulative basis, Marriage
+    Allowance transfers, tax codes adjusted for underpayments, and individual HMRC adjustments.
+    For your specific situation, consult HMRC directly or speak to a qualified accountant.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions, corrections, or feedback? We take accuracy seriously and welcome all reports.
+  </p>
+  <p>
+    <strong>Email:</strong> <a href="mailto:contact@realsalary.co.uk">contact@realsalary.co.uk</a>
+  </p>
+
 </GuideLayout>

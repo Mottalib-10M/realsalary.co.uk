@@ -20,6 +20,37 @@ const { slug, title, metaTitle, metaDescription, h1, intro, faqs } = Astro.props
 const pageTitle = buildTitle(metaTitle);
 const canonical = buildCanonical(slug);
 
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/favicon.svg`,
+  founder: {
+    '@type': 'Person',
+    name: 'Mottalib Radif',
+    description: 'MBA INSEAD',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'contact@realsalary.co.uk',
+    contactType: 'customer support',
+  },
+};
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Mottalib Radif',
+  jobTitle: 'Founder',
+  alumniOf: {
+    '@type': 'EducationalOrganization',
+    name: 'INSEAD',
+  },
+  image: `${SITE_URL}/team/mottalib-radif.jpg`,
+  url: `${SITE_URL}/about/`,
+};
+
 const schemas = [
   webApplicationSchema(title, metaDescription, canonical),
   faqSchema(faqs),
@@ -27,6 +58,8 @@ const schemas = [
     { name: 'Home', url: SITE_URL },
     { name: title, url: canonical },
   ]),
+  organizationSchema,
+  personSchema,
 ];
 ---
 
@@ -37,6 +70,7 @@ const schemas = [
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{pageTitle}</title>
   <meta name="description" content={metaDescription} />
+  <meta name="author" content="Mottalib Radif" />
   <link rel="canonical" href={canonical} />
 
   <!-- Open Graph -->
@@ -60,10 +94,12 @@ const schemas = [
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-  <!-- Preconnect for fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Preload Inter font (self-hosted) -->
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.webmanifest" />
 
   <!-- Structured Data -->
   {schemas.map((schema) => (
