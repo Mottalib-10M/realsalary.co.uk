@@ -1,0 +1,96 @@
+---
+import GuideLayout from '../layouts/GuideLayout.astro';
+---
+
+<GuideLayout
+  title="Free UK Salary Calculator Widget for Your Website"
+  description="Embed our free UK salary calculator on your website. No sign-up, no API key, auto-updates with HMRC rates. Copy the code and paste it into your HTML."
+  slug="/widget"
+>
+
+  <h1>Embed Our Free UK Salary Calculator</h1>
+
+  <p>
+    Add a free, interactive UK salary calculator to your website. The widget uses
+    official HMRC 2026/27 tax rates, runs entirely in the browser, and requires
+    no API key or account. It updates automatically when we publish new tax year rates.
+  </p>
+
+  <h2>Preview</h2>
+
+  <div class="not-prose my-6">
+    <iframe
+      src="/embed/"
+      width="100%"
+      height="420"
+      style="border: 1px solid #e5e7eb; border-radius: 12px; max-width: 400px;"
+      title="UK Salary Calculator Widget Preview"
+      loading="lazy"
+    ></iframe>
+  </div>
+
+  <h2>Embed Code</h2>
+
+  <p>Copy and paste this code into your HTML where you want the calculator to appear:</p>
+
+  <div class="not-prose my-6 relative">
+    <button
+      id="copy-btn"
+      class="absolute right-3 top-3 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+    >
+      Copy
+    </button>
+    <pre class="overflow-x-auto rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-900"><code id="embed-code">&lt;iframe
+  src="https://realsalary.co.uk/embed/"
+  width="400"
+  height="420"
+  style="border:none;border-radius:12px;"
+  title="UK Salary Calculator"
+  loading="lazy"
+&gt;&lt;/iframe&gt;</code></pre>
+  </div>
+
+  <h2>Why Use Our Widget?</h2>
+
+  <ul>
+    <li><strong>Free forever</strong> &mdash; no licence, no API key, no hidden costs</li>
+    <li><strong>Always accurate</strong> &mdash; uses official HMRC 2026/27 tax rates, updated each April</li>
+    <li><strong>Privacy-first</strong> &mdash; all calculations run in the visitor's browser, no data leaves their device</li>
+    <li><strong>Responsive</strong> &mdash; fits any container width down to 320 px</li>
+    <li><strong>Lightweight</strong> &mdash; fully self-contained HTML, CSS and JS (no external dependencies)</li>
+    <li><strong>Auto-updates</strong> &mdash; because the iframe loads from our server, it always uses the latest tax rates</li>
+  </ul>
+
+  <h2>Customisation</h2>
+
+  <p>
+    You can adjust the <code>width</code> and <code>height</code> attributes to fit your
+    layout. The widget is designed at 380 &times; 400 px but adapts to any width.
+  </p>
+
+  <h2>Questions?</h2>
+
+  <p>
+    Need a different size, colour scheme, or feature? Get in touch at
+    <a href="mailto:contact@realsalary.co.uk">contact@realsalary.co.uk</a> and we will
+    do our best to help.
+  </p>
+
+</GuideLayout>
+
+<script>
+  const btn = document.getElementById('copy-btn');
+  const code = document.getElementById('embed-code');
+  if (btn && code) {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent || '');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      } catch {
+        btn.textContent = 'Failed';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      }
+    });
+  }
+</script>

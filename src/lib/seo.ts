@@ -89,16 +89,21 @@ export function articleSchema(options: {
     headline: options.headline,
     description: options.description,
     datePublished: options.datePublished ?? '2025-05-12',
-    dateModified: options.dateModified ?? '2025-05-12',
+    dateModified: options.dateModified ?? '2026-06-19',
+    inLanguage: 'en-GB',
     author: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
+      '@type': 'Person',
+      name: 'Mottalib Radif',
+      url: `${SITE_URL}/about/`,
+      image: `${SITE_URL}/team/mottalib-radif.jpg`,
     },
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
-      url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/og-default.svg`,
+      },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',

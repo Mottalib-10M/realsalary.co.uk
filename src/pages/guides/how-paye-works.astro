@@ -13,9 +13,16 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     PAYE — Pay As You Earn — is the system HMRC uses to collect income tax and National Insurance from employees' wages before they receive their pay. Rather than paying a large tax bill once a year, PAYE spreads your tax liability across every pay period, making it manageable and largely invisible. If you're an employee in the UK, PAYE is the reason your payslip shows deductions and why your bank balance doesn't match your contract salary.
   </p>
 
+  <p>
+    Understanding how PAYE works is essential for checking that you are paying the correct amount of tax. Millions of UK employees are overtaxed or undertaxed each year simply because they do not review their payslips or tax codes. This guide explains the mechanics of the system in full detail, using the <a href="/guides/uk-tax-year-2026-27/">2026/27 tax year</a> rates and thresholds throughout.
+  </p>
+
   <h2>The History of PAYE</h2>
   <p>
     PAYE was introduced in 1944 during World War II to ensure a steady flow of tax revenue to fund the war effort. Before PAYE, employees paid tax in two lump sums per year, which caused hardship and unpredictable government revenue. The system has been updated many times since, but the core principle remains: your employer acts as an unpaid tax collector on HMRC's behalf.
+  </p>
+  <p>
+    Today, PAYE is by far the largest source of government revenue. It covers not only income tax and National Insurance but can also collect <a href="/student-loan/">student loan repayments</a>, postgraduate loan repayments, and even adjustments for underpaid tax from previous years. The system applies to around 30 million employees across the UK and handles hundreds of billions of pounds annually.
   </p>
 
   <h2>How Your Employer Calculates PAYE</h2>
@@ -23,14 +30,49 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     Every time your employer runs payroll, they follow these steps:
   </p>
   <ol>
-    <li><strong>Check your tax code.</strong> Your tax code tells your employer how much tax-free income (personal allowance) to apply. The standard code 1257L means £12,570 of tax-free income per year.</li>
+    <li><strong>Check your tax code.</strong> Your tax code tells your employer how much tax-free income (personal allowance) to apply. The standard code for 2026/27 is 1257L, which means £12,570 of tax-free income per year.</li>
     <li><strong>Calculate cumulative earnings.</strong> PAYE works cumulatively — your employer tracks your total earnings and total tax paid from the start of the tax year (6 April).</li>
     <li><strong>Calculate tax due to date.</strong> Based on your cumulative earnings and the tax bands, your employer calculates the total tax you should have paid by this point in the year.</li>
     <li><strong>Subtract tax already paid.</strong> The tax already deducted in previous pay periods is subtracted. The difference is the tax for this period.</li>
-    <li><strong>Calculate National Insurance.</strong> NI is calculated per pay period (not cumulatively). If your monthly earnings exceed £1,048 (£12,570 ÷ 12), you pay 8% up to £4,189/month and 2% above that.</li>
+    <li><strong>Calculate National Insurance.</strong> NI is calculated per pay period (not cumulatively). If your monthly earnings exceed £1,048 (£12,570 divided by 12), you pay 8% up to £4,189 per month and 2% above that.</li>
     <li><strong>Apply other deductions.</strong> Student loan repayments, pension contributions, and any other payroll deductions are calculated.</li>
     <li><strong>Report to HMRC via RTI.</strong> Your employer submits a Real Time Information (RTI) report to HMRC every time they pay you, detailing your earnings and deductions.</li>
   </ol>
+
+  <h3>Worked Example: Monthly PAYE for a £35,000 Salary</h3>
+  <p>
+    Suppose you earn £35,000 per year, paid monthly, with tax code 1257L and no other deductions. Here is what happens each month using 2026/27 rates:
+  </p>
+  <ul>
+    <li><strong>Gross monthly pay:</strong> £35,000 / 12 = £2,916.67</li>
+    <li><strong>Monthly personal allowance:</strong> £12,570 / 12 = £1,047.50</li>
+    <li><strong>Taxable pay this month:</strong> £2,916.67 - £1,047.50 = £1,869.17</li>
+    <li><strong>Income tax (20% basic rate):</strong> £1,869.17 x 0.20 = £373.83</li>
+    <li><strong>National Insurance:</strong> (£2,916.67 - £1,047.50) x 0.08 = £149.53</li>
+    <li><strong>Total deductions:</strong> £373.83 + £149.53 = £523.36</li>
+    <li><strong>Net pay:</strong> £2,916.67 - £523.36 = £2,393.31</li>
+  </ul>
+  <p>
+    Over 12 months, total income tax would be approximately £4,486 and total employee NI approximately £1,794, giving annual take-home pay of around £28,720. You can verify this figure instantly with our <a href="/take-home-pay/">take-home pay calculator</a>.
+  </p>
+
+  <h3>Worked Example: Higher-Rate Taxpayer on £65,000</h3>
+  <p>
+    If you earn £65,000 per year with tax code 1257L, your monthly PAYE calculation is more involved because your income spans two tax bands:
+  </p>
+  <ul>
+    <li><strong>Gross monthly pay:</strong> £65,000 / 12 = £5,416.67</li>
+    <li><strong>Monthly personal allowance:</strong> £1,047.50</li>
+    <li><strong>Basic rate band (monthly):</strong> (£50,270 - £12,570) / 12 = £3,141.67</li>
+    <li><strong>Income taxed at 20%:</strong> £3,141.67 x 0.20 = £628.33</li>
+    <li><strong>Income taxed at 40%:</strong> (£5,416.67 - £1,047.50 - £3,141.67) x 0.40 = £1,227.50 x 0.40 = £491.00</li>
+    <li><strong>Total income tax:</strong> £628.33 + £491.00 = £1,119.33</li>
+    <li><strong>National Insurance:</strong> (£4,189.17 - £1,047.50) x 0.08 + (£5,416.67 - £4,189.17) x 0.02 = £251.33 + £24.55 = £275.88</li>
+    <li><strong>Net pay:</strong> £5,416.67 - £1,119.33 - £275.88 = £4,021.46</li>
+  </ul>
+  <p>
+    The jump from basic rate to higher rate is significant. A £30,000 increase in salary (from £35,000 to £65,000) yields only around £19,538 more take-home pay per year rather than the full £30,000, because a substantial portion falls into the 40% band. Use the <a href="/income-tax/">income tax calculator</a> to model any salary and see exactly how much falls into each band.
+  </p>
 
   <h2>Why PAYE Is Cumulative</h2>
   <p>
@@ -38,6 +80,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
   </p>
   <p>
     This also means that if you start a new job partway through the year, your first payslip may be unusually high or low. Your new employer uses a cumulative calculation, so if you've already used some of your personal allowance at your previous job (shown on your P45), the remaining allowance is spread across the remaining months.
+  </p>
+  <p>
+    For example, if you leave one job at the end of August (month 5) and start another in September (month 6), your new employer knows you have already used 5/12 of your personal allowance. The remaining 7/12 (approximately £7,333) is spread across months 6 to 12. If your P45 shows you have overpaid tax at your old job — perhaps because you were on a higher tax code than necessary — your new employer's cumulative calculation may result in a refund being applied to your first payslip, making it noticeably larger than expected.
   </p>
 
   <h2>Week 1 / Month 1 Basis</h2>
@@ -51,6 +96,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
   </ul>
   <p>
     Week 1/Month 1 can result in over- or under-taxation. Once HMRC resolves the issue, they'll switch you back to cumulative basis and any over-deducted tax will be refunded through your payslip.
+  </p>
+  <p>
+    You can identify a non-cumulative code on your payslip by looking for a "W1", "M1", or "X" suffix after the tax code number — for instance, "1257L M1". If you see this and more than two months have passed since you started the job, it is worth contacting HMRC to ask them to issue a cumulative code to your employer, as remaining on Month 1 for an extended period increases the risk of an incorrect annual tax bill.
   </p>
 
   <h2>Your Tax Code Explained</h2>
@@ -72,7 +120,26 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     </tbody>
   </table>
   <p>
-    The number in your tax code multiplied by 10 (and add 9) gives your annual tax-free amount. So 1257L means £12,570 (1257 × 10 + 9 = £12,579, rounded to £12,570). If your code is 1100L, your allowance is £11,009 — typically reduced because of benefits in kind or previous underpayment.
+    The number in your tax code multiplied by 10 (and add 9) gives your annual tax-free amount. So 1257L means £12,570 (1257 x 10 + 9 = £12,579, rounded to £12,570). If your code is 1100L, your allowance is £11,009 — typically reduced because of benefits in kind or previous underpayment.
+  </p>
+
+  <h3>K Codes in Detail</h3>
+  <p>
+    A K code is used when the value of your untaxed benefits (such as a company car or private medical insurance) exceeds your personal allowance. Instead of giving you a tax-free amount, the K code adds a notional amount to your taxable pay. For example, K475 means £4,759 is added to your taxable income for the year. This effectively means you have no tax-free allowance and are taxed on an additional £4,759 on top of your actual earnings. K codes cannot result in more than 50% of your gross pay being deducted in any single period — this is a safeguard built into the PAYE system.
+  </p>
+
+  <h3>How Tax Codes Are Adjusted</h3>
+  <p>
+    HMRC adjusts your tax code to collect or refund tax for items that cannot easily be handled through standard PAYE. Common adjustments include:
+  </p>
+  <ul>
+    <li><strong>Company benefits:</strong> The taxable value of a company car, fuel benefit, or medical insurance is divided across 12 months by reducing your personal allowance in the code.</li>
+    <li><strong>Underpayment from a previous year:</strong> If your P800 showed you owed tax, HMRC may collect it by reducing your code for the following year.</li>
+    <li><strong>Job expenses:</strong> If you claim flat-rate expenses or professional subscriptions, HMRC increases your code to give you more tax-free income.</li>
+    <li><strong>Marriage Allowance:</strong> Transferring 10% of your allowance to a spouse reduces your code (and increases theirs).</li>
+  </ul>
+  <p>
+    If you have <a href="/two-jobs/">two jobs</a>, each employment will have its own tax code. Typically, your main job uses your full personal allowance (1257L) and your second job uses BR (basic rate) or D0 (higher rate), depending on your total combined income.
   </p>
 
   <h2>What Appears on Your Payslip</h2>
@@ -89,6 +156,40 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <li><strong>Net pay:</strong> What actually hits your bank account.</li>
     <li><strong>Year-to-date (YTD) figures:</strong> Cumulative totals for the tax year so far.</li>
   </ul>
+  <p>
+    Employers are legally required to provide a payslip for every pay period. Since April 2019, this obligation extends to agency workers and casual staff, not just permanent employees. Your payslip must itemise each deduction and show your gross and net pay. If your payslip lacks detail or you are not receiving one at all, this is a legal issue you should raise with your employer or report to HMRC.
+  </p>
+  <p>
+    It is good practice to compare your payslip against an independent calculation at least once per year. Our <a href="/">salary calculator</a> lets you enter your gross salary, tax code, pension, and student loan details to produce a full payslip breakdown you can cross-check against your employer's figures.
+  </p>
+
+  <h2>How PAYE Handles Bonuses</h2>
+  <p>
+    A common concern among employees is whether bonuses are "taxed more" than regular pay. The answer is: not exactly. PAYE applies the same tax rates to a bonus as to any other earnings, but because the bonus is added on top of your regular salary for that pay period, it pushes more of your income into higher tax bands.
+  </p>
+  <p>
+    For instance, if you earn £45,000 per year (monthly gross of £3,750) and receive a £5,000 bonus in December, your December gross is £8,750. The cumulative calculation accounts for the fact that you have already used nine months of personal allowance and basic rate band. The bonus may push your cumulative earnings above the basic rate threshold (£50,270), causing part of it to be taxed at 40%. However, if your annual total including the bonus is still under £50,270, the cumulative system will ensure you are only taxed at basic rate for the year, and any overtaxation will be corrected in subsequent months. You can model bonus scenarios with our <a href="/bonus/">bonus tax calculator</a>.
+  </p>
+
+  <h2>Pension Contributions Through PAYE</h2>
+  <p>
+    Workplace pensions are deducted through PAYE and can significantly affect your take-home pay. There are two main methods:
+  </p>
+  <ul>
+    <li><strong>Relief at source:</strong> Your pension contribution is taken from your net pay (after tax). Your pension provider then claims basic rate tax relief (20%) from HMRC and adds it to your pot. Higher and additional rate taxpayers must claim the extra relief through Self Assessment or by contacting HMRC.</li>
+    <li><strong>Salary sacrifice (or net pay arrangement):</strong> Your gross salary is reduced before tax is calculated. This means you receive full tax relief immediately and also save on National Insurance. Salary sacrifice is more tax-efficient because it reduces both your income tax and NI liability.</li>
+  </ul>
+  <p>
+    Under auto-enrolment for 2026/27, the minimum employee contribution is 5% and the employer contribution is 3% (total 8%), calculated on qualifying earnings between £6,240 and £50,270. Many employers contribute more than the minimum, and some calculate pension on full salary rather than qualifying earnings only. Use our <a href="/pension-contribution/">pension contribution calculator</a> to see how different contribution levels affect your take-home pay.
+  </p>
+
+  <h2>Student Loan Repayments Through PAYE</h2>
+  <p>
+    If you have a student loan, your employer deducts repayments through PAYE once your earnings exceed your plan's annual threshold. For 2026/27, the thresholds are: Plan 1 at £26,900, Plan 2 at £29,385, Plan 4 (Scotland) at £33,795, Plan 5 at £25,000, and Postgraduate Loan at £21,000. The repayment rate is 9% of earnings above the threshold for undergraduate plans and 6% for postgraduate loans.
+  </p>
+  <p>
+    For example, if you earn £35,000 on Plan 2, your annual repayment is (£35,000 - £29,385) x 9% = £505.35 per year, or about £42.11 per month. If you also have a postgraduate loan, you would additionally repay (£35,000 - £21,000) x 6% = £840 per year. Both deductions are collected simultaneously. See our <a href="/student-loan/">student loan repayment calculator</a> for a detailed breakdown.
+  </p>
 
   <h2>P45, P60, and P11D</h2>
   <table>
@@ -101,6 +202,12 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
       <tr><td>P11D</td><td>After 5 April (if applicable)</td><td>Reports benefits in kind (company car, medical insurance, etc.). These are taxed via your tax code the following year.</td></tr>
     </tbody>
   </table>
+  <p>
+    Your P45 is arguably the most important of these documents when changing jobs. It contains your tax code, total pay, and total tax deducted up to your leaving date. Without it, your new employer must use an emergency tax code, which usually results in overtaxation until HMRC issues the correct code. If you have lost your P45, contact your former employer's payroll department — they are required to provide one. HMRC cannot issue a replacement P45, but they can update your new employer's records directly.
+  </p>
+  <p>
+    Your P60 is issued by 31 May following the end of the tax year. Keep it safe, as it serves as proof of income and tax paid. Many mortgage lenders, landlords, and government agencies require P60s as supporting evidence. Since 2014, your employer may provide your P60 electronically rather than on paper — both formats are equally valid.
+  </p>
 
   <h2>When PAYE Goes Wrong</h2>
   <p>
@@ -112,6 +219,29 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <li><strong>P800 tax reconciliation:</strong> After the tax year ends, HMRC checks whether you paid the right amount. If not, they send a P800 — either a refund or a bill. You have 60 days to query a P800 before HMRC collects any underpayment.</li>
     <li><strong>Two jobs with incorrect codes:</strong> If you have two employments and the codes don't reflect your combined income, you'll underpay tax during the year.</li>
   </ul>
+
+  <h3>Common Mistakes Employees Make</h3>
+  <p>
+    Beyond system errors, there are several mistakes employees regularly make that lead to incorrect PAYE deductions:
+  </p>
+  <ul>
+    <li><strong>Not providing a P45 to a new employer:</strong> This is the single most common cause of emergency tax. Always hand over parts 2 and 3 of your P45 on your first day.</li>
+    <li><strong>Ignoring tax code notices:</strong> HMRC sends notices (form P2) when your tax code changes. Many people discard these without reading them. Always check that the new code is correct and query any unexpected changes.</li>
+    <li><strong>Not claiming allowable expenses:</strong> If you pay professional subscriptions, buy tools for work, or work from home regularly, you may be entitled to a higher personal allowance. Failing to claim means you are overtaxed.</li>
+    <li><strong>Forgetting to update HMRC about changes:</strong> If you stop receiving a benefit in kind (e.g., you return a company car), you must tell HMRC so they remove the adjustment from your tax code. Otherwise, you will continue to be overtaxed.</li>
+    <li><strong>Assuming PAYE is always correct:</strong> HMRC relies on the data your employer submits. If your employer makes a payroll error, HMRC's records will also be wrong. Always compare your payslip to an independent calculation using a <a href="/take-home-pay/">take-home pay calculator</a>.</li>
+  </ul>
+
+  <h2>The 60% Tax Trap</h2>
+  <p>
+    One of the most important edge cases in the PAYE system affects those earning between £100,000 and £125,140. In this income range, the personal allowance is progressively withdrawn at a rate of £1 for every £2 of income above £100,000. This creates an effective marginal tax rate of 60% on income in this band (40% income tax plus an additional 20% from losing the allowance).
+  </p>
+  <p>
+    For example, someone earning £112,570 has lost half their personal allowance (£6,285), meaning they have a tax-free amount of only £6,285 instead of the full £12,570. At £125,140, the personal allowance is completely eliminated. This trap is built into the PAYE system — HMRC adjusts your tax code to reflect the reduced allowance. If your income fluctuates around these thresholds, your tax code may change frequently during the year.
+  </p>
+  <p>
+    One legitimate way to mitigate the 60% trap is to increase pension contributions via salary sacrifice. By reducing your gross income below £100,000, you restore your full personal allowance. This can be extraordinarily tax-efficient — every £1 contributed to a pension in the £100,000 to £125,140 band effectively costs you only 40p after accounting for the restored allowance. See our <a href="/pension-contribution/">pension contribution calculator</a> and <a href="/guides/pension-salary-sacrifice-explained/">salary sacrifice guide</a> for more detail.
+  </p>
 
   <h2>PAYE and Self-Assessment</h2>
   <p>
@@ -125,6 +255,17 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <li>Have foreign income.</li>
     <li>Have capital gains above the annual exempt amount.</li>
   </ul>
+  <p>
+    Even if you are required to file a Self Assessment return, PAYE continues to operate on your employment income. Your Self Assessment calculation will credit the tax already collected via PAYE, and any additional liability (or refund) is settled through the return. The online filing deadline for the 2026/27 tax year is 31 January 2028.
+  </p>
+
+  <h2>PAYE for Directors</h2>
+  <p>
+    Company directors have a different National Insurance calculation under PAYE. Instead of the standard per-period calculation, directors' NI is calculated on a cumulative annual basis. This means that a director who takes a small salary for most of the year and a large dividend or bonus at the end will have NI calculated across the full year's earnings, not just the period in which the payment was made. The annual Primary Threshold and Upper Earnings Limit still apply, but on an annual rather than monthly basis.
+  </p>
+  <p>
+    This distinction is important for directors of small limited companies who pay themselves a combination of salary and dividends. The most tax-efficient salary level for 2026/27 is often set at the Primary Threshold of £12,570 — high enough to qualify for state pension credits but low enough to avoid any employee NI liability.
+  </p>
 
   <h2>How to Check Your PAYE Is Correct</h2>
   <ol>
@@ -134,6 +275,12 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <li>Check for any benefits in kind or underpayments being collected.</li>
     <li>Use our <a href="/">salary calculator</a> to verify the figures match your payslip.</li>
   </ol>
+  <p>
+    If you discover a discrepancy, you can contact HMRC by phone on 0300 200 3300 or through your Personal Tax Account online. It is generally faster to use the online service, as phone wait times can be lengthy. Keep records of all correspondence with HMRC, including dates and reference numbers.
+  </p>
+  <p>
+    You should also check your National Insurance record periodically at <a href="https://www.gov.uk/check-national-insurance-record" target="_blank" rel="noopener">GOV.UK</a>. Gaps in your NI record can affect your entitlement to the State Pension and certain benefits. If your employer is deducting NI but it is not appearing on your record, this is a serious issue that needs immediate attention — it may indicate your employer is not forwarding your contributions to HMRC. Use our <a href="/national-insurance/">National Insurance calculator</a> to check what you should be paying.
+  </p>
 
   <h2>Sources</h2>
   <ul>
@@ -141,5 +288,6 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
     <li><a href="https://www.gov.uk/tax-codes" target="_blank" rel="noopener">Tax codes — GOV.UK</a></li>
     <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener">Check your income tax — GOV.UK</a></li>
     <li><a href="https://www.gov.uk/paye-forms-p45-p60-p11d" target="_blank" rel="noopener">PAYE forms (P45, P60, P11D) — GOV.UK</a></li>
+    <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
   </ul>
 </GuideLayout>

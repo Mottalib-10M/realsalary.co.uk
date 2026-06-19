@@ -55,7 +55,7 @@ const canonical = buildCanonical(`/salary/${page.slug}`);
 
 const breadcrumbs = breadcrumbSchema([
   { name: 'Home', url: SITE_URL },
-  { name: 'Salary Pages', url: `${SITE_URL}/salary` },
+  { name: 'Salary Pages', url: `${SITE_URL}/salary/` },
   { name: `£${page.monthly.toLocaleString('en-GB')} Per Month`, url: canonical },
 ]);
 

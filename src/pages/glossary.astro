@@ -5,24 +5,9 @@ import '../styles/global.css';
 import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, LAST_UPDATED } from '../lib/seo';
 import { TAX_YEAR } from '../data/tax-rules-2026-27';
 
-const title = `UK Tax Glossary ${TAX_YEAR}: Salary, PAYE & National Insurance Terms`;
-const description = `Every UK tax, salary and payroll term explained in plain English. PAYE, National Insurance, tax codes, student loans, pension auto-enrolment and more for ${TAX_YEAR}.`;
+const title = `UK Tax Glossary ${TAX_YEAR}: Salary, PAYE & NI Terms Explained`;
+const description = `UK tax, salary and payroll terms explained in plain English. Covers PAYE, National Insurance, tax codes, student loans, pensions and more for the ${TAX_YEAR} year.`;
 const canonical = buildCanonical('/glossary');
-
-const schemas = [
-  breadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: 'Glossary', url: canonical },
-  ]),
-  {
-    '@context': 'https://schema.org',
-    '@type': 'DefinedTermSet',
-    name: `UK Tax & Salary Glossary ${TAX_YEAR}`,
-    description,
-    url: canonical,
-    inLanguage: 'en-GB',
-  },
-];
 
 interface GlossaryEntry {
   term: string;
@@ -37,6 +22,17 @@ const entries: GlossaryEntry[] = [
     id: 'personal-allowance',
     definition: 'The amount of income you can earn each year before paying income tax. For 2026/27, the Personal Allowance is £12,570. It reduces by £1 for every £2 earned above £100,000, disappearing entirely at £125,140.',
     link: { href: '/income-tax/', label: 'Income Tax Calculator' },
+  },
+  {
+    term: 'Additional Rate',
+    id: 'additional-rate',
+    definition: 'The highest band of income tax, charged at 45% on earnings above £125,140 (2026/27). By this point the Personal Allowance has been fully withdrawn, so every pound is taxed. In Scotland the top rate is 48% on income above £125,140.',
+    link: { href: '/income-tax/', label: 'Income Tax Calculator' },
+  },
+  {
+    term: 'Adjusted Net Income',
+    id: 'adjusted-net-income',
+    definition: 'Your total taxable income minus certain tax reliefs such as pension contributions and Gift Aid donations. HMRC uses adjusted net income to determine whether the Personal Allowance taper applies (starting at £100,000) and eligibility for the High Income Child Benefit Charge.',
   },
   {
     term: 'Basic Rate',
@@ -57,9 +53,19 @@ const entries: GlossaryEntry[] = [
     link: { href: '/national-insurance/', label: 'NI Calculator' },
   },
   {
+    term: 'Child Benefit',
+    id: 'child-benefit',
+    definition: 'A tax-free payment from HMRC for each child you are responsible for. The rate for 2026/27 is £26.05 per week for the eldest child and £17.25 for each additional child. If either parent earns over £60,000, the High Income Child Benefit Charge claws back 1% for every £200 above that threshold.',
+  },
+  {
     term: 'Employer National Insurance',
     id: 'employer-ni',
     definition: 'National Insurance contributions paid by your employer on top of your salary. For 2026/27, employers pay 15% on earnings above the Secondary Threshold (£5,000). This is not deducted from your pay.',
+  },
+  {
+    term: 'Emergency Tax Code',
+    id: 'emergency-tax-code',
+    definition: 'A temporary tax code applied when HMRC does not have enough information about your income, often when starting a new job without a P45. Common emergency codes are 1257L W1 or 1257L M1. Under emergency tax you may overpay and need to reclaim via a P800 or Self Assessment.',
   },
   {
     term: 'Gross Pay',
@@ -85,6 +91,17 @@ const entries: GlossaryEntry[] = [
     link: { href: '/hourly-rate/', label: 'Hourly Rate Calculator' },
   },
   {
+    term: 'ISA (Individual Savings Account)',
+    id: 'isa',
+    definition: 'A tax-free savings or investment wrapper. Interest, dividends, and capital gains within an ISA are exempt from tax. The annual ISA allowance for 2026/27 is £20,000 across all ISA types (Cash, Stocks & Shares, Innovative Finance, Lifetime). The Lifetime ISA has a separate £4,000 sub-limit.',
+  },
+  {
+    term: 'Marginal Tax Rate',
+    id: 'marginal-tax-rate',
+    definition: 'The percentage of tax you pay on the next pound you earn. It differs from your effective (average) tax rate. Between £100,000 and £125,140, the marginal rate is effectively 60% due to the Personal Allowance taper. Understanding your marginal rate helps with decisions on overtime, bonuses, and pension contributions.',
+    link: { href: '/', label: 'Salary Calculator' },
+  },
+  {
     term: 'Marriage Allowance',
     id: 'marriage-allowance',
     definition: 'A tax benefit allowing a non-taxpayer or basic rate taxpayer to transfer £1,260 (10% of the Personal Allowance) to their spouse or civil partner, saving up to £252 per year. Only available if neither partner pays higher rate tax.',
@@ -105,6 +122,16 @@ const entries: GlossaryEntry[] = [
     id: 'net-pay',
     definition: 'The amount you actually receive in your bank account after all deductions (income tax, National Insurance, student loan, pension contributions) have been taken from your gross pay.',
     link: { href: '/take-home-pay/', label: 'Take-Home Pay Calculator' },
+  },
+  {
+    term: 'P45',
+    id: 'p45',
+    definition: 'A document your employer gives you when you leave a job. It shows your total pay and the tax deducted in the current tax year. You hand it to your next employer so they can apply the correct tax code. Without a P45, your new employer may put you on an emergency tax code.',
+  },
+  {
+    term: 'P60',
+    id: 'p60',
+    definition: 'An end-of-year certificate your employer must provide by 31 May after the tax year ends. It summarises your total pay, income tax, and National Insurance for the full tax year. You may need your P60 for Self Assessment, mortgage applications, or tax refund claims.',
   },
   {
     term: 'PAYE (Pay As You Earn)',
@@ -143,6 +170,11 @@ const entries: GlossaryEntry[] = [
     link: { href: '/', label: 'Salary Calculator' },
   },
   {
+    term: 'State Pension',
+    id: 'state-pension',
+    definition: 'A regular payment from the government once you reach State Pension age (currently 66, rising to 67 by 2028). The full new State Pension for 2026/27 is £221.20 per week. You need at least 35 qualifying years of National Insurance contributions for the full amount, and a minimum of 10 years to receive anything.',
+  },
+  {
     term: 'Student Loan Repayment',
     id: 'student-loan',
     definition: 'Repayments deducted from earnings once you earn above the plan threshold. Plan 1: 9% above £24,990. Plan 2: 9% above £27,295. Plan 4 (Scotland): 9% above £31,395. Plan 5: 9% above £25,000. Postgraduate: 6% above £21,000. Deducted through PAYE.',
@@ -165,6 +197,26 @@ const entries: GlossaryEntry[] = [
     id: 'upper-earnings-limit',
     definition: 'The earnings level above which the employee National Insurance rate drops from 8% to 2% (2026/27). Set at £50,270 per year (£967 per week), aligned with the higher rate tax threshold.',
     link: { href: '/national-insurance/', label: 'NI Calculator' },
+  },
+];
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Glossary', url: canonical },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTermSet',
+    name: `UK Tax & Salary Glossary ${TAX_YEAR}`,
+    description,
+    url: canonical,
+    inLanguage: 'en-GB',
+    hasDefinedTerm: entries.map((e) => ({
+      '@type': 'DefinedTerm',
+      name: e.term,
+      description: e.definition,
+    })),
   },
 ];
 ---
