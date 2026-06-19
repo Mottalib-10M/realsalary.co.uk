@@ -1,0 +1,111 @@
+---
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import '../../styles/global.css';
+import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, LAST_UPDATED } from '../../lib/seo';
+
+const title = 'UK Tax & Salary Guides 2026/27: PAYE, Income Tax & More';
+const description = 'Free guides to UK income tax, National Insurance, PAYE, student loans, pensions and the 2026/27 tax year. Plain English explanations with worked examples.';
+const canonical = buildCanonical('/guides');
+
+const schema = breadcrumbSchema([
+  { name: 'Home', url: SITE_URL },
+  { name: 'Guides', url: canonical },
+]);
+
+const guides = [
+  {
+    href: '/guides/uk-tax-year-2026-27/',
+    title: 'UK Tax Year 2026/27: Complete Guide',
+    desc: 'All income tax bands, NI rates, student loan thresholds and pension limits for the current tax year.',
+    category: 'Tax Year',
+  },
+  {
+    href: '/guides/how-paye-works/',
+    title: 'How PAYE Works in the UK',
+    desc: 'How employers calculate and deduct income tax and NI from your pay, including tax codes and cumulative vs Week 1 basis.',
+    category: 'Payroll',
+  },
+  {
+    href: '/guides/income-tax-bands-explained/',
+    title: 'Income Tax Bands Explained',
+    desc: 'A breakdown of UK income tax rates for England, Wales, Northern Ireland and Scotland, with worked examples.',
+    category: 'Income Tax',
+  },
+  {
+    href: '/guides/national-insurance-explained/',
+    title: 'National Insurance Explained',
+    desc: 'Employee and employer NI rates, thresholds, classes and how contributions affect your State Pension.',
+    category: 'National Insurance',
+  },
+  {
+    href: '/guides/student-loan-repayment-guide/',
+    title: 'Student Loan Repayment Guide',
+    desc: 'Repayment thresholds and rates for Plan 1, 2, 4, 5 and postgraduate loans, plus how they interact with PAYE.',
+    category: 'Student Loans',
+  },
+  {
+    href: '/guides/pension-salary-sacrifice-explained/',
+    title: 'Pension & Salary Sacrifice Explained',
+    desc: 'How workplace pensions work, auto-enrolment minimums, and the tax advantages of salary sacrifice vs relief at source.',
+    category: 'Pensions',
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="Mottalib Radif" />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <header class="mb-10">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">Guides</h1>
+      <p class="mt-3 text-lg text-gray-500 dark:text-gray-400">
+        Plain English guides to UK taxes, payroll and personal finance, with worked examples and links to our free calculators.
+      </p>
+    </header>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      {guides.map((guide) => (
+        <a href={guide.href} class="group rounded-lg border border-gray-200 p-5 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-gray-800">
+          <span class="text-xs font-medium uppercase tracking-wider text-navy-600 dark:text-navy-400">{guide.category}</span>
+          <h2 class="mt-1 font-semibold text-gray-900 group-hover:text-navy-700 dark:text-white dark:group-hover:text-navy-300">{guide.title}</h2>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{guide.desc}</p>
+        </a>
+      ))}
+    </div>
+
+    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+</body>
+</html>

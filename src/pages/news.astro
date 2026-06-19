@@ -1,0 +1,156 @@
+---
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
+import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, LAST_UPDATED } from '../lib/seo';
+import { TAX_YEAR } from '../data/tax-rules-2026-27';
+
+const title = `UK Tax News ${TAX_YEAR}: Rate Changes, Thresholds & Updates`;
+const description = `All important UK tax and salary changes for the ${TAX_YEAR} tax year. Income tax bands, NI rates, student loan thresholds and pension limits updated.`;
+const canonical = buildCanonical('/news');
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'News', url: canonical },
+  ]),
+  articleSchema({ headline: title, description, url: canonical }),
+];
+
+interface NewsItem {
+  date: string;
+  title: string;
+  content: string;
+  links?: { href: string; label: string }[];
+}
+
+const items: NewsItem[] = [
+  {
+    date: '12 May 2026',
+    title: 'All calculators updated for 2026/27 tax year',
+    content: 'Every calculator on Real Salary has been updated with the confirmed 2026/27 rates and thresholds from HMRC, including income tax bands, National Insurance rates, student loan thresholds and pension auto-enrolment limits.',
+    links: [{ href: '/', label: 'Salary Calculator' }],
+  },
+  {
+    date: '6 April 2026',
+    title: 'Income tax: Personal Allowance and bands remain frozen',
+    content: 'The Personal Allowance stays at £12,570 and the higher rate threshold at £50,270 for 2026/27. With wage growth, more earners are being pulled into higher tax bands through fiscal drag. The additional rate of 45% continues to apply from £125,140.',
+    links: [
+      { href: '/income-tax/', label: 'Income Tax Calculator' },
+      { href: '/guides/income-tax-bands-explained/', label: 'Income Tax Bands Guide' },
+    ],
+  },
+  {
+    date: '6 April 2026',
+    title: 'National Insurance: Employee rate unchanged at 8%',
+    content: 'The employee Class 1 NI rate remains at 8% on earnings between £12,570 and £50,270, with 2% above. However, employer NI has risen to 15% (from 13.8%), and the Secondary Threshold has dropped to £5,000, increasing the cost of employment.',
+    links: [
+      { href: '/national-insurance/', label: 'NI Calculator' },
+      { href: '/guides/national-insurance-explained/', label: 'NI Explained Guide' },
+    ],
+  },
+  {
+    date: '6 April 2026',
+    title: 'Student loan repayment thresholds 2026/27',
+    content: 'Updated thresholds: Plan 1 rises to £24,990, Plan 2 to £27,295, Plan 4 to £31,395, and Plan 5 to £25,000. Postgraduate loan repayment threshold remains £21,000. All at 9% (postgrad: 6%) of earnings above the threshold.',
+    links: [
+      { href: '/student-loan/', label: 'Student Loan Calculator' },
+      { href: '/guides/student-loan-repayment-guide/', label: 'Student Loan Guide' },
+    ],
+  },
+  {
+    date: '6 April 2026',
+    title: 'National Living Wage rises to £12.21',
+    content: 'The National Living Wage for workers aged 21 and over increases to £12.21 per hour from April 2026, up from £11.44. The 18-20 rate rises to £10.00 and the apprentice rate to £7.55.',
+    links: [{ href: '/hourly-rate/', label: 'Hourly Rate Calculator' }],
+  },
+  {
+    date: '6 April 2026',
+    title: 'Pension auto-enrolment: minimum contributions unchanged',
+    content: 'Minimum auto-enrolment contributions remain at 8% of qualifying earnings (5% employee, 3% employer) for 2026/27. The qualifying earnings band is £6,240 to £50,270. Salary sacrifice remains the most tax-efficient method.',
+    links: [
+      { href: '/pension-contribution/', label: 'Pension Calculator' },
+      { href: '/guides/pension-salary-sacrifice-explained/', label: 'Pension Guide' },
+    ],
+  },
+  {
+    date: '6 April 2026',
+    title: 'Scottish income tax: Six bands continue',
+    content: 'Scotland retains its six-band income tax structure for 2026/27: starter (19%), basic (20%), intermediate (21%), higher (42%), advanced (45%), and top (48%). The starter band begins at £12,571 and the top rate applies from £125,141.',
+    links: [{ href: '/', label: 'Salary Calculator (Scotland option)' }],
+  },
+  {
+    date: '6 April 2026',
+    title: 'Marriage Allowance remains £252 per year',
+    content: 'The Marriage Allowance transfer stays at £1,260 (10% of the Personal Allowance), saving up to £252 per year. Available where one partner earns under £12,570 and the other is a basic rate taxpayer.',
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="Mottalib Radif" />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  {schemas.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <header class="mb-10">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">Tax News & Updates</h1>
+      <p class="mt-3 text-lg text-gray-500 dark:text-gray-400">
+        All important UK tax and salary changes for the {TAX_YEAR} tax year, with links to affected calculators.
+      </p>
+    </header>
+
+    <div class="space-y-8">
+      {items.map((item) => (
+        <article class="rounded-lg border border-gray-200 p-5 dark:border-gray-700">
+          <time class="text-sm font-medium text-navy-600 dark:text-navy-400">{item.date}</time>
+          <h2 class="mt-1 text-lg font-bold text-gray-900 dark:text-white">{item.title}</h2>
+          <p class="mt-2 text-gray-600 dark:text-gray-300">{item.content}</p>
+          {item.links && item.links.length > 0 && (
+            <div class="mt-3 flex flex-wrap gap-3">
+              {item.links.map((l) => (
+                <a href={l.href} class="inline-flex items-center gap-1 text-sm font-medium text-navy-600 hover:text-navy-700 dark:text-navy-400 dark:hover:text-navy-300">
+                  {l.label} &rarr;
+                </a>
+              ))}
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+
+    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+</body>
+</html>

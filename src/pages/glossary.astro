@@ -1,0 +1,253 @@
+---
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
+import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, LAST_UPDATED } from '../lib/seo';
+import { TAX_YEAR } from '../data/tax-rules-2026-27';
+
+const title = `UK Tax Glossary ${TAX_YEAR}: Salary, PAYE & National Insurance Terms`;
+const description = `Every UK tax, salary and payroll term explained in plain English. PAYE, National Insurance, tax codes, student loans, pension auto-enrolment and more for ${TAX_YEAR}.`;
+const canonical = buildCanonical('/glossary');
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Glossary', url: canonical },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTermSet',
+    name: `UK Tax & Salary Glossary ${TAX_YEAR}`,
+    description,
+    url: canonical,
+    inLanguage: 'en-GB',
+  },
+];
+
+interface GlossaryEntry {
+  term: string;
+  id: string;
+  definition: string;
+  link?: { href: string; label: string };
+}
+
+const entries: GlossaryEntry[] = [
+  {
+    term: 'Allowance (Personal Allowance)',
+    id: 'personal-allowance',
+    definition: 'The amount of income you can earn each year before paying income tax. For 2026/27, the Personal Allowance is £12,570. It reduces by £1 for every £2 earned above £100,000, disappearing entirely at £125,140.',
+    link: { href: '/income-tax/', label: 'Income Tax Calculator' },
+  },
+  {
+    term: 'Basic Rate',
+    id: 'basic-rate',
+    definition: 'The first band of income tax, charged at 20% on earnings between £12,571 and £50,270 (2026/27). In Scotland, different rates and bands apply, including the starter rate (19%), basic rate (20%), and intermediate rate (21%).',
+    link: { href: '/income-tax/', label: 'Income Tax Calculator' },
+  },
+  {
+    term: 'Bonus',
+    id: 'bonus',
+    definition: 'A one-off payment on top of regular salary. Bonuses are taxed as normal income through PAYE. Because they are added on top of your existing earnings, they are often taxed at your highest marginal rate.',
+    link: { href: '/bonus/', label: 'Bonus Tax Calculator' },
+  },
+  {
+    term: 'Class 1 National Insurance',
+    id: 'class-1-ni',
+    definition: 'The main National Insurance contributions paid by employees. For 2026/27, employees pay 8% on earnings between £12,570 and £50,270 (Primary Threshold to Upper Earnings Limit), then 2% on anything above.',
+    link: { href: '/national-insurance/', label: 'NI Calculator' },
+  },
+  {
+    term: 'Employer National Insurance',
+    id: 'employer-ni',
+    definition: 'National Insurance contributions paid by your employer on top of your salary. For 2026/27, employers pay 15% on earnings above the Secondary Threshold (£5,000). This is not deducted from your pay.',
+  },
+  {
+    term: 'Gross Pay',
+    id: 'gross-pay',
+    definition: 'Your total earnings before any deductions. This is the headline salary figure in your contract. From gross pay, HMRC deducts income tax, National Insurance, and any student loan repayments via PAYE.',
+    link: { href: '/', label: 'Salary Calculator' },
+  },
+  {
+    term: 'Higher Rate',
+    id: 'higher-rate',
+    definition: 'The second band of income tax, charged at 40% on earnings between £50,271 and £125,140 (2026/27). Above £100,000, the Personal Allowance tapers away, creating an effective marginal rate of 60%.',
+    link: { href: '/income-tax/', label: 'Income Tax Calculator' },
+  },
+  {
+    term: 'HMRC',
+    id: 'hmrc',
+    definition: 'Her Majesty\'s Revenue & Customs, the UK government department responsible for collecting taxes and National Insurance, administering tax credits and child benefit, and enforcing customs regulations.',
+  },
+  {
+    term: 'Hourly Rate',
+    id: 'hourly-rate',
+    definition: 'Your salary expressed per hour. Calculated by dividing your annual salary by total working hours (typically 52 weeks times contracted hours per week). The National Living Wage for 2026/27 is £12.21 per hour for workers aged 21+.',
+    link: { href: '/hourly-rate/', label: 'Hourly Rate Calculator' },
+  },
+  {
+    term: 'Marriage Allowance',
+    id: 'marriage-allowance',
+    definition: 'A tax benefit allowing a non-taxpayer or basic rate taxpayer to transfer £1,260 (10% of the Personal Allowance) to their spouse or civil partner, saving up to £252 per year. Only available if neither partner pays higher rate tax.',
+  },
+  {
+    term: 'National Insurance (NI)',
+    id: 'national-insurance',
+    definition: 'A mandatory social security contribution deducted from earnings. It funds the State Pension, NHS, and other benefits. Employees pay Class 1 NI; self-employed pay Class 2 and Class 4. Your NI record determines your State Pension entitlement.',
+    link: { href: '/national-insurance/', label: 'NI Calculator' },
+  },
+  {
+    term: 'National Living Wage',
+    id: 'national-living-wage',
+    definition: 'The legal minimum hourly rate for workers aged 21 and over. For 2026/27, it is £12.21 per hour. Lower rates apply for younger workers and apprentices. Employers must pay at least this rate.',
+  },
+  {
+    term: 'Net Pay (Take-Home Pay)',
+    id: 'net-pay',
+    definition: 'The amount you actually receive in your bank account after all deductions (income tax, National Insurance, student loan, pension contributions) have been taken from your gross pay.',
+    link: { href: '/take-home-pay/', label: 'Take-Home Pay Calculator' },
+  },
+  {
+    term: 'PAYE (Pay As You Earn)',
+    id: 'paye',
+    definition: 'The system HMRC uses to collect income tax and National Insurance directly from wages before the employee receives them. Employers calculate and deduct the correct amounts each pay period using tax codes and NI tables.',
+    link: { href: '/guides/how-paye-works/', label: 'How PAYE Works Guide' },
+  },
+  {
+    term: 'Pension Auto-Enrolment',
+    id: 'pension-auto-enrolment',
+    definition: 'A legal requirement for employers to automatically enrol eligible workers into a workplace pension. The minimum total contribution is 8% of qualifying earnings (5% employee, 3% employer). Employees can opt out.',
+    link: { href: '/pension-contribution/', label: 'Pension Calculator' },
+  },
+  {
+    term: 'Primary Threshold',
+    id: 'primary-threshold',
+    definition: 'The earnings level at which employees start paying National Insurance. For 2026/27, it is £12,570 per year (£242 per week). Below this threshold, no employee NI is due.',
+    link: { href: '/national-insurance/', label: 'NI Calculator' },
+  },
+  {
+    term: 'Pro-Rata Salary',
+    id: 'pro-rata',
+    definition: 'A proportionally reduced salary for part-time workers. If the full-time equivalent salary is £30,000 for 37.5 hours per week, working 22.5 hours gives a pro-rata salary of £18,000 (22.5/37.5 of the full amount).',
+    link: { href: '/pro-rata/', label: 'Pro-Rata Calculator' },
+  },
+  {
+    term: 'Salary Sacrifice',
+    id: 'salary-sacrifice',
+    definition: 'An arrangement where you agree to a lower gross salary in exchange for a non-cash benefit (usually pension contributions). Because your gross pay is reduced, you pay less income tax and National Insurance, making it more tax-efficient than relief at source.',
+    link: { href: '/pension-contribution/', label: 'Pension Calculator' },
+  },
+  {
+    term: 'Scottish Income Tax',
+    id: 'scottish-income-tax',
+    definition: 'Scotland sets its own income tax rates and bands for non-savings, non-dividend income. For 2026/27, Scotland has six bands (19%, 20%, 21%, 42%, 45%, 48%) compared to England\'s three (20%, 40%, 45%). Scottish taxpayers have tax codes prefixed with "S".',
+    link: { href: '/', label: 'Salary Calculator' },
+  },
+  {
+    term: 'Student Loan Repayment',
+    id: 'student-loan',
+    definition: 'Repayments deducted from earnings once you earn above the plan threshold. Plan 1: 9% above £24,990. Plan 2: 9% above £27,295. Plan 4 (Scotland): 9% above £31,395. Plan 5: 9% above £25,000. Postgraduate: 6% above £21,000. Deducted through PAYE.',
+    link: { href: '/student-loan/', label: 'Student Loan Calculator' },
+  },
+  {
+    term: 'Tax Code',
+    id: 'tax-code',
+    definition: 'A code used by employers to calculate how much income tax to deduct. The most common code is 1257L (2026/27), meaning a £12,570 tax-free allowance. Letters indicate your situation: L (standard), S (Scotland), BR (all taxed at basic rate), 0T (no allowance).',
+    link: { href: '/guides/how-paye-works/', label: 'How PAYE Works' },
+  },
+  {
+    term: 'Tax Year',
+    id: 'tax-year',
+    definition: 'The UK tax year runs from 6 April to 5 April the following year. The current tax year is 2026/27 (6 April 2026 to 5 April 2027). All tax bands, thresholds, and allowances are set per tax year.',
+    link: { href: '/guides/uk-tax-year-2026-27/', label: '2026/27 Tax Year Guide' },
+  },
+  {
+    term: 'Upper Earnings Limit (UEL)',
+    id: 'upper-earnings-limit',
+    definition: 'The earnings level above which the employee National Insurance rate drops from 8% to 2% (2026/27). Set at £50,270 per year (£967 per week), aligned with the higher rate tax threshold.',
+    link: { href: '/national-insurance/', label: 'NI Calculator' },
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="Mottalib Radif" />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  {schemas.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <header class="mb-10">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white">UK Tax Glossary</h1>
+      <p class="mt-3 text-lg text-gray-500 dark:text-gray-400">
+        Every key UK tax, salary and payroll term explained in plain English, with links to the relevant calculators.
+      </p>
+    </header>
+
+    <nav class="mb-8 flex flex-wrap gap-2" aria-label="Alphabetical navigation">
+      {[...new Set(entries.map(e => e.term[0].toUpperCase()))].sort().map((letter) => (
+        <a href={`#${letter.toLowerCase()}`} class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-navy-50 hover:text-navy-700 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-navy-300">
+          {letter}
+        </a>
+      ))}
+    </nav>
+
+    <div class="space-y-6">
+      {entries.map((entry, i) => {
+        const currentLetter = entry.term[0].toUpperCase();
+        const prevLetter = i > 0 ? entries[i - 1].term[0].toUpperCase() : '';
+        const showLetter = currentLetter !== prevLetter;
+        return (
+          <>
+            {showLetter && (
+              <h2 id={currentLetter.toLowerCase()} class="mt-8 border-b border-gray-200 pb-2 text-2xl font-bold text-gray-900 dark:border-gray-700 dark:text-white">
+                {currentLetter}
+              </h2>
+            )}
+            <div id={entry.id} class="scroll-mt-20 rounded-lg border border-gray-100 p-4 dark:border-gray-800">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{entry.term}</h3>
+              <p class="mt-2 text-gray-600 dark:text-gray-300">{entry.definition}</p>
+              {entry.link && (
+                <a href={entry.link.href} class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-navy-600 hover:text-navy-700 dark:text-navy-400 dark:hover:text-navy-300">
+                  {entry.link.label} &rarr;
+                </a>
+              )}
+            </div>
+          </>
+        );
+      })}
+    </div>
+
+    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+</body>
+</html>
