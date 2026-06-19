@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer.astro';
 import FAQAccordion from '../components/ui/FAQAccordion.astro';
 import RelatedCalculators from '../components/ui/RelatedCalculators.astro';
 import '../styles/global.css';
-import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, webApplicationSchema, faqSchema, breadcrumbSchema, LAST_UPDATED } from '../lib/seo';
+import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, webApplicationSchema, faqSchema, breadcrumbSchema, websiteSearchSchema, LAST_UPDATED } from '../lib/seo';
 
 interface Props {
   slug: string;
@@ -25,7 +25,15 @@ const organizationSchema = {
   '@type': 'Organization',
   name: SITE_NAME,
   url: SITE_URL,
-  logo: `${SITE_URL}/favicon.svg`,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${SITE_URL}/og-default.svg`,
+    width: 1200,
+    height: 630,
+  },
+  sameAs: [
+    `${SITE_URL}/about/`,
+  ],
   founder: {
     '@type': 'Person',
     name: 'Mottalib Radif',
@@ -53,7 +61,7 @@ const personSchema = {
   url: `${SITE_URL}/about/`,
 };
 
-const schemas = [
+const schemas: object[] = [
   webApplicationSchema(title, metaDescription, canonical),
   faqSchema(faqs),
   breadcrumbSchema([
@@ -63,6 +71,11 @@ const schemas = [
   organizationSchema,
   personSchema,
 ];
+
+// Add WebSite schema with SearchAction on homepage for Google sitelinks search box
+if (slug === '/') {
+  schemas.push(websiteSearchSchema());
+}
 ---
 
 <!DOCTYPE html>

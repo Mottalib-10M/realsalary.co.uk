@@ -76,6 +76,25 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
 
 export const LAST_UPDATED = `Updated for ${TAX_YEAR} tax year`;
 
+export function websiteSearchSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    inLanguage: 'en-GB',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE_URL}/salary/{salary}/`,
+      },
+      'query-input': 'required name=salary',
+    },
+  };
+}
+
 export function articleSchema(options: {
   headline: string;
   description: string;
