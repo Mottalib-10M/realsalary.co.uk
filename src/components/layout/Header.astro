@@ -1,25 +1,31 @@
 ---
-const navLinks = [
-  { href: '/', label: 'Salary Calculator' },
+const calcPayLinks = [
   { href: '/take-home-pay/', label: 'Take-Home Pay' },
+  { href: '/hourly-rate/', label: 'Hourly Rate' },
+  { href: '/pro-rata/', label: 'Pro-Rata Salary' },
+  { href: '/required-salary/', label: 'Required Salary' },
+  { href: '/pension-contribution/', label: 'Pension Contribution' },
+];
+
+const calcTaxLinks = [
   { href: '/income-tax/', label: 'Income Tax' },
   { href: '/national-insurance/', label: 'National Insurance' },
   { href: '/student-loan/', label: 'Student Loan' },
-  { href: '/pension-contribution/', label: 'Pension' },
-  { href: '/bonus/', label: 'Bonus' },
+  { href: '/bonus/', label: 'Bonus Tax' },
+  { href: '/two-jobs/', label: 'Two Jobs Tax' },
 ];
 
-const moreCalcLinks = [
-  { href: '/hourly-rate/', label: 'Hourly Rate' },
-  { href: '/pro-rata/', label: 'Pro-Rata' },
-  { href: '/required-salary/', label: 'Required Salary' },
-  { href: '/two-jobs/', label: 'Two Jobs' },
+const guideLinks = [
+  { href: '/guides/uk-tax-year-2026-27/', label: 'UK Tax Year 2026/27 Guide' },
+  { href: '/guides/how-paye-works/', label: 'How PAYE Works' },
+  { href: '/guides/income-tax-bands-explained/', label: 'Income Tax Bands Explained' },
+  { href: '/guides/national-insurance-explained/', label: 'National Insurance Explained' },
+  { href: '/guides/student-loan-repayment-guide/', label: 'Student Loan Repayment Guide' },
+  { href: '/guides/pension-salary-sacrifice-explained/', label: 'Pension & Salary Sacrifice' },
+];
+
+const moreLinks = [
   { href: '/salary/', label: 'Monthly Salaries' },
-];
-
-const resourceLinks = [
-  { href: '/calculators/', label: 'All Calculators' },
-  { href: '/guides/', label: 'Guides' },
   { href: '/news/', label: 'Tax News' },
   { href: '/glossary/', label: 'Glossary' },
 ];
@@ -39,46 +45,117 @@ const currentPath = Astro.url.pathname;
 
     <!-- Desktop nav -->
     <div class="hidden items-center gap-1 lg:flex">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class:list={[
-            'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-            currentPath === link.href
-              ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
-              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
-          ]}
-          aria-current={currentPath === link.href ? 'page' : undefined}
+      <!-- Salary Calculator — direct CTA -->
+      <a
+        href="/"
+        class:list={[
+          'rounded-lg px-3 py-2 text-sm font-semibold transition-colors',
+          currentPath === '/'
+            ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+            : 'text-navy-700 hover:bg-navy-50 dark:text-navy-300 dark:hover:bg-gray-800',
+        ]}
+        aria-current={currentPath === '/' ? 'page' : undefined}
+      >
+        Salary Calculator
+      </a>
+
+      <!-- Calculators dropdown -->
+      <div class="nav-dropdown relative">
+        <button
+          class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+          aria-haspopup="true"
         >
-          {link.label}
-        </a>
-      ))}
-      <div class="relative group">
-        <button class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white" aria-haspopup="true">
-          More ▾
+          Calculators ▾
         </button>
-        <div class="invisible absolute right-0 top-full z-50 w-52 rounded-lg border border-gray-200 bg-white py-1 pt-2 shadow-lg group-hover:visible dark:border-gray-700 dark:bg-gray-900">
-          {moreCalcLinks.map((link) => (
+        <div class="nav-dropdown-panel invisible absolute left-0 top-full z-50 w-[26rem] rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+          <div class="grid grid-cols-2 gap-x-2">
+            <div>
+              <p class="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pay & Salary</p>
+              {calcPayLinks.map((link) => (
+                <a
+                  href={link.href}
+                  class:list={[
+                    'block rounded-md px-3 py-1.5 text-sm transition-colors',
+                    currentPath === link.href
+                      ? 'bg-navy-50 font-medium text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+                  ]}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+            <div>
+              <p class="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Tax & Deductions</p>
+              {calcTaxLinks.map((link) => (
+                <a
+                  href={link.href}
+                  class:list={[
+                    'block rounded-md px-3 py-1.5 text-sm transition-colors',
+                    currentPath === link.href
+                      ? 'bg-navy-50 font-medium text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+                  ]}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+          <div class="mt-2 border-t border-gray-100 pt-2 dark:border-gray-800">
+            <a href="/calculators/" class="block rounded-md px-3 py-1.5 text-sm font-semibold text-navy-600 hover:bg-navy-50 dark:text-navy-400 dark:hover:bg-gray-800">
+              All Calculators &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guides dropdown -->
+      <div class="nav-dropdown relative">
+        <button
+          class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+          aria-haspopup="true"
+        >
+          Guides ▾
+        </button>
+        <div class="nav-dropdown-panel invisible absolute left-0 top-full z-50 w-72 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+          {guideLinks.map((link) => (
             <a
               href={link.href}
               class:list={[
-                'block px-4 py-2 text-sm transition-colors',
+                'block rounded-md px-3 py-1.5 text-sm transition-colors',
                 currentPath === link.href
-                  ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                  ? 'bg-navy-50 font-medium text-navy-700 dark:bg-navy-900 dark:text-navy-200'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
               ]}
             >
               {link.label}
             </a>
           ))}
-          <div class="my-1 border-t border-gray-100 dark:border-gray-800"></div>
-          {resourceLinks.map((link) => (
+          <div class="mt-2 border-t border-gray-100 pt-2 dark:border-gray-800">
+            <a href="/guides/" class="block rounded-md px-3 py-1.5 text-sm font-semibold text-navy-600 hover:bg-navy-50 dark:text-navy-400 dark:hover:bg-gray-800">
+              All Guides &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- More dropdown (right-aligned) -->
+      <div class="nav-dropdown relative">
+        <button
+          class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+          aria-haspopup="true"
+        >
+          More ▾
+        </button>
+        <div class="nav-dropdown-panel invisible absolute right-0 top-full z-50 w-48 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+          {moreLinks.map((link) => (
             <a
               href={link.href}
               class:list={[
-                'block px-4 py-2 text-sm transition-colors',
+                'block rounded-md px-3 py-1.5 text-sm transition-colors',
                 currentPath === link.href
-                  ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                  ? 'bg-navy-50 font-medium text-navy-700 dark:bg-navy-900 dark:text-navy-200'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
               ]}
             >
@@ -108,36 +185,97 @@ const currentPath = Astro.url.pathname;
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden border-t border-gray-200 bg-white px-4 pb-4 lg:hidden dark:border-gray-800 dark:bg-gray-950">
     <div class="flex flex-col gap-1 pt-2">
-      {[...navLinks, ...moreCalcLinks].map((link) => (
-        <a
-          href={link.href}
-          class:list={[
-            'rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-            currentPath === link.href
-              ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
-              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
-          ]}
-        >
-          {link.label}
-        </a>
-      ))}
-      <div class="my-1 border-t border-gray-100 dark:border-gray-800"></div>
-      {resourceLinks.map((link) => (
-        <a
-          href={link.href}
-          class:list={[
-            'rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-            currentPath === link.href
-              ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
-              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
-          ]}
-        >
-          {link.label}
-        </a>
-      ))}
+      <!-- CTA: Salary Calculator -->
+      <a
+        href="/"
+        class:list={[
+          'rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors',
+          currentPath === '/'
+            ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+            : 'bg-navy-50/50 text-navy-700 hover:bg-navy-50 dark:bg-navy-900/30 dark:text-navy-300 dark:hover:bg-navy-900/50',
+        ]}
+      >
+        Salary Calculator
+      </a>
+
+      <!-- Calculators accordion -->
+      <details class="group">
+        <summary class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
+          Calculators
+          <svg class="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
+        </summary>
+        <div class="flex flex-col gap-0.5 pb-1 pl-3">
+          {[...calcPayLinks, ...calcTaxLinks].map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                'rounded-lg px-3 py-2 text-sm transition-colors',
+                currentPath === link.href
+                  ? 'bg-navy-50 font-medium text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a href="/calculators/" class="rounded-lg px-3 py-2 text-sm font-semibold text-navy-600 hover:bg-navy-50 dark:text-navy-400 dark:hover:bg-gray-800">
+            All Calculators &rarr;
+          </a>
+        </div>
+      </details>
+
+      <!-- Guides accordion -->
+      <details class="group">
+        <summary class="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
+          Guides
+          <svg class="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
+        </summary>
+        <div class="flex flex-col gap-0.5 pb-1 pl-3">
+          {guideLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                'rounded-lg px-3 py-2 text-sm transition-colors',
+                currentPath === link.href
+                  ? 'bg-navy-50 font-medium text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a href="/guides/" class="rounded-lg px-3 py-2 text-sm font-semibold text-navy-600 hover:bg-navy-50 dark:text-navy-400 dark:hover:bg-gray-800">
+            All Guides &rarr;
+          </a>
+        </div>
+      </details>
+
+      <!-- More section -->
+      <div class="mt-1 border-t border-gray-100 pt-1 dark:border-gray-800">
+        {moreLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              'block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+              currentPath === link.href
+                ? 'bg-navy-50 text-navy-700 dark:bg-navy-900 dark:text-navy-200'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
     </div>
   </div>
 </header>
+
+<style>
+  .nav-dropdown:hover .nav-dropdown-panel,
+  .nav-dropdown-panel:hover {
+    visibility: visible;
+  }
+</style>
 
 <script>
   const btn = document.getElementById('mobile-menu-btn');
@@ -146,5 +284,16 @@ const currentPath = Astro.url.pathname;
     const expanded = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!expanded));
     menu?.classList.toggle('hidden');
+  });
+
+  // Only one accordion open at a time
+  document.querySelectorAll('#mobile-menu details').forEach((det) => {
+    det.addEventListener('toggle', () => {
+      if (det.open) {
+        document.querySelectorAll('#mobile-menu details').forEach((other) => {
+          if (other !== det) other.removeAttribute('open');
+        });
+      }
+    });
   });
 </script>
