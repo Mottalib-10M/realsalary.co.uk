@@ -7,17 +7,17 @@ const meta = CALCULATOR_META['take-home-pay'];
 ---
 
 <CalculatorLayout {...meta}>
-  <SalaryCalculator client:load />
+  <SalaryCalculator client:idle />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
 
       <h2>What Is Take-Home Pay?</h2>
       <p>
-        Take-home pay — also called net pay — is the amount of money that actually reaches your bank account after all mandatory deductions have been subtracted from your gross salary. In the UK, these deductions are handled automatically through the PAYE (Pay As You Earn) system run by HMRC. Your employer calculates and deducts income tax, National Insurance contributions, student loan repayments, and workplace pension contributions before paying you.
+        Take-home pay (also called net pay) is the amount of money that actually reaches your bank account after all mandatory deductions have been subtracted from your gross salary. In the UK, these deductions are handled automatically through the PAYE (Pay As You Earn) system run by HMRC. Your employer calculates and deducts income tax, National Insurance contributions, student loan repayments, and workplace pension contributions before paying you.
       </p>
       <p>
-        The difference between your gross salary and your take-home pay can be substantial. On a £40,000 salary, for example, you lose over £8,500 to tax and NI alone — meaning roughly 21% of your earnings never reach your bank account. Understanding exactly where your money goes is the first step to managing your finances effectively and spotting opportunities to keep more of what you earn.
+        The difference between your gross salary and your take-home pay can be substantial. On a £40,000 salary, for example, you lose over £8,500 to tax and NI alone, meaning roughly 21% of your earnings never reach your bank account. Understanding exactly where your money goes is the first step to managing your finances effectively and spotting opportunities to keep more of what you earn.
       </p>
 
       <h2>How We Calculate Your Take-Home Pay</h2>
@@ -25,12 +25,12 @@ const meta = CALCULATOR_META['take-home-pay'];
         This calculator applies the official HMRC rates for the 2026/27 tax year (6 April 2026 to 5 April 2027) in the same order your employer's payroll software does:
       </p>
       <ol>
-        <li><strong>Start with your gross annual salary</strong> — the figure on your employment contract.</li>
-        <li><strong>Determine your personal allowance</strong> — normally £12,570. If you earn over £100,000, your allowance is reduced by £1 for every £2 above the threshold, reaching zero at £125,140.</li>
-        <li><strong>Calculate income tax</strong> — your taxable income (gross minus personal allowance) is split across the progressive tax bands. Only income within each band is taxed at that band's rate.</li>
-        <li><strong>Calculate National Insurance</strong> — a separate deduction charged at 8% on earnings between £12,570 and £50,270, then 2% on earnings above £50,270.</li>
-        <li><strong>Deduct student loan repayments</strong> (if applicable) — 9% of earnings above your plan's threshold (6% for postgraduate loans).</li>
-        <li><strong>Deduct pension contributions</strong> (if applicable) — salary sacrifice reduces your gross pay before tax and NI; relief at source is deducted after tax.</li>
+        <li><strong>Start with your gross annual salary:</strong> the figure on your employment contract.</li>
+        <li><strong>Determine your personal allowance:</strong> normally £12,570. If you earn over £100,000, your allowance is reduced by £1 for every £2 above the threshold, reaching zero at £125,140.</li>
+        <li><strong>Calculate income tax:</strong> your taxable income (gross minus personal allowance) is split across the progressive tax bands. Only income within each band is taxed at that band's rate.</li>
+        <li><strong>Calculate National Insurance:</strong> a separate deduction charged at 8% on earnings between £12,570 and £50,270, then 2% on earnings above £50,270.</li>
+        <li><strong>Deduct student loan repayments</strong> (if applicable): 9% of earnings above your plan's threshold (6% for postgraduate loans).</li>
+        <li><strong>Deduct pension contributions</strong> (if applicable): salary sacrifice reduces your gross pay before tax and NI; relief at source is deducted after tax.</li>
         <li><strong>The remainder is your take-home pay.</strong></li>
       </ol>
 
@@ -142,10 +142,10 @@ const meta = CALCULATOR_META['take-home-pay'];
 
       <h2>The £100,000 Trap: Personal Allowance Taper</h2>
       <p>
-        One of the most misunderstood aspects of UK tax is what happens between £100,000 and £125,140. In this band, your personal allowance is gradually withdrawn — you lose £1 of allowance for every £2 you earn above £100,000. This means income in this range is effectively taxed at 60% (40% higher rate + 20% from the lost allowance).
+        One of the most misunderstood aspects of UK tax is what happens between £100,000 and £125,140. In this band, your personal allowance is gradually withdrawn: you lose £1 of allowance for every £2 you earn above £100,000. This means income in this range is effectively taxed at 60% (40% higher rate + 20% from the lost allowance).
       </p>
       <p>
-        The result is counterintuitive: someone earning £125,140 takes home less additional money per pound than someone earning £200,000 (who pays 45% on additional income). If your salary falls in this range, increasing your pension contributions to bring your adjusted net income below £100,000 can save you thousands — our <a href="/pension-contribution/">pension calculator</a> shows you the exact savings.
+        The result is counterintuitive: someone earning £125,140 takes home less additional money per pound than someone earning £200,000 (who pays 45% on additional income). If your salary falls in this range, increasing your pension contributions to bring your adjusted net income below £100,000 can save you thousands. Our <a href="/pension-contribution/">pension calculator</a> shows you the exact savings.
       </p>
 
       <h2>How Student Loans Affect Take-Home Pay</h2>
@@ -165,7 +165,7 @@ const meta = CALCULATOR_META['take-home-pay'];
         </tbody>
       </table>
       <p>
-        For example, on a £35,000 salary with a Plan 2 loan, you'd repay 9% of the amount above £29,385 — that's 9% × £5,615 = £505 per year, or about £42 per month. You can have multiple loans deducted simultaneously. Use our <a href="/student-loan/">student loan calculator</a> to see the combined effect.
+        For example, on a £35,000 salary with a Plan 2 loan, you'd repay 9% of the amount above £29,385, that's 9% × £5,615 = £505 per year, or about £42 per month. You can have multiple loans deducted simultaneously. Use our <a href="/student-loan/">student loan calculator</a> to see the combined effect.
       </p>
 
       <h2>Pension Contributions and Take-Home Pay</h2>
@@ -218,7 +218,7 @@ const meta = CALCULATOR_META['take-home-pay'];
 
       <h2>Tips to Maximise Your Take-Home Pay</h2>
       <ul>
-        <li><strong>Check your tax code annually.</strong> The standard code for 2026/27 is 1257L. If yours differs, check HMRC's explanation — incorrect codes are common after job changes.</li>
+        <li><strong>Check your tax code annually.</strong> The standard code for 2026/27 is 1257L. If yours differs, check HMRC's explanation; incorrect codes are common after job changes.</li>
         <li><strong>Use salary sacrifice for pension contributions.</strong> You'll save on NI (8%) in addition to income tax. On a £50,000 salary with 5% contribution, salary sacrifice saves you roughly £200/year more than relief at source.</li>
         <li><strong>Claim Marriage Allowance.</strong> If your partner earns under £12,570, they can transfer £1,260 of their allowance to you, saving up to £252 per year.</li>
         <li><strong>Claim tax relief on work expenses.</strong> Flat-rate allowances for uniform washing (£60/year), professional subscriptions, and working from home (£6/week) can add up.</li>
@@ -227,7 +227,7 @@ const meta = CALCULATOR_META['take-home-pay'];
 
       <h2>Take-Home Pay vs Salary Calculator: What's the Difference?</h2>
       <p>
-        Our <a href="/">salary calculator</a> provides a quick overview of your net pay. This take-home pay calculator does the same calculation but is optimised for people who want to understand the full breakdown — seeing exactly how much goes to income tax, NI, student loans, and pension at each level. If you need the reverse calculation (what gross salary do I need for a target take-home amount?), use our <a href="/required-salary/">required salary calculator</a>.
+        Our <a href="/">salary calculator</a> provides a quick overview of your net pay. This take-home pay calculator does the same calculation but is optimised for people who want to understand the full breakdown, seeing exactly how much goes to income tax, NI, student loans, and pension at each level. If you need the reverse calculation (what gross salary do I need for a target take-home amount?), use our <a href="/required-salary/">required salary calculator</a>.
       </p>
 
       <h2>Sources and Official References</h2>
@@ -235,11 +235,11 @@ const meta = CALCULATOR_META['take-home-pay'];
         All figures in this calculator are based on official HMRC and UK government publications for the 2026/27 tax year:
       </p>
       <ul>
-        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener">Scottish income tax — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">Student loan repayment rates — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">GOV.UK: Income tax rates and personal allowances</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">GOV.UK: Rates and thresholds for employers 2026/27</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">GOV.UK: National Insurance rates and categories</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener">GOV.UK: Scottish income tax</a></li>
+        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">GOV.UK: Student loan repayment rates</a></li>
       </ul>
       <p>
         For a complete overview of all tax changes this year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.

@@ -191,7 +191,7 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <!-- 1. H1 + Intro -->
       <!-- ═══════════════════════════════════════════════════════════════ -->
-      <h1>£{page.monthly.toLocaleString('en-GB')} Per Month After Tax &mdash; UK Take-Home Pay Breakdown</h1>
+      <h1>£{page.monthly.toLocaleString('en-GB')} Per Month After Tax: UK Take-Home Pay Breakdown</h1>
 
       {page.tier === 'below-pa' ? (
         <p>
@@ -288,16 +288,16 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
             covered by the Personal Allowance. This means:
           </p>
           <ul>
-            <li><strong>Income tax: {page.englandFormatted.incomeTax}</strong> &mdash; no tax is due because your salary is below the tax-free threshold.</li>
+            <li><strong>Income tax: {page.englandFormatted.incomeTax}:</strong> no tax is due because your salary is below the tax-free threshold.</li>
             {paysNI ? (
               <li>
-                <strong>National Insurance: {page.englandFormatted.nationalInsurance} per year</strong> &mdash;
+                <strong>National Insurance: {page.englandFormatted.nationalInsurance} per year:</strong>
                 you still pay NI because the NI threshold ({formatCurrency(NI_PRIMARY_THRESHOLD)}/year) is the same as the Personal
                 Allowance, but your earnings above this threshold are subject to the {(NI_MAIN_RATE * 100).toFixed(0)}% rate.
               </li>
             ) : (
               <li>
-                <strong>National Insurance: {page.englandFormatted.nationalInsurance}</strong> &mdash;
+                <strong>National Insurance: {page.englandFormatted.nationalInsurance}:</strong>
                 your salary is also below the NI Primary Threshold of {formatCurrency(NI_PRIMARY_THRESHOLD)}/year,
                 so no NI is due either.
               </li>
@@ -305,7 +305,7 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
           </ul>
           <p>
             Even though no income tax is deducted, your employer will still operate PAYE (Pay As You Earn) and report
-            your earnings to HMRC. You will receive a tax code &mdash; typically 1257L &mdash; which tells your employer
+            your earnings to HMRC. You will receive a tax code (typically 1257L) which tells your employer
             that you have the full Personal Allowance available.
           </p>
           <p>
@@ -1024,7 +1024,7 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
           <ul>
             <li>
               <strong>Check your tax code:</strong> Make sure your employer is using the correct tax code (typically 1257L).
-              If you see BR or another code, contact HMRC &mdash; you may be having tax deducted unnecessarily. You can
+              If you see BR or another code, contact HMRC, as you may be having tax deducted unnecessarily. You can
               reclaim overpaid tax.
             </li>
             <li>
@@ -1060,7 +1060,7 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
             <li>
               <strong>Pension salary sacrifice:</strong> If your employer offers salary sacrifice for pension
               contributions, this reduces your gross pay before tax and NI are calculated. For every £100 you
-              sacrifice, you save £20 in income tax and £8 in NI &mdash; so a £100 pension contribution only
+              sacrifice, you save £20 in income tax and £8 in NI, so a £100 pension contribution only
               costs you £72 in take-home pay. This is one of the most effective tax-saving strategies for
               basic-rate taxpayers.
             </li>
@@ -1742,11 +1742,11 @@ const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid'
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <h2>Sources</h2>
       <ul>
-        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; Income Tax rates and Personal Allowances</a></li>
-        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; National Insurance rates</a></li>
-        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; Scottish Income Tax</a></li>
-        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">GOV.UK &mdash; Rates and thresholds for employers {TAX_YEAR}</a></li>
-        <li><a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours" target="_blank" rel="noopener noreferrer">ONS &mdash; Earnings and working hours</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">GOV.UK: Income Tax rates and Personal Allowances</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener noreferrer">GOV.UK: National Insurance rates</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">GOV.UK: Scottish Income Tax</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">GOV.UK: Rates and thresholds for employers {TAX_YEAR}</a></li>
+        <li><a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours" target="_blank" rel="noopener noreferrer">ONS: Earnings and working hours</a></li>
       </ul>
 
     </article>

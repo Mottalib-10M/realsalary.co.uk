@@ -7,25 +7,25 @@ const meta = CALCULATOR_META.home;
 ---
 
 <CalculatorLayout {...meta}>
-  <SalaryCalculator client:load />
+  <SalaryCalculator client:idle />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
 
       <h2>How the UK Salary Calculator Works</h2>
       <p>
-        This salary calculator shows you exactly what happens between your gross salary — the number on your employment contract — and the money that actually lands in your bank account each month. The gap between the two can be surprisingly large, especially once you cross into higher tax bands.
+        This salary calculator shows you exactly what happens between your gross salary (the number on your employment contract) and the money that actually lands in your bank account each month. The gap between the two can be surprisingly large, especially once you cross into higher tax bands.
       </p>
       <p>
         When your employer runs payroll, HMRC's Pay As You Earn (PAYE) system automatically deducts income tax, National Insurance contributions, student loan repayments, and any workplace pension contributions before you receive your net pay. Our calculator applies the same rules using the official 2026/27 rates published by HMRC, so the figures you see here should closely match your payslip.
       </p>
       <p>
-        Simply enter your annual gross salary above. The calculator updates instantly as you type — no need to press a button. You can switch between yearly, monthly, weekly, daily, and hourly views. If you're in Scotland, switch the tax region to see Scottish income tax bands applied instead of the England, Wales &amp; Northern Ireland rates.
+        Simply enter your annual gross salary above. The calculator updates instantly as you type, no need to press a button. You can switch between yearly, monthly, weekly, daily, and hourly views. If you're in Scotland, switch the tax region to see Scottish income tax bands applied instead of the England, Wales &amp; Northern Ireland rates.
       </p>
 
       <h2>UK Income Tax Bands 2026/27</h2>
       <p>
-        Your salary is taxed progressively. Only the portion of income within each band is taxed at that band's rate — not your entire salary. Here are the current rates for England, Wales, and Northern Ireland:
+        Your salary is taxed progressively. Only the portion of income within each band is taxed at that band's rate, not your entire salary. Here are the current rates for England, Wales, and Northern Ireland:
       </p>
       <table>
         <thead>
@@ -39,7 +39,7 @@ const meta = CALCULATOR_META.home;
         </tbody>
       </table>
       <p>
-        The personal allowance of £12,570 means the first £12,570 you earn is completely tax-free. If you earn between £100,000 and £125,140, your personal allowance is gradually reduced by £1 for every £2 above £100,000, creating an effective 60% marginal tax rate in that band — one of the highest in the UK tax system.
+        The personal allowance of £12,570 means the first £12,570 you earn is completely tax-free. If you earn between £100,000 and £125,140, your personal allowance is gradually reduced by £1 for every £2 above £100,000, creating an effective 60% marginal tax rate in that band, one of the highest in the UK tax system.
       </p>
 
       <h3>Scottish Income Tax Bands 2026/27</h3>
@@ -70,7 +70,7 @@ const meta = CALCULATOR_META.home;
         <li><strong>2%</strong> on earnings above £50,270</li>
       </ul>
       <p>
-        Unlike income tax, NI has no personal allowance taper — the thresholds are fixed. NI contributes towards your State Pension entitlement and other benefits such as Statutory Sick Pay and Maternity Allowance.
+        Unlike income tax, NI has no personal allowance taper. The thresholds are fixed. NI contributes towards your State Pension entitlement and other benefits such as Statutory Sick Pay and Maternity Allowance.
       </p>
 
       <h2>Worked Examples: UK Take-Home Pay at Different Salaries</h2>
@@ -140,12 +140,12 @@ const meta = CALCULATOR_META.home;
         Your monthly payslip should show these deductions, which this calculator replicates:
       </p>
       <ul>
-        <li><strong>Gross pay:</strong> Your total pay before any deductions — your annual salary divided by 12.</li>
+        <li><strong>Gross pay:</strong> Your total pay before any deductions, your annual salary divided by 12.</li>
         <li><strong>Tax (PAYE):</strong> Income tax deducted under the Pay As You Earn system, based on your tax code.</li>
         <li><strong>NI (Employee):</strong> Your National Insurance contributions (Class 1).</li>
         <li><strong>Pension:</strong> Your workplace pension contribution, if applicable.</li>
         <li><strong>Student loan:</strong> Repayment deducted if you earn above your plan's threshold.</li>
-        <li><strong>Net pay:</strong> What you actually receive — this is what our calculator shows you.</li>
+        <li><strong>Net pay:</strong> What you actually receive. This is what our calculator shows you.</li>
       </ul>
       <p>
         If the figures on your payslip don't match what this calculator shows, common reasons include: a different tax code, benefits in kind (like a company car), additional voluntary pension contributions, or HMRC adjustments for previous underpayments.
@@ -153,7 +153,7 @@ const meta = CALCULATOR_META.home;
 
       <h2>Salary Calculator vs. Take-Home Pay Calculator: What's the Difference?</h2>
       <p>
-        Both calculate your net pay, but they're optimised for different use cases. This salary calculator is designed for a quick overview — enter your salary and see the result. Our <a href="/take-home-pay/">take-home pay calculator</a> provides a more detailed breakdown with full band-by-band analysis and is optimised for people who want to understand exactly where every penny goes.
+        Both calculate your net pay, but they're optimised for different use cases. This salary calculator is designed for a quick overview: enter your salary and see the result. Our <a href="/take-home-pay/">take-home pay calculator</a> provides a more detailed breakdown with full band-by-band analysis and is optimised for people who want to understand exactly where every penny goes.
       </p>
       <p>
         If you already know your target take-home pay and need to work out the gross salary required, use our <a href="/required-salary/">required salary calculator</a> instead.
@@ -164,11 +164,11 @@ const meta = CALCULATOR_META.home;
         All rates and thresholds used in this calculator are sourced from official HMRC and UK government publications:
       </p>
       <ul>
-        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener">Scottish income tax — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">Student loan repayment rates — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">GOV.UK: Income tax rates and personal allowances</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">GOV.UK: Rates and thresholds for employers 2026/27</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">GOV.UK: National Insurance rates and categories</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener">GOV.UK: Scottish income tax</a></li>
+        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">GOV.UK: Student loan repayment rates</a></li>
       </ul>
       <p>
         For a complete overview of the current tax year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.

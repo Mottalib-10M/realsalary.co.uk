@@ -7,17 +7,17 @@ const meta = CALCULATOR_META['income-tax'];
 ---
 
 <CalculatorLayout {...meta}>
-  <IncomeTaxCalculator client:load />
+  <IncomeTaxCalculator client:idle />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
 
       <h2>How UK Income Tax Works</h2>
       <p>
-        Income tax is the largest deduction most UK employees face. It's collected through the PAYE (Pay As You Earn) system — your employer calculates and deducts tax from each pay packet before you receive it, then sends the money directly to HMRC. The amount you pay depends on how much you earn, where you live in the UK, and your tax code.
+        Income tax is the largest deduction most UK employees face. It's collected through the PAYE (Pay As You Earn) system. Your employer calculates and deducts tax from each pay packet before you receive it, then sends the money directly to HMRC. The amount you pay depends on how much you earn, where you live in the UK, and your tax code.
       </p>
       <p>
-        The UK uses a progressive tax system, meaning different portions of your income are taxed at different rates. You don't pay 40% on your entire salary when you cross into the higher rate band — only the portion above the threshold is taxed at the higher rate. This is one of the most common misunderstandings about UK tax, and this calculator shows you exactly how the progressive system works by breaking down your tax band by band.
+        The UK uses a progressive tax system, meaning different portions of your income are taxed at different rates. You don't pay 40% on your entire salary when you cross into the higher rate band; only the portion above the threshold is taxed at the higher rate. This is one of the most common misunderstandings about UK tax, and this calculator shows you exactly how the progressive system works by breaking down your tax band by band.
       </p>
 
       <h2>Income Tax Bands for England, Wales &amp; Northern Ireland 2026/27</h2>
@@ -41,7 +41,7 @@ const meta = CALCULATOR_META['income-tax'];
 
       <h3>Personal Allowance</h3>
       <p>
-        The personal allowance for 2026/27 is £12,570. This is the amount of income you can earn before you start paying any income tax. The personal allowance has been frozen at this level since 2021/22 — a policy known as "fiscal drag" that effectively increases the tax burden each year as wages rise but the allowance stays the same.
+        The personal allowance for 2026/27 is £12,570. This is the amount of income you can earn before you start paying any income tax. The personal allowance has been frozen at this level since 2021/22, a policy known as "fiscal drag" that effectively increases the tax burden each year as wages rise but the allowance stays the same.
       </p>
       <p>
         Everyone who earns under £100,000 gets the full £12,570 allowance, regardless of their employment status. It applies to employment income, self-employment profits, pension income, and most other taxable income.
@@ -178,15 +178,15 @@ const meta = CALCULATOR_META['income-tax'];
         </thead>
         <tbody>
           <tr><td>1257L</td><td>Standard allowance of £12,570 (multiply the number by 10 and add 9)</td></tr>
-          <tr><td>1100L</td><td>Reduced allowance of £11,009 — often due to benefits in kind</td></tr>
-          <tr><td>BR</td><td>All income taxed at basic rate (20%) — no allowance. Common for second jobs.</td></tr>
+          <tr><td>1100L</td><td>Reduced allowance of £11,009, often due to benefits in kind</td></tr>
+          <tr><td>BR</td><td>All income taxed at basic rate (20%); no allowance. Common for second jobs.</td></tr>
           <tr><td>D0</td><td>All income taxed at higher rate (40%)</td></tr>
           <tr><td>D1</td><td>All income taxed at additional rate (45%)</td></tr>
           <tr><td>0T</td><td>No personal allowance (allowance fully used or not determined)</td></tr>
           <tr><td>NT</td><td>No tax deducted at all</td></tr>
           <tr><td>S1257L</td><td>Scottish taxpayer with standard allowance</td></tr>
           <tr><td>C1257L</td><td>Welsh taxpayer with standard allowance</td></tr>
-          <tr><td>K codes</td><td>Tax owed exceeds your allowance — extra tax deducted from pay</td></tr>
+          <tr><td>K codes</td><td>Tax owed exceeds your allowance, so extra tax is deducted from pay</td></tr>
         </tbody>
       </table>
       <p>
@@ -210,10 +210,10 @@ const meta = CALCULATOR_META['income-tax'];
 
       <h2>Marriage Allowance and Income Tax</h2>
       <p>
-        If you're married or in a civil partnership and one partner earns less than £12,570, the lower earner can transfer £1,260 of their personal allowance to the higher earner. This reduces the higher earner's tax bill by up to £252 per year (£1,260 × 20%). To qualify, the higher earner must be a basic rate taxpayer — if they earn above £50,270 (England) or £43,662 (Scotland), the transfer isn't available.
+        If you're married or in a civil partnership and one partner earns less than £12,570, the lower earner can transfer £1,260 of their personal allowance to the higher earner. This reduces the higher earner's tax bill by up to £252 per year (£1,260 × 20%). To qualify, the higher earner must be a basic rate taxpayer; if they earn above £50,270 (England) or £43,662 (Scotland), the transfer isn't available.
       </p>
       <p>
-        You can backdate your Marriage Allowance claim by up to four years. Apply through GOV.UK — it's free and doesn't require an accountant.
+        You can backdate your Marriage Allowance claim by up to four years. Apply through GOV.UK. It's free and doesn't require an accountant.
       </p>
 
       <h2>How to Reduce Your Income Tax Bill</h2>
@@ -241,11 +241,11 @@ const meta = CALCULATOR_META['income-tax'];
         All rates and thresholds used in this calculator are sourced directly from official HMRC and UK government publications:
       </p>
       <ul>
-        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener">Scottish income tax — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/marriage-allowance" target="_blank" rel="noopener">Marriage Allowance — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener">Check your income tax for the current year — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">GOV.UK: Income tax rates and personal allowances</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">GOV.UK: Rates and thresholds for employers 2026/27</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener">GOV.UK: Scottish income tax</a></li>
+        <li><a href="https://www.gov.uk/marriage-allowance" target="_blank" rel="noopener">GOV.UK: Marriage Allowance</a></li>
+        <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener">GOV.UK: Check your income tax for the current year</a></li>
       </ul>
       <p>
         For a complete guide to all tax changes this year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.

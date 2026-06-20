@@ -7,20 +7,20 @@ const meta = CALCULATOR_META['student-loan'];
 ---
 
 <CalculatorLayout {...meta}>
-  <StudentLoanCalculator client:load />
+  <StudentLoanCalculator client:idle />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
 
       <h2>How UK Student Loan Repayments Work</h2>
       <p>
-        Student loan repayments in the UK are collected through your payslip, alongside income tax and National Insurance. Unlike a traditional loan where you make fixed monthly payments, student loan repayments are based on a percentage of your earnings above a threshold — if you earn below the threshold, you pay nothing. This makes student loans function more like a graduate tax than a conventional debt.
+        Student loan repayments in the UK are collected through your payslip, alongside income tax and National Insurance. Unlike a traditional loan where you make fixed monthly payments, student loan repayments are based on a percentage of your earnings above a threshold. If you earn below the threshold, you pay nothing. This makes student loans function more like a graduate tax than a conventional debt.
       </p>
       <p>
         Your employer deducts repayments automatically through PAYE once HMRC notifies them via a Student Loan Notice (SL1 or SL2). The deduction appears on your payslip as a separate line item. If you're self-employed, you repay through your Self Assessment tax return instead.
       </p>
       <p>
-        Outstanding balances are written off after a set period (typically 25–40 years depending on your plan), and any remaining balance is cancelled. The loan doesn't affect your credit score or your ability to get a mortgage — lenders can see it on your payslip, but it's treated differently from commercial debt.
+        Outstanding balances are written off after a set period (typically 25–40 years depending on your plan), and any remaining balance is cancelled. The loan doesn't affect your credit score or your ability to get a mortgage. Lenders can see it on your payslip, but it's treated differently from commercial debt.
       </p>
 
       <h2>Student Loan Plans and Thresholds 2026/27</h2>
@@ -93,7 +93,7 @@ const meta = CALCULATOR_META['student-loan'];
         </tbody>
       </table>
       <p>
-        With dual loans on a £50,000 salary, you'd lose an extra £300 per month beyond tax and NI. Combined with income tax (£7,486) and NI (£2,994), your total annual deductions would be £14,075 — leaving you with £35,925 take-home (£2,994/month).
+        With dual loans on a £50,000 salary, you'd lose an extra £300 per month beyond tax and NI. Combined with income tax (£7,486) and NI (£2,994), your total annual deductions would be £14,075, leaving you with £35,925 take-home (£2,994/month).
       </p>
 
       <h3>Example 4: £35,000 Salary with Plan 5</h3>
@@ -145,7 +145,7 @@ const meta = CALCULATOR_META['student-loan'];
         </tbody>
       </table>
       <p>
-        Most Plan 2 borrowers won't repay their loan in full — government estimates suggest around 70% of graduates will have some balance written off. This is particularly relevant when deciding whether to make voluntary overpayments: if you're unlikely to repay the full amount anyway, overpaying means you lose money you'd never have had to repay.
+        Most Plan 2 borrowers won't repay their loan in full. Government estimates suggest around 70% of graduates will have some balance written off. This is particularly relevant when deciding whether to make voluntary overpayments: if you're unlikely to repay the full amount anyway, overpaying means you lose money you'd never have had to repay.
       </p>
 
       <h2>Should You Overpay Your Student Loan?</h2>
@@ -154,7 +154,7 @@ const meta = CALCULATOR_META['student-loan'];
       </p>
       <ul>
         <li><strong>Overpaying makes sense if:</strong> You're a high earner who will repay the full loan before the write-off date. The interest you save by repaying early can be significant, especially on Plan 2 loans where interest can be RPI + 3%.</li>
-        <li><strong>Overpaying doesn't make sense if:</strong> You're unlikely to repay the full balance before it's written off. Any overpayment simply reduces a balance that would have been cancelled anyway — you're effectively donating money to the Treasury.</li>
+        <li><strong>Overpaying doesn't make sense if:</strong> You're unlikely to repay the full balance before it's written off. Any overpayment simply reduces a balance that would have been cancelled anyway, effectively donating money to the Treasury.</li>
         <li><strong>The break-even point:</strong> Use the SLC's repayment calculator to estimate your total repayments over the loan term. If your projected total repayments (at your current and expected future salary) are less than your outstanding balance, don't overpay.</li>
       </ul>
 
@@ -183,7 +183,7 @@ const meta = CALCULATOR_META['student-loan'];
         </tbody>
       </table>
       <p>
-        Plan 5 loans have the most borrower-friendly interest terms — the balance is adjusted for inflation only, meaning in real terms you never owe more than you borrowed. This is a significant improvement over Plan 2, where high earners can see their balance grow substantially due to RPI + 3% interest.
+        Plan 5 loans have the most borrower-friendly interest terms: the balance is adjusted for inflation only, meaning in real terms you never owe more than you borrowed. This is a significant improvement over Plan 2, where high earners can see their balance grow substantially due to RPI + 3% interest.
       </p>
 
       <h2>Common Student Loan Questions</h2>
@@ -208,11 +208,11 @@ const meta = CALCULATOR_META['student-loan'];
         All student loan thresholds and rates are sourced from official UK government publications:
       </p>
       <ul>
-        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">Student loan repayment: what you pay — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/government/publications/sl3-student-loan-deduction-tables/2026-to-2027-student-and-postgraduate-loan-deduction-tables" target="_blank" rel="noopener">2026/27 student loan deduction tables — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/repaying-your-student-loan/when-your-student-loan-gets-written-off-or-cancelled" target="_blank" rel="noopener">When your student loan gets written off — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/sign-in-to-manage-your-student-loan-balance" target="_blank" rel="noopener">Manage your student loan balance — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/student-finance" target="_blank" rel="noopener">Student finance — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">Student loan repayment: what you pay: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/government/publications/sl3-student-loan-deduction-tables/2026-to-2027-student-and-postgraduate-loan-deduction-tables" target="_blank" rel="noopener">2026/27 student loan deduction tables: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/repaying-your-student-loan/when-your-student-loan-gets-written-off-or-cancelled" target="_blank" rel="noopener">When your student loan gets written off: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/sign-in-to-manage-your-student-loan-balance" target="_blank" rel="noopener">Manage your student loan balance: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/student-finance" target="_blank" rel="noopener">Student finance: GOV.UK</a></li>
       </ul>
       <p>
         For a complete overview of all tax and deduction changes this year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.

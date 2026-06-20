@@ -7,7 +7,7 @@ const meta = CALCULATOR_META['hourly-rate'];
 ---
 
 <CalculatorLayout {...meta}>
-  <HourlyRateCalculator client:load />
+  <HourlyRateCalculator client:idle />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
@@ -17,7 +17,7 @@ const meta = CALCULATOR_META['hourly-rate'];
         Knowing your hourly rate is essential for comparing job offers, evaluating overtime pay, deciding whether to go freelance, or simply understanding what your time is worth. The calculation is straightforward: divide your annual salary by the number of working hours in a year.
       </p>
       <p>
-        The standard assumption in the UK is 37.5 hours per week for 52 weeks, giving 1,950 working hours per year. A £30,000 salary works out to £15.38 per hour before tax. After tax and NI, the net hourly rate drops to around £12.87 — significantly less than the headline figure.
+        The standard assumption in the UK is 37.5 hours per week for 52 weeks, giving 1,950 working hours per year. A £30,000 salary works out to £15.38 per hour before tax. After tax and NI, the net hourly rate drops to around £12.87, significantly less than the headline figure.
       </p>
 
       <h2>Hourly Rate Formula</h2>
@@ -84,7 +84,7 @@ const meta = CALCULATOR_META['hourly-rate'];
         Notice how working 40 hours instead of 37.5 reduces your hourly rate. The additional 2.5 hours per week (130 hours per year) means you're earning less per hour even though the annual salary is higher than many 37.5-hour jobs.
       </p>
 
-      <h3>Example 3: Hourly to Annual — Contractor at £25/hr</h3>
+      <h3>Example 3: Hourly to Annual: Contractor at £25/hr</h3>
       <table>
         <tbody>
           <tr><td>Hourly rate</td><td class="text-right">£25.00</td></tr>
@@ -114,7 +114,7 @@ const meta = CALCULATOR_META['hourly-rate'];
         </tbody>
       </table>
       <p>
-        Use the calculator above to adjust the weekly hours to match your actual working pattern. The hourly rate changes significantly — on a £35,000 salary, working 35 hours/week gives £19.23/hour, while 40 hours/week gives £16.83/hour. That's a 14% difference for the same annual pay.
+        Use the calculator above to adjust the weekly hours to match your actual working pattern. The hourly rate changes significantly; on a £35,000 salary, working 35 hours/week gives £19.23/hour, while 40 hours/week gives £16.83/hour. That's a 14% difference for the same annual pay.
       </p>
 
       <h2>Hourly Rate and National Minimum Wage</h2>
@@ -138,7 +138,7 @@ const meta = CALCULATOR_META['hourly-rate'];
 
       <h2>Comparing Job Offers: Why Hourly Rate Matters</h2>
       <p>
-        When comparing job offers, the annual salary figure can be misleading. A £35,000 job requiring 40 hours/week pays £16.83/hour, while a £32,000 job at 35 hours/week pays £17.58/hour. The lower-paying job actually values your time more highly, and you get 5 extra hours of free time per week — 260 hours per year.
+        When comparing job offers, the annual salary figure can be misleading. A £35,000 job requiring 40 hours/week pays £16.83/hour, while a £32,000 job at 35 hours/week pays £17.58/hour. The lower-paying job actually values your time more highly, and you get 5 extra hours of free time per week (260 hours per year).
       </p>
       <p>
         Other factors to consider beyond the headline salary:
@@ -167,10 +167,10 @@ const meta = CALCULATOR_META['hourly-rate'];
 
       <h2>Sources and Official References</h2>
       <ul>
-        <li><a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" rel="noopener">National Minimum Wage rates — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/maximum-weekly-working-hours" target="_blank" rel="noopener">Maximum weekly working hours — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" rel="noopener">National Minimum Wage rates: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/maximum-weekly-working-hours" target="_blank" rel="noopener">Maximum weekly working hours: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27: GOV.UK</a></li>
       </ul>
       <p>
         For a complete overview of all tax rates this year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.

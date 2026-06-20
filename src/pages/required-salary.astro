@@ -7,14 +7,14 @@ const meta = CALCULATOR_META['required-salary'];
 ---
 
 <CalculatorLayout {...meta}>
-  <RequiredSalaryCalculator client:load />
+  <RequiredSalaryCalculator client:idle />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
 
       <h2>How the Reverse Salary Calculator Works</h2>
       <p>
-        Most salary calculators work forwards: you enter a gross salary and see the take-home pay. This calculator does the opposite — you enter your desired take-home pay, and it calculates the gross salary you need to earn to achieve it. This is useful when budgeting, negotiating a pay rise, or assessing whether a job offer will cover your living costs.
+        Most salary calculators work forwards: you enter a gross salary and see the take-home pay. This calculator does the opposite: you enter your desired take-home pay, and it calculates the gross salary you need to earn to achieve it. This is useful when budgeting, negotiating a pay rise, or assessing whether a job offer will cover your living costs.
       </p>
       <p>
         The reverse calculation is more complex than the forward one because the UK tax system is progressive: each pound you earn pushes the next pound into a potentially higher tax band. Our calculator uses an iterative algorithm that converges on the correct gross salary within £1 accuracy.
@@ -22,7 +22,7 @@ const meta = CALCULATOR_META['required-salary'];
 
       <h2>Why Forward and Reverse Calculations Differ</h2>
       <p>
-        Going from gross to net is straightforward — you apply the tax bands in order. Going from net to gross requires "unwinding" the progressive tax system. You can't simply divide by (1 − tax rate) because different portions of your income are taxed at different rates, and the personal allowance taper adds further complexity above £100,000.
+        Going from gross to net is straightforward: you apply the tax bands in order. Going from net to gross requires "unwinding" the progressive tax system. You can't simply divide by (1 − tax rate) because different portions of your income are taxed at different rates, and the personal allowance taper adds further complexity above £100,000.
       </p>
       <p>
         For example, if you want £40,000 take-home pay, the answer isn't £40,000 ÷ 0.72 = £55,556. The actual required gross is approximately £53,040, because the calculation must account for the personal allowance (first £12,570 tax-free), the basic rate band (20%), and National Insurance (8% then 2%).
@@ -76,7 +76,7 @@ const meta = CALCULATOR_META['required-salary'];
         </tbody>
       </table>
       <p>
-        To take home £3,500/month, you need to earn roughly £57,600 gross — meaning over 27% of your gross salary goes to tax and NI. Your salary needs to be in the higher rate tax band.
+        To take home £3,500/month, you need to earn roughly £57,600 gross, meaning over 27% of your gross salary goes to tax and NI. Your salary needs to be in the higher rate tax band.
       </p>
 
       <h3>Example 3: I Want £5,000/month with a Student Loan (Plan 2)</h3>
@@ -93,7 +93,7 @@ const meta = CALCULATOR_META['required-salary'];
         </tbody>
       </table>
       <p>
-        With a student loan, the required salary is significantly higher. Without the loan, you'd need about £87,600 — the student loan adds roughly £5,600 to the required gross salary for the same take-home target.
+        With a student loan, the required salary is significantly higher. Without the loan, you'd need about £87,600. The student loan adds roughly £5,600 to the required gross salary for the same take-home target.
       </p>
 
       <h2>The Impact of Deductions on Required Salary</h2>
@@ -153,7 +153,7 @@ const meta = CALCULATOR_META['required-salary'];
 
       <h2>The £100,000 Cliff Edge</h2>
       <p>
-        If your required gross salary falls between £100,000 and £125,140, be aware of the personal allowance taper. In this range, the marginal rate hits 62%, making it exceptionally expensive to increase take-home pay. To go from £68,558 take-home (at £100,000 gross) to £72,000 take-home, you'd need to earn about £109,000 — an extra £9,000 gross for just £3,442 extra take-home.
+        If your required gross salary falls between £100,000 and £125,140, be aware of the personal allowance taper. In this range, the marginal rate hits 62%, making it exceptionally expensive to increase take-home pay. To go from £68,558 take-home (at £100,000 gross) to £72,000 take-home, you'd need to earn about £109,000, an extra £9,000 gross for just £3,442 extra take-home.
       </p>
       <p>
         If you're near this threshold, consider whether pension contributions could bring your adjusted net income below £100,000 while still meeting your take-home target through reduced deductions.
@@ -161,10 +161,10 @@ const meta = CALCULATOR_META['required-salary'];
 
       <h2>Sources and Official References</h2>
       <ul>
-        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">Student loan repayment rates — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener">Student loan repayment rates: GOV.UK</a></li>
       </ul>
       <p>
         For a complete overview of all tax rates this year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.

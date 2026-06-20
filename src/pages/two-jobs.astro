@@ -7,17 +7,17 @@ const meta = CALCULATOR_META['two-jobs'];
 ---
 
 <CalculatorLayout {...meta}>
-  <TwoJobsCalculator client:load />
+  <TwoJobsCalculator client:idle />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
 
       <h2>How Tax Works When You Have Two Jobs</h2>
       <p>
-        Having two jobs in the UK is increasingly common — whether it's a second part-time role, freelance work alongside employment, or two part-time jobs adding up to full-time hours. The key challenge is understanding how your tax is split between the two employers, because getting this wrong can lead to large underpayments or overpayments of tax.
+        Having two jobs in the UK is increasingly common, whether it's a second part-time role, freelance work alongside employment, or two part-time jobs adding up to full-time hours. The key challenge is understanding how your tax is split between the two employers, because getting this wrong can lead to large underpayments or overpayments of tax.
       </p>
       <p>
-        Each employer operates PAYE independently. They don't know about your other job, so they can only apply the tax rules to the pay they give you. HMRC coordinates between your two employments through your tax codes — but this only works correctly if your tax codes are right.
+        Each employer operates PAYE independently. They don't know about your other job, so they can only apply the tax rules to the pay they give you. HMRC coordinates between your two employments through your tax codes, but this only works correctly if your tax codes are right.
       </p>
 
       <h2>How HMRC Splits Your Tax Code</h2>
@@ -64,7 +64,7 @@ const meta = CALCULATOR_META['two-jobs'];
         </tbody>
       </table>
       <p>
-        Notice the NI anomaly: Job 2 pays £10,000, which is below the £12,570 NI primary threshold, so no NI is charged on it — even though your combined earnings are well above the threshold. This is because NI is calculated per employment, not on combined income.
+        Notice the NI anomaly: Job 2 pays £10,000, which is below the £12,570 NI primary threshold, so no NI is charged on it, even though your combined earnings are well above the threshold. This is because NI is calculated per employment, not on combined income.
       </p>
 
       <h3>Example 2: £40,000 + £15,000 (Crossing Higher Rate)</h3>
@@ -101,7 +101,7 @@ const meta = CALCULATOR_META['two-jobs'];
         </tbody>
       </table>
       <p>
-        With two jobs below the NI threshold, you pay zero National Insurance. If you worked one job at £16,000, you'd pay £274 in NI. The two-job setup saves you NI — but check that both jobs earn above the Lower Earnings Limit (£6,708) to protect your State Pension record.
+        With two jobs below the NI threshold, you pay zero National Insurance. If you worked one job at £16,000, you'd pay £274 in NI. The two-job setup saves you NI, but check that both jobs earn above the Lower Earnings Limit (£6,708) to protect your State Pension record.
       </p>
 
       <h2>National Insurance with Two Jobs</h2>
@@ -157,7 +157,7 @@ const meta = CALCULATOR_META['two-jobs'];
       <h2>Tips for Managing Two Jobs</h2>
       <ul>
         <li><strong>Check your tax codes regularly.</strong> Log into your Personal Tax Account on GOV.UK to see both employments and their tax codes.</li>
-        <li><strong>Request a split allowance</strong> if your primary job pays less than £12,570 — otherwise you're overpaying tax during the year.</li>
+        <li><strong>Request a split allowance</strong> if your primary job pays less than £12,570; otherwise you're overpaying tax during the year.</li>
         <li><strong>Keep records.</strong> Save all payslips from both jobs. If there's a discrepancy at year end, you'll need these to support a refund claim.</li>
         <li><strong>Watch the higher rate threshold.</strong> If your combined income exceeds £50,270, make sure HMRC applies a D0 code to your second job to avoid a tax bill later.</li>
         <li><strong>Consider NI deferment</strong> if both jobs pay above £50,270 to prevent overpaying National Insurance.</li>
@@ -165,11 +165,11 @@ const meta = CALCULATOR_META['two-jobs'];
 
       <h2>Sources and Official References</h2>
       <ul>
-        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/tax-codes" target="_blank" rel="noopener">Understanding your tax code — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27 — GOV.UK</a></li>
-        <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener">Check your income tax — GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener">Income tax rates and personal allowances: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener">National Insurance rates and categories: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/tax-codes" target="_blank" rel="noopener">Understanding your tax code: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener">Rates and thresholds for employers 2026/27: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener">Check your income tax: GOV.UK</a></li>
       </ul>
       <p>
         For a complete overview of all tax rates this year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.
