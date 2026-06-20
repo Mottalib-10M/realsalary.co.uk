@@ -42,8 +42,8 @@ export default function IncomeTaxCalculator() {
           <InputField
             label="Annual income"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={1000}
             value={state.income || ''}

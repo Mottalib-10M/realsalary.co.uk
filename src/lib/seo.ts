@@ -11,6 +11,12 @@ export const OG_IMAGE = `${SITE_URL}/og-default.svg`;
 export const OG_IMAGE_WIDTH = '1200';
 export const OG_IMAGE_HEIGHT = '630';
 
+/** Microsoft Clarity project ID — leave empty to disable */
+export const CLARITY_PROJECT_ID = '';
+
+/** Bing Webmaster verification code — leave empty to disable */
+export const BING_VERIFY_CODE = '';
+
 export interface PageMeta {
   title: string;
   description: string;

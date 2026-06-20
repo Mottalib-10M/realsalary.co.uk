@@ -7,7 +7,7 @@ import { TAX_YEAR } from '../data/tax-rules-2026-27';
 
 const title = `UK Tax Glossary ${TAX_YEAR}: Salary, PAYE & NI Terms Explained`;
 const description = `UK tax, salary and payroll terms explained in plain English. Covers PAYE, National Insurance, tax codes, student loans, pensions and more for the ${TAX_YEAR} year.`;
-const canonical = buildCanonical('/glossary');
+const canonical = buildCanonical('/glossary/');
 
 interface GlossaryEntry {
   term: string;
@@ -56,6 +56,11 @@ const entries: GlossaryEntry[] = [
     term: 'Child Benefit',
     id: 'child-benefit',
     definition: 'A tax-free payment from HMRC for each child you are responsible for. The rate for 2026/27 is £26.05 per week for the eldest child and £17.25 for each additional child. If either parent earns over £60,000, the High Income Child Benefit Charge claws back 1% for every £200 above that threshold.',
+  },
+  {
+    term: 'Employment Allowance',
+    id: 'employment-allowance',
+    definition: 'A relief that allows eligible employers to reduce their employer National Insurance liability by up to £10,500 per year (2026/27). Most small businesses with employer NI bills below £100,000 in the previous tax year can claim. It does not affect employee NI deductions.',
   },
   {
     term: 'Employer National Insurance',
@@ -118,6 +123,12 @@ const entries: GlossaryEntry[] = [
     definition: 'The legal minimum hourly rate for workers aged 21 and over. For 2026/27, it is £12.21 per hour. Lower rates apply for younger workers and apprentices. Employers must pay at least this rate.',
   },
   {
+    term: 'National Minimum Wage',
+    id: 'national-minimum-wage',
+    definition: 'The minimum hourly pay rate set by the government for workers under 21 and apprentices. For 2026/27: £10.00 per hour for 18-20 year olds, £7.55 for under 18s, and £7.55 for apprentices. Workers aged 21 and over receive the National Living Wage instead.',
+    link: { href: '/hourly-rate/', label: 'Hourly Rate Calculator' },
+  },
+  {
     term: 'Net Pay (Take-Home Pay)',
     id: 'net-pay',
     definition: 'The amount you actually receive in your bank account after all deductions (income tax, National Insurance, student loan, pension contributions) have been taken from your gross pay.',
@@ -132,6 +143,11 @@ const entries: GlossaryEntry[] = [
     term: 'P60',
     id: 'p60',
     definition: 'An end-of-year certificate your employer must provide by 31 May after the tax year ends. It summarises your total pay, income tax, and National Insurance for the full tax year. You may need your P60 for Self Assessment, mortgage applications, or tax refund claims.',
+  },
+  {
+    term: 'P11D',
+    id: 'p11d',
+    definition: 'A form employers submit to HMRC listing the value of benefits in kind and expenses provided to employees, such as company cars, private medical insurance, and interest-free loans. The taxable value of these benefits is added to your income and collected through an adjustment to your tax code.',
   },
   {
     term: 'PAYE (Pay As You Earn)',
@@ -164,6 +180,11 @@ const entries: GlossaryEntry[] = [
     link: { href: '/pension-contribution/', label: 'Pension Calculator' },
   },
   {
+    term: 'Self Assessment',
+    id: 'self-assessment',
+    definition: 'The system HMRC uses to collect income tax from people with income that is not taxed at source through PAYE. This includes self-employed individuals, company directors, landlords, and anyone earning over £150,000. The Self Assessment tax return must be filed by 31 January following the end of the tax year (31 October for paper returns).',
+  },
+  {
     term: 'Scottish Income Tax',
     id: 'scottish-income-tax',
     definition: 'Scotland sets its own income tax rates and bands for non-savings, non-dividend income. For 2026/27, Scotland has six bands (19%, 20%, 21%, 42%, 45%, 48%) compared to England\'s three (20%, 40%, 45%). Scottish taxpayers have tax codes prefixed with "S".',
@@ -173,6 +194,16 @@ const entries: GlossaryEntry[] = [
     term: 'State Pension',
     id: 'state-pension',
     definition: 'A regular payment from the government once you reach State Pension age (currently 66, rising to 67 by 2028). The full new State Pension for 2026/27 is £221.20 per week. You need at least 35 qualifying years of National Insurance contributions for the full amount, and a minimum of 10 years to receive anything.',
+  },
+  {
+    term: 'Statutory Maternity Pay (SMP)',
+    id: 'statutory-maternity-pay',
+    definition: 'Pay from your employer during maternity leave. For the first 6 weeks you receive 90% of your average weekly earnings. For the remaining 33 weeks you receive the lower of 90% of average earnings or the flat SMP rate (£187.18 per week for 2026/27). You must have worked for your employer for at least 26 weeks and earn at least £125 per week.',
+  },
+  {
+    term: 'Statutory Sick Pay (SSP)',
+    id: 'statutory-sick-pay',
+    definition: 'The minimum amount your employer must pay you when you are off work sick for four or more consecutive days. The SSP rate for 2026/27 is £118.75 per week, paid for up to 28 weeks. You must earn at least £125 per week to qualify. SSP is subject to income tax and National Insurance deductions.',
   },
   {
     term: 'Student Loan Repayment',
@@ -187,16 +218,38 @@ const entries: GlossaryEntry[] = [
     link: { href: '/guides/how-paye-works/', label: 'How PAYE Works' },
   },
   {
+    term: 'Tax Credits',
+    id: 'tax-credits',
+    definition: 'Government payments made to working people on lower incomes and families with children. Tax credits are being replaced by Universal Credit, but some claimants remain on the legacy system. Working Tax Credit supplements low earnings, while Child Tax Credit supports families. New claims are now directed to Universal Credit.',
+  },
+  {
+    term: 'Tax-Free Allowance',
+    id: 'tax-free-allowance',
+    definition: 'The total amount you can earn before paying income tax in a tax year. For most people this equals the Personal Allowance of £12,570 (2026/27). It may be higher if you receive Marriage Allowance or Blind Person\'s Allowance, or lower if you earn over £100,000 or have benefits in kind coded against it.',
+    link: { href: '/income-tax/', label: 'Income Tax Calculator' },
+  },
+  {
     term: 'Tax Year',
     id: 'tax-year',
     definition: 'The UK tax year runs from 6 April to 5 April the following year. The current tax year is 2026/27 (6 April 2026 to 5 April 2027). All tax bands, thresholds, and allowances are set per tax year.',
     link: { href: '/guides/uk-tax-year-2026-27/', label: '2026/27 Tax Year Guide' },
   },
   {
+    term: 'Universal Credit',
+    id: 'universal-credit',
+    definition: 'A single monthly benefit payment replacing six legacy benefits (Income Support, income-based JSA, income-related ESA, Housing Benefit, Child Tax Credit, and Working Tax Credit). The amount you receive depends on your circumstances, income, and savings. It is reduced by 55p for every £1 you earn above your work allowance.',
+  },
+  {
     term: 'Upper Earnings Limit (UEL)',
     id: 'upper-earnings-limit',
     definition: 'The earnings level above which the employee National Insurance rate drops from 8% to 2% (2026/27). Set at £50,270 per year (£967 per week), aligned with the higher rate tax threshold.',
     link: { href: '/national-insurance/', label: 'NI Calculator' },
+  },
+  {
+    term: 'Workplace Pension',
+    id: 'workplace-pension',
+    definition: 'A pension scheme arranged by your employer. Since auto-enrolment, all eligible employees must be offered a workplace pension. The minimum contribution is 8% of qualifying earnings (between £6,240 and £50,270), split as 5% from the employee and 3% from the employer. Contributions can be made via salary sacrifice or relief at source.',
+    link: { href: '/pension-contribution/', label: 'Pension Calculator' },
   },
 ];
 
@@ -239,6 +292,7 @@ const schemas = [
   <meta property="og:image" content={OG_IMAGE} />
   <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
   <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content="UK Tax Glossary - salary, PAYE and NI terms explained" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />

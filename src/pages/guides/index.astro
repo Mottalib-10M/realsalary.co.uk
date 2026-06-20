@@ -6,7 +6,7 @@ import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE
 
 const title = 'UK Tax & Salary Guides 2026/27: PAYE, Income Tax & More';
 const description = 'Free guides to UK income tax, National Insurance, PAYE, student loans, pensions and the 2026/27 tax year. Plain English explanations with worked examples.';
-const canonical = buildCanonical('/guides');
+const canonical = buildCanonical('/guides/');
 
 const schema = breadcrumbSchema([
   { name: 'Home', url: SITE_URL },
@@ -71,6 +71,7 @@ const guides = [
   <meta property="og:image" content={OG_IMAGE} />
   <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
   <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content="UK Tax and Salary Guides - PAYE, income tax and more" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />

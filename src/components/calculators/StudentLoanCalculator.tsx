@@ -37,8 +37,8 @@ export default function StudentLoanCalculator() {
           <InputField
             label="Annual gross salary"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={1000}
             value={state.income || ''}

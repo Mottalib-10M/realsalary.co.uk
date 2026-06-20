@@ -39,8 +39,8 @@ export default function ProRataCalculator() {
           <InputField
             label="Full-time equivalent salary"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={1000}
             value={state.fullTimeSalary || ''}
@@ -50,8 +50,8 @@ export default function ProRataCalculator() {
           <div className="grid grid-cols-2 gap-4">
             <InputField
               label="Full-time days per week"
-              type="number"
-              inputMode="numeric"
+              type="text"
+              inputMode="decimal"
               min={1}
               max={7}
               step={0.5}
@@ -60,8 +60,8 @@ export default function ProRataCalculator() {
             />
             <InputField
               label="Your days per week"
-              type="number"
-              inputMode="numeric"
+              type="text"
+              inputMode="decimal"
               min={0.5}
               max={7}
               step={0.5}

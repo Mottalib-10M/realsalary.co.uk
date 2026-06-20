@@ -39,8 +39,8 @@ export default function BonusCalculator() {
           <InputField
             label="Annual base salary"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={1000}
             value={state.salary || ''}
@@ -50,8 +50,8 @@ export default function BonusCalculator() {
           <InputField
             label="Bonus amount"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={500}
             value={state.bonus || ''}

@@ -1,34 +1,5 @@
 ---
-const calcPayLinks = [
-  { href: '/take-home-pay/', label: 'Take-Home Pay' },
-  { href: '/hourly-rate/', label: 'Hourly Rate' },
-  { href: '/pro-rata/', label: 'Pro-Rata Salary' },
-  { href: '/required-salary/', label: 'Required Salary' },
-  { href: '/pension-contribution/', label: 'Pension Contribution' },
-];
-
-const calcTaxLinks = [
-  { href: '/income-tax/', label: 'Income Tax' },
-  { href: '/national-insurance/', label: 'National Insurance' },
-  { href: '/student-loan/', label: 'Student Loan' },
-  { href: '/bonus/', label: 'Bonus Tax' },
-  { href: '/two-jobs/', label: 'Two Jobs Tax' },
-];
-
-const guideLinks = [
-  { href: '/guides/uk-tax-year-2026-27/', label: 'UK Tax Year 2026/27 Guide' },
-  { href: '/guides/how-paye-works/', label: 'How PAYE Works' },
-  { href: '/guides/income-tax-bands-explained/', label: 'Income Tax Bands Explained' },
-  { href: '/guides/national-insurance-explained/', label: 'National Insurance Explained' },
-  { href: '/guides/student-loan-repayment-guide/', label: 'Student Loan Repayment Guide' },
-  { href: '/guides/pension-salary-sacrifice-explained/', label: 'Pension & Salary Sacrifice' },
-];
-
-const moreLinks = [
-  { href: '/salary/', label: 'Monthly Salaries' },
-  { href: '/news/', label: 'Tax News' },
-  { href: '/glossary/', label: 'Glossary' },
-];
+import { calcPayLinks, calcTaxLinks, guideLinks, moreLinks } from '../../data/nav';
 
 const currentPath = Astro.url.pathname;
 ---

@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer.astro';
 import FAQAccordion from '../components/ui/FAQAccordion.astro';
 import RelatedCalculators from '../components/ui/RelatedCalculators.astro';
 import '../styles/global.css';
-import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, webApplicationSchema, faqSchema, breadcrumbSchema, websiteSearchSchema, LAST_UPDATED } from '../lib/seo';
+import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, webApplicationSchema, faqSchema, breadcrumbSchema, websiteSearchSchema, LAST_UPDATED, CLARITY_PROJECT_ID, BING_VERIFY_CODE } from '../lib/seo';
 
 interface Props {
   slug: string;
@@ -106,6 +106,8 @@ if (slug === '/') {
   <meta name="twitter:description" content={metaDescription} />
   <meta name="twitter:image" content={OG_IMAGE} />
 
+  {BING_VERIFY_CODE && <meta name="msvalidate.01" content={BING_VERIFY_CODE} />}
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -124,6 +126,15 @@ if (slug === '/') {
   <!-- Plausible Analytics (uncomment when ready to launch)
   <script defer data-domain="realsalary.co.uk" src="https://plausible.io/js/script.js"></script>
   -->
+
+  {CLARITY_PROJECT_ID && (
+    <script type="text/javascript" set:html={`
+      (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","${CLARITY_PROJECT_ID}");
+      clarity("set","language","en-GB");
+      clarity("set","page_type","${slug === '/' ? 'calculator' : 'calculator'}");
+      clarity("set","page_path","${slug}");
+    `} />
+  )}
 </head>
 <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
   <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to calculator</a>
@@ -144,8 +155,17 @@ if (slug === '/') {
     <!-- Calculator slot -->
     <slot />
 
+    <!-- Author byline -->
+    <div class="mt-8 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
+      <img src="/team/mottalib-radif.jpg" alt="Mottalib Radif" class="h-12 w-12 rounded-full object-cover" width="48" height="48" loading="lazy" />
+      <div class="text-sm">
+        <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Mottalib Radif</a></p>
+        <p class="text-gray-500 dark:text-gray-400">MBA INSEAD &middot; Finance Enthusiast</p>
+      </div>
+    </div>
+
     <!-- Tax year stamp -->
-    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">
+    <p class="mt-4 text-sm text-gray-400 dark:text-gray-500">
       {LAST_UPDATED}
     </p>
 

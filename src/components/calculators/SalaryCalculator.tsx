@@ -87,8 +87,8 @@ export default function SalaryCalculator() {
           <InputField
             label="Annual gross salary"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={1000}
             value={state.gross || ''}
@@ -257,7 +257,7 @@ export default function SalaryCalculator() {
                   <InputField
                     label="Employee contribution"
                     suffix="%"
-                    type="number"
+                    type="text"
                     inputMode="decimal"
                     min={0}
                     max={100}

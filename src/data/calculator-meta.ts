@@ -55,7 +55,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Take-Home Pay ──────────────────────────────────────────────────
   'take-home-pay': {
-    slug: '/take-home-pay',
+    slug: '/take-home-pay/',
     title: 'Take-Home Pay Calculator',
     // 58 chars
     metaTitle: `UK Take Home Pay Calculator ${TAX_YEAR} - Net Salary After Tax`,
@@ -81,7 +81,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Hourly Rate ────────────────────────────────────────────────────
   'hourly-rate': {
-    slug: '/hourly-rate',
+    slug: '/hourly-rate/',
     title: 'Hourly Rate Calculator',
     // 56 chars
     metaTitle: `Annual Salary to Hourly Rate Calculator UK ${TAX_YEAR}`,
@@ -107,7 +107,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Pro-Rata ───────────────────────────────────────────────────────
   'pro-rata': {
-    slug: '/pro-rata',
+    slug: '/pro-rata/',
     title: 'Pro-Rata Salary Calculator',
     // 55 chars
     metaTitle: `Pro Rata Salary Calculator UK - Part Time Pay ${TAX_YEAR}`,
@@ -133,7 +133,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Income Tax ─────────────────────────────────────────────────────
   'income-tax': {
-    slug: '/income-tax',
+    slug: '/income-tax/',
     title: 'Income Tax Calculator',
     // 57 chars
     metaTitle: `UK Income Tax Calculator ${TAX_YEAR} - Tax Bands and Rates`,
@@ -159,7 +159,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── National Insurance ─────────────────────────────────────────────
   'national-insurance': {
-    slug: '/national-insurance',
+    slug: '/national-insurance/',
     title: 'National Insurance Calculator',
     // 56 chars
     metaTitle: `National Insurance Calculator UK ${TAX_YEAR} - NI Rates`,
@@ -185,7 +185,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Student Loan ───────────────────────────────────────────────────
   'student-loan': {
-    slug: '/student-loan',
+    slug: '/student-loan/',
     title: 'Student Loan Calculator',
     // 58 chars
     metaTitle: `Student Loan Repayment Calculator UK ${TAX_YEAR} - All Plans`,
@@ -211,7 +211,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Pension Contribution ───────────────────────────────────────────
   'pension-contribution': {
-    slug: '/pension-contribution',
+    slug: '/pension-contribution/',
     title: 'Pension Contribution Calculator',
     // 58 chars
     metaTitle: `Pension Contribution Calculator UK ${TAX_YEAR} - Tax Savings`,
@@ -237,7 +237,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Bonus ──────────────────────────────────────────────────────────
   bonus: {
-    slug: '/bonus',
+    slug: '/bonus/',
     title: 'Bonus Tax Calculator',
     // 55 chars
     metaTitle: `Bonus Tax Calculator UK ${TAX_YEAR} - How Much Do I Keep?`,
@@ -263,7 +263,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Required Salary ────────────────────────────────────────────────
   'required-salary': {
-    slug: '/required-salary',
+    slug: '/required-salary/',
     title: 'Required Salary Calculator',
     // 57 chars
     metaTitle: `Gross to Net Salary Calculator UK ${TAX_YEAR} - Reverse Tax`,
@@ -289,7 +289,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
 
   // ── Two Jobs ───────────────────────────────────────────────────────
   'two-jobs': {
-    slug: '/two-jobs',
+    slug: '/two-jobs/',
     title: 'Two Jobs Tax Calculator',
     // 56 chars
     metaTitle: `Two Jobs Tax Calculator UK ${TAX_YEAR} - Combined Tax Bill`,

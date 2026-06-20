@@ -38,8 +38,8 @@ export default function TwoJobsCalculator() {
           <InputField
             label="Job 1 salary (main job)"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={1000}
             value={state.salary1 || ''}
@@ -49,8 +49,8 @@ export default function TwoJobsCalculator() {
           <InputField
             label="Job 2 salary (second job)"
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={1000}
             value={state.salary2 || ''}

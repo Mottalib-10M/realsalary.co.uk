@@ -66,7 +66,7 @@ export default function HourlyRateCalculator() {
           <InputField
             label={state.mode === 'annual' ? 'Annual salary' : 'Hourly rate'}
             prefix="£"
-            type="number"
+            type="text"
             inputMode="decimal"
             min={0}
             step={state.mode === 'annual' ? 1000 : 0.5}
@@ -77,7 +77,7 @@ export default function HourlyRateCalculator() {
           <div className="mt-4">
             <InputField
               label="Hours per week"
-              type="number"
+              type="text"
               inputMode="decimal"
               min={1}
               max={168}

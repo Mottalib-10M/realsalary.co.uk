@@ -40,8 +40,8 @@ export default function RequiredSalaryCalculator() {
           <InputField
             label={`Target take-home pay (${state.period})`}
             prefix="£"
-            type="number"
-            inputMode="numeric"
+            type="text"
+            inputMode="decimal"
             min={0}
             step={state.period === 'monthly' ? 100 : 1000}
             value={state.targetNet || ''}

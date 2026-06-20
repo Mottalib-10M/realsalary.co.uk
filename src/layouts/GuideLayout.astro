@@ -2,7 +2,7 @@
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import '../styles/global.css';
-import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, LAST_UPDATED } from '../lib/seo';
+import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, LAST_UPDATED, CLARITY_PROJECT_ID, BING_VERIFY_CODE } from '../lib/seo';
 
 interface Props {
   title: string;
@@ -36,6 +36,7 @@ if (isGuide) {
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
   <meta name="author" content="Mottalib Radif" />
+  {BING_VERIFY_CODE && <meta name="msvalidate.01" content={BING_VERIFY_CODE} />}
   <link rel="canonical" href={canonical} />
   <meta property="og:type" content="article" />
   <meta property="og:title" content={title} />
@@ -60,6 +61,15 @@ if (isGuide) {
   {schemas.map((s) => (
     <script type="application/ld+json" set:html={JSON.stringify(s)} />
   ))}
+
+  {CLARITY_PROJECT_ID && (
+    <script type="text/javascript" set:html={`
+      (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","${CLARITY_PROJECT_ID}");
+      clarity("set","language","en-GB");
+      clarity("set","page_type","${isGuide ? 'guide' : 'page'}");
+      clarity("set","page_path","${slug}");
+    `} />
+  )}
 </head>
 <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
   <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
