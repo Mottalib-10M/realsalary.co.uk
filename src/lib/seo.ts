@@ -15,7 +15,7 @@ export const OG_IMAGE_HEIGHT = '630';
 export const CLARITY_PROJECT_ID = '';
 
 /** Bing Webmaster verification code — leave empty to disable */
-export const BING_VERIFY_CODE = '';
+export const BING_VERIFY_CODE = '15b1d26333aa4cd7a1cdba8e813bfc7f';
 
 export interface PageMeta {
   title: string;
@@ -98,6 +98,51 @@ export function websiteSearchSchema() {
       },
       'query-input': 'required name=salary',
     },
+  };
+}
+
+export function organizationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/og-default.svg`,
+      width: 1200,
+      height: 630,
+    },
+    sameAs: [
+      `${SITE_URL}/about/`,
+    ],
+    founder: {
+      '@type': 'Person',
+      name: 'Mottalib Radif',
+      jobTitle: 'Personal Finance and Taxation Expert',
+      description: 'Personal finance and taxation expert, MBA INSEAD graduate. Specialized in UK income tax, National Insurance, and pension contribution analysis.',
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'contact@realsalary.co.uk',
+      contactType: 'customer support',
+    },
+  };
+}
+
+export function personSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Mottalib Radif',
+    jobTitle: 'Personal Finance and Taxation Expert',
+    description: 'Personal finance and taxation expert, MBA INSEAD graduate. Specialized in UK income tax, National Insurance, and pension contribution analysis.',
+    alumniOf: {
+      '@type': 'EducationalOrganization',
+      name: 'INSEAD',
+    },
+    image: `${SITE_URL}/team/mottalib-radif.jpg`,
+    url: `${SITE_URL}/about/`,
   };
 }
 

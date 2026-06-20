@@ -1,8 +1,10 @@
 ---
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import BaseHead from '../components/seo/BaseHead.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
 import '../styles/global.css';
-import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, LAST_UPDATED, CLARITY_PROJECT_ID, BING_VERIFY_CODE } from '../lib/seo';
+import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, organizationSchema, personSchema, LAST_UPDATED } from '../lib/seo';
 
 interface Props {
   title: string;
@@ -15,12 +17,16 @@ const pageTitle = buildTitle(title);
 const canonical = buildCanonical(slug);
 const isGuide = slug.startsWith('/guides/');
 
+const breadcrumbItems = [
+  { name: 'Home', url: SITE_URL },
+  ...(isGuide ? [{ name: 'Guides', url: `${SITE_URL}/guides/` }] : []),
+  { name: title, url: canonical },
+];
+
 const schemas: object[] = [
-  breadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    ...(isGuide ? [{ name: 'Guides', url: `${SITE_URL}/guides/` }] : []),
-    { name: title, url: canonical },
-  ]),
+  breadcrumbSchema(breadcrumbItems),
+  organizationSchema(),
+  personSchema(),
 ];
 
 if (isGuide) {
@@ -36,7 +42,7 @@ if (isGuide) {
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
   <meta name="author" content="Mottalib Radif" />
-  {BING_VERIFY_CODE && <meta name="msvalidate.01" content={BING_VERIFY_CODE} />}
+  <BaseHead slug={slug} pageType={isGuide ? 'guide' : 'page'} />
   <link rel="canonical" href={canonical} />
   <meta property="og:type" content="article" />
   <meta property="og:title" content={title} />
@@ -62,20 +68,13 @@ if (isGuide) {
     <script type="application/ld+json" set:html={JSON.stringify(s)} />
   ))}
 
-  {CLARITY_PROJECT_ID && (
-    <script type="text/javascript" set:html={`
-      (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","${CLARITY_PROJECT_ID}");
-      clarity("set","language","en-GB");
-      clarity("set","page_type","${isGuide ? 'guide' : 'page'}");
-      clarity("set","page_path","${slug}");
-    `} />
-  )}
 </head>
 <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
   <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
   <Header />
 
   <main id="main-content" class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumbs items={breadcrumbItems} />
     <article class="prose prose-gray dark:prose-invert max-w-none">
       <slot />
     </article>

@@ -5,6 +5,8 @@
  */
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
+import BaseHead from '../../components/seo/BaseHead.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import '../../styles/global.css';
 import { generateMonthlySalaryPages } from '../../data/monthly-salary-pages';
 import {
@@ -16,6 +18,8 @@ import {
   OG_IMAGE_WIDTH,
   OG_IMAGE_HEIGHT,
   breadcrumbSchema,
+  organizationSchema,
+  personSchema,
   LAST_UPDATED,
 } from '../../lib/seo';
 import { formatCurrency } from '../../lib/format';
@@ -30,10 +34,16 @@ const metaTitle = buildTitle(pageTitle);
 const description = `Browse UK take home pay for every monthly salary from £100 to £3,000. Income tax, National Insurance and net pay breakdowns for the ${TAX_YEAR} tax year. Free.`;
 const canonical = buildCanonical('/salary/');
 
-const breadcrumbs = breadcrumbSchema([
+const breadcrumbItems = [
   { name: 'Home', url: SITE_URL },
   { name: 'Salary Pages', url: canonical },
-]);
+];
+
+const schemas = [
+  breadcrumbSchema(breadcrumbItems),
+  organizationSchema(),
+  personSchema(),
+];
 
 // Group pages by salary range
 const groups = [
@@ -51,6 +61,7 @@ const groups = [
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{metaTitle}</title>
   <meta name="description" content={description} />
+  <meta name="author" content="Mottalib Radif" />
   <link rel="canonical" href={canonical} />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={pageTitle} />
@@ -66,14 +77,21 @@ const groups = [
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={OG_IMAGE} />
+  <BaseHead slug="/salary/" pageType="hub" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  {schemas.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
 </head>
 <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
   <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
   <Header />
 
   <main id="main-content" class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumbs items={breadcrumbItems} />
     <div class="prose prose-gray dark:prose-invert max-w-none">
       <h1>UK Monthly Salary After Tax — Every Amount from £100 to £3,000</h1>
       <p>
@@ -118,7 +136,15 @@ const groups = [
       </p>
     </div>
 
-    <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+    <div class="mt-8 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
+      <img src="/team/mottalib-radif.jpg" alt="Mottalib Radif" class="h-12 w-12 rounded-full object-cover" width="48" height="48" loading="lazy" />
+      <div class="text-sm">
+        <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Mottalib Radif</a></p>
+        <p class="text-gray-500 dark:text-gray-400">MBA INSEAD &middot; Finance Enthusiast</p>
+      </div>
+    </div>
+
+    <p class="mt-4 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
   </main>
 
   <Footer />
