@@ -12,7 +12,7 @@ export const OG_IMAGE_WIDTH = '1200';
 export const OG_IMAGE_HEIGHT = '630';
 
 /** Microsoft Clarity project ID — leave empty to disable */
-export const CLARITY_PROJECT_ID = '';
+export const CLARITY_PROJECT_ID = 'xa15ozu4w9';
 
 /** Bing Webmaster verification code — leave empty to disable */
 export const BING_VERIFY_CODE = '15b1d26333aa4cd7a1cdba8e813bfc7f';
