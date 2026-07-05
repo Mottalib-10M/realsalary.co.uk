@@ -11,6 +11,9 @@ export const OG_IMAGE = `${SITE_URL}/og-default.svg`;
 export const OG_IMAGE_WIDTH = '1200';
 export const OG_IMAGE_HEIGHT = '630';
 
+/** Google Analytics 4 measurement ID — leave empty to disable */
+export const GA4_MEASUREMENT_ID = 'G-1N5EQ2ENPS';
+
 /** Microsoft Clarity project ID — leave empty to disable */
 export const CLARITY_PROJECT_ID = 'xa15ozu4w9';
 
