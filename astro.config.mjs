@@ -11,7 +11,10 @@ export default defineConfig({
   site: 'https://realsalary.co.uk',
   trailingSlash: 'always',
   integrations: [react(), sitemap()],
-
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'viewport',
+  },
   vite: {
     plugins: [tailwindcss()]
   }

@@ -7,7 +7,7 @@ import { TAX_YEAR } from '../data/tax-rules-2026-27';
 export const SITE_NAME = 'Real Salary';
 export const SITE_URL = 'https://realsalary.co.uk';
 export const SITE_DESCRIPTION = 'Free UK salary, tax, and finance calculators. See what you actually take home.';
-export const OG_IMAGE = `${SITE_URL}/og-default.svg`;
+export const OG_IMAGE = `${SITE_URL}/og-default.png`;
 export const OG_IMAGE_WIDTH = '1200';
 export const OG_IMAGE_HEIGHT = '630';
 
@@ -112,7 +112,7 @@ export function organizationSchema() {
     url: SITE_URL,
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE_URL}/og-default.svg`,
+      url: `${SITE_URL}/og-default.png`,
       width: 1200,
       height: 630,
     },
@@ -175,7 +175,7 @@ export function articleSchema(options: {
       name: SITE_NAME,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/og-default.svg`,
+        url: `${SITE_URL}/og-default.png`,
       },
     },
     mainEntityOfPage: {

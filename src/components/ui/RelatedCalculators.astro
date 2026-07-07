@@ -19,6 +19,7 @@ const related = RELATED_CALCULATORS[key] ?? [];
       {related.map((calc) => (
         <a
           href={calc.slug}
+          data-astro-prefetch
           class="group rounded-xl border border-gray-200 p-5 transition-all hover:border-navy-300 hover:shadow-md dark:border-gray-800 dark:hover:border-navy-600"
         >
           <h3 class="font-semibold text-gray-900 group-hover:text-navy-600 dark:text-white dark:group-hover:text-navy-300">
