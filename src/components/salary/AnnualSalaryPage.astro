@@ -41,9 +41,9 @@ const { page } = Astro.props;
 
 // ─── SEO ──────────────────────────────────────────────────────────────────
 const annualF = page.annual.toLocaleString('en-GB');
-const title = `£${annualF} a Year After Tax UK - Take Home Pay ${TAX_YEAR}`;
+const title = `£${annualF} a Year After Tax UK ${TAX_YEAR} - Monthly Take Home Pay`;
 const metaTitle = buildTitle(title);
-const description = `Earning £${annualF} a year? Your UK take home pay is ${page.englandFormatted.netMonthly}/month after tax and NI. Full ${TAX_YEAR} tax breakdown, Scotland comparison, and tips.`;
+const description = `On a £${annualF} salary you take home ${page.englandFormatted.netMonthly}/month after tax and NI. Full ${TAX_YEAR} UK breakdown with income tax bands, National Insurance and Scotland comparison.`;
 const canonical = buildCanonical(`/salary/${page.slug}`);
 
 const breadcrumbItems = [

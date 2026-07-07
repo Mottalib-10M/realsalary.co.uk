@@ -49,9 +49,9 @@ interface Props {
 const { page } = Astro.props;
 
 // ─── SEO ──────────────────────────────────────────────────────────────────
-const title = `\u00A3${page.hourlyRate} Per Hour After Tax UK - Take Home Pay ${TAX_YEAR}`;
+const title = `\u00A3${page.hourlyRate} Per Hour After Tax UK ${TAX_YEAR} - Salary & Tax Breakdown`;
 const metaTitle = buildTitle(title);
-const description = `Earning \u00A3${page.hourlyRate} per hour in the UK? See your annual salary equivalent, take home pay, tax breakdown and Scotland comparison for ${TAX_YEAR}.`;
+const description = `At \u00A3${page.hourlyRate}/hr you earn ${page.annualFormatted} a year. Your UK take home is ${page.englandFormatted.netMonthly}/month after income tax and NI. Full ${TAX_YEAR} breakdown with tax bands and Scotland comparison.`;
 const canonical = buildCanonical(`/hourly/${page.slug}`);
 
 const breadcrumbItems = [

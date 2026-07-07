@@ -318,7 +318,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     slug: '/scottish-tax-calculator/',
     title: 'Scottish Tax Calculator',
     metaTitle: `Scottish Tax Calculator ${TAX_YEAR} - Scotland Income Tax Rates`,
-    metaDescription: `Calculate your Scottish income tax for ${TAX_YEAR}. Compare Scotland vs England take-home pay with all six tax bands. Free HMRC rates and thresholds.`,
+    metaDescription: `Calculate your Scottish income tax for ${TAX_YEAR}. Compare Scotland vs England take-home pay across all six tax bands. Updated HMRC rates, thresholds and examples.`,
     h1: `Scottish Tax Calculator ${TAX_YEAR}`,
     intro: 'Compare Scottish income tax rates with England, Wales, and Northern Ireland. See the difference in your take-home pay.',
     faqs: [
@@ -342,7 +342,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     slug: '/employer-cost/',
     title: 'Employer Cost Calculator',
     metaTitle: `Employer Cost Calculator UK ${TAX_YEAR} - Total Cost to Hire`,
-    metaDescription: `Calculate the total cost of employing someone in the UK for ${TAX_YEAR}. Includes employer NI at 15%, pension contributions, and Employment Allowance.`,
+    metaDescription: `Total cost of hiring someone in the UK for ${TAX_YEAR}. Includes employer National Insurance (15%), pension contributions and Employment Allowance. Free calculator.`,
     h1: `Employer Cost Calculator ${TAX_YEAR}`,
     intro: 'See the true cost of employing someone in the UK, including employer National Insurance and pension contributions.',
     faqs: [
@@ -355,7 +355,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
         answer: 'The Employment Allowance reduces your employer NI bill by up to £10,500 per year. Most businesses with employer NI below £100,000 in the previous year are eligible.',
       },
       {
-        question: 'What is the employer NI rate for ${TAX_YEAR}?',
+        question: `What is the employer NI rate for ${TAX_YEAR}?`,
         answer: 'Employers pay 15% NI on employee earnings above £5,000 per year. There is no upper limit, unlike employee NI.',
       },
     ],
