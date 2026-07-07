@@ -1,0 +1,1934 @@
+---
+/**
+ * Full-page component for monthly salary landing pages.
+ * Renders a complete <html> document (no <!DOCTYPE html> — the parent handles that).
+ * Receives a single `page` prop of type MonthlySalaryPageData.
+ */
+import Header from '../layout/Header.astro';
+import Footer from '../layout/Footer.astro';
+import BaseHead from '../seo/BaseHead.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import '../../styles/global.css';
+import { type MonthlySalaryPageData } from '../../data/monthly-salary-pages';
+import {
+  buildTitle,
+  buildCanonical,
+  SITE_NAME,
+  SITE_URL,
+  OG_IMAGE,
+  OG_IMAGE_WIDTH,
+  OG_IMAGE_HEIGHT,
+  breadcrumbSchema,
+  articleSchema,
+  faqSchema,
+  organizationSchema,
+  personSchema,
+  LAST_UPDATED,
+} from '../../lib/seo';
+import { formatCurrency, formatPercent } from '../../lib/format';
+import {
+  getBandContext,
+  getCareerDescription,
+  getTaxTips,
+  buildFaqs as buildUniqueFaqs,
+  getRaiseSimulation,
+  getBudgetBreakdown,
+  getUniqueComparisons,
+} from '../../lib/salary-content';
+import {
+  getDailyLifeAlt,
+  getCareerAlt,
+  getFinancialPlanningAlt,
+  getInflationAlt,
+  getRegionalAlt,
+  getBudgetCommentaryAlt,
+  getSalaryPositionAlt,
+} from '../../lib/salary-prose';
+import {
+  PERSONAL_ALLOWANCE,
+  NI_PRIMARY_THRESHOLD,
+  NI_UPPER_EARNINGS_LIMIT,
+  NI_MAIN_RATE,
+  NI_ADDITIONAL_RATE,
+  TAX_YEAR,
+  INCOME_TAX_BANDS_ENGLAND,
+} from '../../data/tax-rules-2026-27';
+
+interface Props {
+  page: MonthlySalaryPageData;
+}
+
+const { page } = Astro.props;
+
+// ─── SEO ──────────────────────────────────────────────────────────────────
+// Title: 50-60 chars, keyword-rich, no site name
+const title = `£${page.monthly.toLocaleString('en-GB')} Per Month After Tax UK - Take Home Pay ${TAX_YEAR}`;
+const metaTitle = buildTitle(title);
+// Description: 150-160 chars, keyword-rich
+const description = `Earning £${page.monthly.toLocaleString('en-GB')} per month? See your UK take home pay after income tax and NI for ${TAX_YEAR}. Full salary breakdown with tax bands, Scotland comparison and tips.`;
+const canonical = buildCanonical(`/salary/${page.slug}`);
+
+const breadcrumbItems = [
+  { name: 'Home', url: SITE_URL },
+  { name: 'Salary Pages', url: `${SITE_URL}/salary/` },
+  { name: `£${page.monthly.toLocaleString('en-GB')} Per Month`, url: canonical },
+];
+
+const article = articleSchema({
+  headline: title,
+  description,
+  url: canonical,
+});
+
+// ─── FAQs (unique per salary level) ─────────────────────────────────────
+const faqs: { question: string; answer: string }[] = [];
+
+if (page.tier === 'below-pa') {
+  faqs.push(
+    {
+      question: `Do I pay tax on £${page.monthly.toLocaleString('en-GB')} a month?`,
+      answer: `No. A salary of ${page.monthlyFormatted} per month equals ${page.annualFormatted} per year, which is below the ${TAX_YEAR} Personal Allowance of ${formatCurrency(PERSONAL_ALLOWANCE)}. You pay no income tax on this amount. However, you may still pay National Insurance if your earnings exceed ${formatCurrency(NI_PRIMARY_THRESHOLD)} per year.`,
+    },
+    {
+      question: `How much is ${page.monthlyFormatted} a month per hour?`,
+      answer: `Based on a standard 37.5-hour working week, ${page.monthlyFormatted} per month (${page.annualFormatted} per year) works out to approximately ${page.hourlyGross} per hour before any deductions.`,
+    },
+    {
+      question: `Is ${page.monthlyFormatted} a month above minimum wage?`,
+      answer: `The National Living Wage for 2026/27 is £12.21 per hour for workers aged 21 and over, which equates to roughly £23,808 per year or £1,984 per month for a 37.5-hour week. At ${page.monthlyFormatted} per month (${page.hourlyGross} per hour), this salary is ${page.annual >= 23808 ? 'at or above' : 'below'} the full-time minimum wage equivalent.`,
+    },
+  );
+} else {
+  faqs.push(
+    {
+      question: `What is the take-home pay on £${page.monthly.toLocaleString('en-GB')} a month?`,
+      answer: `On a salary of ${page.monthlyFormatted} per month (${page.annualFormatted} per year) in England, your monthly take-home pay is approximately ${page.englandFormatted.netMonthly} after income tax and National Insurance deductions for the ${TAX_YEAR} tax year.`,
+    },
+    {
+      question: `How much tax do I pay on ${page.monthlyFormatted} a month?`,
+      answer: `On ${page.monthlyFormatted} per month (${page.annualFormatted} annual), you pay ${page.englandFormatted.incomeTax} in income tax and ${page.englandFormatted.nationalInsurance} in National Insurance per year. Your effective tax rate is ${page.englandFormatted.effectiveTaxRate}.`,
+    },
+    {
+      question: `How much is ${page.monthlyFormatted} a month per hour?`,
+      answer: `Based on a standard 37.5-hour working week, ${page.monthlyFormatted} per month (${page.annualFormatted} per year) works out to approximately ${page.hourlyGross} per hour before tax.`,
+    },
+    {
+      question: `Is ${page.monthlyFormatted} a month a good salary in the UK?`,
+      answer: `The UK median salary is approximately £35,000 per year (around £2,917 per month). At ${page.monthlyFormatted} per month (${page.annualFormatted} per year), this salary is ${page.annual >= 35000 ? 'at or above' : 'below'} the national median. Whether it is sufficient depends on your location, lifestyle, and financial commitments.`,
+    },
+  );
+}
+
+// faqStructuredData is built below after uniqueFaqs are generated
+
+// ─── CTA ────────────────────────────────────────────────────────────────
+// Link is plain "/" in static HTML so Google doesn't index query-string variants.
+// JS adds ?gross= on click so the calculator is pre-filled for real users.
+const ctaGross = page.annual;
+
+// ─── Context helpers ────────────────────────────────────────────────────
+const medianAnnual = 35000;
+const medianMonthly = Math.round(medianAnnual / 12);
+const percentOfMedian = Math.round((page.annual / medianAnnual) * 100);
+
+// NI calculation details
+const niThresholdMonthly = formatCurrency(NI_PRIMARY_THRESHOLD / 12);
+const niUpperMonthly = formatCurrency(NI_UPPER_EARNINGS_LIMIT / 12);
+const paysNI = page.annual > NI_PRIMARY_THRESHOLD;
+const niableIncome = paysNI ? Math.min(page.annual, NI_UPPER_EARNINGS_LIMIT) - NI_PRIMARY_THRESHOLD : 0;
+
+// Tax calculation details
+const paysTax = page.annual > PERSONAL_ALLOWANCE;
+const taxableIncome = paysTax ? page.annual - PERSONAL_ALLOWANCE : 0;
+
+// Extended content helpers
+const monthlyNet = page.england.netAnnual / 12;
+const rentBudget30 = formatCurrency(monthlyNet * 0.3);
+const mortgageMax = formatCurrency(page.annual * 4.5);
+const emergencyFund3mo = formatCurrency(monthlyNet * 3);
+const emergencyFund6mo = formatCurrency(monthlyNet * 6);
+const savingsAt10pct = formatCurrency(monthlyNet * 0.1);
+const hourlyNet = formatCurrency(page.england.netAnnual / (52 * 37.5));
+const weeklyNet = formatCurrency(page.england.netAnnual / 52);
+const dailyNet = formatCurrency(page.england.netAnnual / 365);
+const hoursFor50 = Math.round(50 / (page.england.netAnnual / (52 * 37.5)));
+const hoursFor500 = Math.round(500 / (page.england.netAnnual / (52 * 37.5)));
+const lifeBracket = page.monthly <= 300 ? 'minimal' : page.monthly <= 700 ? 'parttime' : page.monthly <= 1050 ? 'nearpa' : page.monthly <= 1800 ? 'lower' : 'upper';
+const regionBracket = page.monthly <= 700 ? 'low' : page.monthly <= 1500 ? 'mid' : 'high';
+
+// ─── Unique content generation ────────────────────────────────────────────
+const bandContext = getBandContext(page.monthly, page.england);
+const careerDescription = getCareerDescription(page.monthly);
+const taxTips = getTaxTips(page.monthly, page.england);
+const uniqueFaqs = buildUniqueFaqs(page.monthly, page.england);
+const raiseSimulation = getRaiseSimulation(page.monthly, page.england);
+const budgetBreakdownData = getBudgetBreakdown(monthlyNet);
+const uniqueComparisons = getUniqueComparisons(page.monthly, page.england);
+
+// ─── Alternate prose content (reduces cross-page duplication) ────────────
+const dailyLifeAlt = getDailyLifeAlt(page.monthly, page.england);
+const careerAlt = getCareerAlt(page.monthly, page.england);
+const financialAlt = getFinancialPlanningAlt(page.monthly, page.england);
+const inflationAlt = getInflationAlt(page.monthly, page.england);
+const regionalAlt = getRegionalAlt(page.monthly, page.england);
+const budgetCommentaryAlt = getBudgetCommentaryAlt(page.monthly, page.england);
+const salaryPositionAlt = getSalaryPositionAlt(page.monthly, page.england);
+
+// FAQ structured data includes both standard and unique FAQs
+const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
+---
+
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{metaTitle}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="Mottalib Radif" />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content={`£${page.monthly.toLocaleString('en-GB')} per month after tax UK - salary breakdown`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <BaseHead slug={`/salary/${page.slug}/`} pageType="salary" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="alternate" hreflang="en-GB" href={canonical} />
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema(breadcrumbItems))} />
+  <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqStructuredData)} />
+  <script type="application/ld+json" set:html={JSON.stringify(organizationSchema())} />
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema())} />
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumbs items={breadcrumbItems} />
+    <article class="prose prose-gray dark:prose-invert max-w-none">
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 1. H1 + Intro -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h1>£{page.monthly.toLocaleString('en-GB')} Per Month After Tax: UK Take-Home Pay Breakdown</h1>
+
+      {page.tier === 'below-pa' ? (
+        <p>
+          If you earn <strong>{page.monthlyFormatted} per month</strong> in the United Kingdom, your annual gross salary
+          is <strong>{page.annualFormatted}</strong>. Because this is below the {TAX_YEAR} Personal Allowance
+          of {formatCurrency(PERSONAL_ALLOWANCE)}, <strong>you pay no income tax</strong> on this salary. This page
+          breaks down exactly what happens to your pay, whether you owe National Insurance, and how your take-home
+          compares to nearby salary levels. All figures use official HMRC rates for the {TAX_YEAR} tax year.
+        </p>
+      ) : (
+        <p>
+          If you earn <strong>{page.monthlyFormatted} per month</strong> in the United Kingdom, your annual gross salary
+          is <strong>{page.annualFormatted}</strong>. After income tax and National Insurance, your monthly take-home pay
+          is approximately <strong>{page.englandFormatted.netMonthly}</strong> in England. This page provides a complete
+          breakdown of your deductions, band-by-band tax analysis, a Scotland comparison, and practical context for
+          the {TAX_YEAR} tax year.
+        </p>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 2. Summary Results Table -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Your {page.monthlyFormatted} Salary at a Glance</h2>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="text-right">Annual</th>
+              <th class="text-right">Monthly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gross salary</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossMonthly}</td>
+            </tr>
+            <tr>
+              <td>Income tax</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+              <td class="text-right tabular-nums">{formatCurrency(page.england.incomeTax / 12)}</td>
+            </tr>
+            <tr>
+              <td>National Insurance</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.nationalInsurance}</td>
+              <td class="text-right tabular-nums">{formatCurrency(page.england.nationalInsurance / 12)}</td>
+            </tr>
+            <tr>
+              <td><strong>Total deductions</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.totalDeductions}</strong></td>
+              <td class="text-right tabular-nums"><strong>{formatCurrency(page.england.totalDeductions / 12)}</strong></td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Take-home pay</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netAnnual}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netMonthly}</strong></td>
+            </tr>
+            <tr>
+              <td>Effective tax rate</td>
+              <td class="text-right" colspan="2">{page.englandFormatted.effectiveTaxRate}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 3. CTA Button -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <div class="not-prose my-8 text-center">
+        <a
+          href="/"
+          data-gross={ctaGross}
+          class="cta-calc inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+        >
+          Calculate your exact take-home pay &rarr;
+        </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 4. How Your Salary Is Taxed -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>How Your {page.monthlyFormatted}/Month Salary Is Taxed</h2>
+
+      {page.tier === 'below-pa' ? (
+        <>
+          <p>
+            Your annual salary of {page.annualFormatted} falls entirely within the <strong>Personal Allowance</strong>,
+            which is the amount you can earn tax-free each year. For the {TAX_YEAR} tax year, the Personal Allowance
+            is <strong>{formatCurrency(PERSONAL_ALLOWANCE)}</strong>.
+          </p>
+          <p>
+            Since {page.annualFormatted} is less than {formatCurrency(PERSONAL_ALLOWANCE)}, your entire income is
+            covered by the Personal Allowance. This means:
+          </p>
+          <ul>
+            <li><strong>Income tax: {page.englandFormatted.incomeTax}:</strong> no tax is due because your salary is below the tax-free threshold.</li>
+            {paysNI ? (
+              <li>
+                <strong>National Insurance: {page.englandFormatted.nationalInsurance} per year:</strong>
+                you still pay NI because the NI threshold ({formatCurrency(NI_PRIMARY_THRESHOLD)}/year) is the same as the Personal
+                Allowance, but your earnings above this threshold are subject to the {(NI_MAIN_RATE * 100).toFixed(0)}% rate.
+              </li>
+            ) : (
+              <li>
+                <strong>National Insurance: {page.englandFormatted.nationalInsurance}:</strong>
+                your salary is also below the NI Primary Threshold of {formatCurrency(NI_PRIMARY_THRESHOLD)}/year,
+                so no NI is due either.
+              </li>
+            )}
+          </ul>
+          <p>
+            Even though no income tax is deducted, your employer will still operate PAYE (Pay As You Earn) and report
+            your earnings to HMRC. You will receive a tax code (typically 1257L) which tells your employer
+            that you have the full Personal Allowance available.
+          </p>
+          <p>
+            If this is a second job, your tax code may differ (e.g., BR), which could mean tax is deducted even on
+            income below the Personal Allowance. You can reclaim any overpaid tax through HMRC.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Understanding how UK income tax works on your {page.monthlyFormatted} monthly salary helps you see exactly
+            where your money goes. The UK uses a <strong>progressive tax system</strong>, meaning different portions of
+            your income are taxed at different rates.
+          </p>
+          <p>Here is how your {page.annualFormatted} annual salary is broken down step by step:</p>
+          <ol>
+            <li>
+              <strong>Personal Allowance ({formatCurrency(PERSONAL_ALLOWANCE)}):</strong> The first {formatCurrency(PERSONAL_ALLOWANCE)} of your
+              income is tax-free. This is your Personal Allowance for {TAX_YEAR}.
+            </li>
+            <li>
+              <strong>Basic Rate at 20%:</strong> Income above the Personal Allowance up to £50,270 is taxed at 20%.
+              For your salary, that means {formatCurrency(taxableIncome)} is taxed at the basic rate, producing
+              {page.englandFormatted.incomeTax} in income tax.
+            </li>
+          </ol>
+          <p>
+            Your total income tax for the year is <strong>{page.englandFormatted.incomeTax}</strong>,
+            or {formatCurrency(page.england.incomeTax / 12)} per month.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 5. Band-by-Band Analysis (taxable salaries only) -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      {page.tier === 'basic-rate' && page.england.incomeTaxBands.length > 0 && (
+        <>
+          <h2>Income Tax Band-by-Band Breakdown</h2>
+          <p>
+            The table below shows exactly how much of your {page.annualFormatted} salary falls in each income tax
+            band for England, Wales, and Northern Ireland in {TAX_YEAR}:
+          </p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tax Band</th>
+                  <th class="text-right">Rate</th>
+                  <th class="text-right">Taxable Amount</th>
+                  <th class="text-right">Tax</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Personal Allowance</td>
+                  <td class="text-right">0%</td>
+                  <td class="text-right tabular-nums">{formatCurrency(page.england.personalAllowance)}</td>
+                  <td class="text-right tabular-nums">£0</td>
+                </tr>
+                {page.england.incomeTaxBands.map((band) => (
+                  <tr>
+                    <td>{band.name}</td>
+                    <td class="text-right">{(band.rate * 100).toFixed(0)}%</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.taxableAmount)}</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.tax)}</td>
+                  </tr>
+                ))}
+                <tr class="font-semibold">
+                  <td>Total</td>
+                  <td class="text-right"></td>
+                  <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+                  <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            As the table shows, only the portion of your salary above the {formatCurrency(PERSONAL_ALLOWANCE)} Personal
+            Allowance is actually taxed. The first {formatCurrency(PERSONAL_ALLOWANCE)} is entirely tax-free, and the
+            remaining {formatCurrency(taxableIncome)} is taxed at 20% (the basic rate).
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 6. National Insurance Breakdown -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>National Insurance on {page.monthlyFormatted} Per Month</h2>
+      {paysNI ? (
+        <>
+          <p>
+            National Insurance Contributions (NICs) are calculated separately from income tax. For employees in
+            the {TAX_YEAR} tax year, Class 1 NICs are charged at:
+          </p>
+          <ul>
+            <li><strong>{(NI_MAIN_RATE * 100).toFixed(0)}%</strong> on earnings between {formatCurrency(NI_PRIMARY_THRESHOLD)} and {formatCurrency(NI_UPPER_EARNINGS_LIMIT)} per year</li>
+            <li><strong>{(NI_ADDITIONAL_RATE * 100).toFixed(0)}%</strong> on earnings above {formatCurrency(NI_UPPER_EARNINGS_LIMIT)} per year</li>
+          </ul>
+          <p>
+            On your annual salary of {page.annualFormatted}, National Insurance is calculated as follows:
+          </p>
+          <ul>
+            <li>Earnings below {formatCurrency(NI_PRIMARY_THRESHOLD)}: no NI due (this is the Primary Threshold).</li>
+            <li>
+              Earnings from {formatCurrency(NI_PRIMARY_THRESHOLD)} to {formatCurrency(Math.min(page.annual, NI_UPPER_EARNINGS_LIMIT))}:
+              {formatCurrency(niableIncome)} &times; {(NI_MAIN_RATE * 100).toFixed(0)}% = <strong>{formatCurrency(niableIncome * NI_MAIN_RATE)}</strong>.
+            </li>
+          </ul>
+          <p>
+            Your total NI for the year is <strong>{page.englandFormatted.nationalInsurance}</strong>,
+            or approximately {formatCurrency(page.england.nationalInsurance / 12)} per month. National Insurance
+            contributions help fund the State Pension, NHS, and other benefits.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            National Insurance Contributions (NICs) for employees are charged on earnings above the Primary Threshold,
+            which is {formatCurrency(NI_PRIMARY_THRESHOLD)} per year for {TAX_YEAR}. Since your annual salary of
+            {page.annualFormatted} is at or below this threshold, <strong>you pay no National Insurance</strong>.
+          </p>
+          <p>
+            However, you may still build up qualifying years for the State Pension if your earnings are above the
+            Lower Earnings Limit of £6,708 per year ({page.annual >= 6708 ? 'which your salary exceeds' : 'which your salary is below'}).
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 7. Period Breakdown Table -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What You Take Home Each Pay Period</h2>
+      <p>
+        Here is what {page.monthlyFormatted} per month looks like across different pay periods, showing both your
+        gross (before-tax) and net (after-tax) amounts for England in {TAX_YEAR}:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Period</th>
+              <th class="text-right">Gross</th>
+              <th class="text-right">Take-Home</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.periods.map((p) => (
+              <tr>
+                <td>{p.label}</td>
+                <td class="text-right tabular-nums">{p.gross}</td>
+                <td class="text-right tabular-nums">{p.net}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        At {page.monthlyFormatted} per month gross, your effective hourly rate is {page.hourlyGross} before tax
+        (based on a 37.5-hour week), or approximately {formatCurrency(page.england.netAnnual / (52 * 37.5))} per
+        hour after tax. Your daily take-home is roughly {formatCurrency(page.england.netAnnual / 365)}.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 8. Scotland Comparison -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>England vs Scotland: {page.monthlyFormatted} Per Month Comparison</h2>
+      <p>
+        Scotland has its own income tax rates that differ from England, Wales, and Northern Ireland. If you live in
+        Scotland and earn {page.monthlyFormatted} per month, your take-home pay may differ. National Insurance rates
+        are the same across the UK. Here is the comparison:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="text-right">England</th>
+              <th class="text-right">Scotland</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gross annual</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.grossAnnual}</td>
+            </tr>
+            <tr>
+              <td>Income tax</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.incomeTax}</td>
+            </tr>
+            <tr>
+              <td>National Insurance</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.nationalInsurance}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.nationalInsurance}</td>
+            </tr>
+            <tr>
+              <td>Total deductions</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.totalDeductions}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.totalDeductions}</td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Net annual</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netAnnual}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.scotlandFormatted.netAnnual}</strong></td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Net monthly</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netMonthly}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.scotlandFormatted.netMonthly}</strong></td>
+            </tr>
+            <tr>
+              <td>Effective rate</td>
+              <td class="text-right">{page.englandFormatted.effectiveTaxRate}</td>
+              <td class="text-right">{page.scotlandFormatted.effectiveTaxRate}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {page.england.incomeTax !== page.scotland.incomeTax ? (
+        <p>
+          The difference in take-home pay between England and Scotland on a {page.monthlyFormatted}/month salary
+          is <strong>{formatCurrency(Math.abs(page.england.netAnnual - page.scotland.netAnnual))} per year</strong>
+          ({formatCurrency(Math.abs(page.england.netAnnual - page.scotland.netAnnual) / 12)} per month).
+          {page.england.netAnnual > page.scotland.netAnnual
+            ? ' You take home more in England due to the lower starter/basic rate structure.'
+            : ' You take home more in Scotland at this income level.'}
+        </p>
+      ) : (
+        <p>
+          At this salary level, income tax is the same in both England and Scotland ({page.englandFormatted.incomeTax}),
+          so your take-home pay is identical regardless of where you live in the UK.
+        </p>
+      )}
+
+      <!-- Scottish tax bands detail for taxable salaries -->
+      {page.tier === 'basic-rate' && page.scotland.incomeTaxBands.length > 0 && (
+        <>
+          <h3>Scottish Income Tax Bands on {page.annualFormatted}</h3>
+          <p>Scotland uses a six-band income tax system for {TAX_YEAR}:</p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Band</th>
+                  <th class="text-right">Rate</th>
+                  <th class="text-right">Taxable Amount</th>
+                  <th class="text-right">Tax</th>
+                </tr>
+              </thead>
+              <tbody>
+                {page.scotland.incomeTaxBands.map((band) => (
+                  <tr>
+                    <td>{band.name}</td>
+                    <td class="text-right">{(band.rate * 100).toFixed(0)}%</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.taxableAmount)}</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.tax)}</td>
+                  </tr>
+                ))}
+                <tr class="font-semibold">
+                  <td>Total Scottish tax</td>
+                  <td></td>
+                  <td></td>
+                  <td class="text-right tabular-nums">{page.scotlandFormatted.incomeTax}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 9. Nearby Salary Comparison -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Nearby Monthly Salary Comparison</h2>
+      <p>
+        Wondering how a small change in salary affects your take-home? The table below compares monthly salaries
+        close to {page.monthlyFormatted}, showing the net monthly pay and the difference from your current salary:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Monthly Salary</th>
+              <th class="text-right">Net Monthly</th>
+              <th class="text-right">Net Annual</th>
+              <th class="text-right">vs {page.monthlyFormatted}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.nearby.map((n) => (
+              <tr>
+                <td><a href={`/salary/${n.slug}/`} class="text-navy-600 hover:underline dark:text-navy-300">{n.monthlyFormatted}</a></td>
+                <td class="text-right tabular-nums">{n.netMonthly}</td>
+                <td class="text-right tabular-nums">{n.netAnnual}</td>
+                <td class="text-right tabular-nums">{n.difference}/mo</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        As you can see, each £50 increase in monthly gross salary does not result in a full £50 increase in
+        take-home pay. After income tax{paysTax ? ' (20%)' : ''} and National Insurance{paysNI ? ` (${(NI_MAIN_RATE * 100).toFixed(0)}%)` : ''},
+        you keep approximately {page.tier === 'basic-rate' ? '72p of every additional £1 earned' : 'most of any additional earnings until you reach the tax threshold'}.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10. Where This Salary Sits in UK Earnings -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Where {page.monthlyFormatted} Per Month Sits in UK Earnings</h2>
+      <p>
+        The median full-time salary in the UK is approximately <strong>£35,000 per year</strong>
+        (around <strong>{formatCurrency(medianMonthly)} per month</strong>), according to the most recent ONS data.
+        At {page.monthlyFormatted} per month ({page.annualFormatted} per year), your salary
+        is <strong>{percentOfMedian}% of the UK median</strong>.
+      </p>
+      {salaryPositionAlt ? (
+        <p set:html={salaryPositionAlt} />
+      ) : page.annual < 15000 ? (
+        <p>
+          This salary level is typical of part-time work, entry-level positions, or roles with reduced hours.
+          Many people earning in this range work in retail, hospitality, care work, or are supplementing other income.
+          At this level, you may also be eligible for Universal Credit or other means-tested benefits to top up your income.
+        </p>
+      ) : page.annual < 22000 ? (
+        <p>
+          This salary is common for entry-level full-time roles, apprenticeships nearing completion, or part-time
+          professional work. Typical roles at this level include junior administrative positions, retail supervisors,
+          teaching assistants, and entry-level customer service roles. Depending on your location, you may find
+          budgeting tight, particularly in high-cost areas like London and the South East.
+        </p>
+      ) : page.annual < 30000 ? (
+        <p>
+          This salary falls within the range of many full-time roles across the UK, including junior professionals,
+          skilled trades, NHS Band 3-5 positions, and experienced administrative staff. While below the national
+          median, this income provides a reasonable standard of living in most areas outside London.
+        </p>
+      ) : (
+        <p>
+          At {page.annualFormatted} per year, your salary is {page.annual >= medianAnnual ? 'at or above' : 'approaching'}
+          the national median. This level is typical for mid-career professionals, experienced public sector workers
+          (NHS Band 5-6, civil service HEO/SEO), skilled tradespeople, and many private sector roles. This income
+          supports a comfortable standard of living in most UK regions.
+        </p>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10b. Daily Life on This Salary -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What Daily Life Looks Like on {page.monthlyFormatted} Per Month in the UK</h2>
+
+      <p>
+        Beyond the tax figures and deduction tables, what does {page.monthlyFormatted} per month actually feel like
+        in your day to day life? Your take home pay of {page.englandFormatted.netMonthly} per month works out
+        to {weeklyNet} per week and {dailyNet} per day after all deductions. These are the real numbers that
+        determine what you can afford for housing, food, transport, and everything else that makes up life in the
+        United Kingdom.
+      </p>
+
+      {dailyLifeAlt ? (
+        <>{dailyLifeAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' ? (
+        <>
+          <p>
+            An income of {page.monthlyFormatted} per month adds up to {page.annualFormatted} over a full year. For most
+            people earning at this level, the work involves a handful of shifts per week or a small freelance gig on the
+            side. Students, semi retired individuals, and parents who work around school hours often find themselves in
+            this range. Your take home of {page.englandFormatted.netMonthly} represents spending money rather than a
+            primary wage, and understanding that distinction matters when planning your finances.
+          </p>
+          <p>
+            If this is your only source of income, managing everyday costs requires careful planning and usually some
+            outside support. Room rentals in shared houses across the UK start at around £300 to £400 per month outside
+            of London, which alone would consume your entire earnings. Most people earning {page.monthlyFormatted} are
+            either living with family, sharing costs with a partner, or receiving housing support through the benefits
+            system. Groceries for one person can be kept to around £25 to £35 per week by shopping at budget
+            supermarkets, cooking from scratch, and avoiding convenience foods.
+          </p>
+          <p>
+            Transport costs at this income level need to be minimal. Walking and cycling are the most affordable options.
+            A monthly bus pass costs between £50 and £70 in most UK cities, which represents a large chunk of your
+            {page.monthlyFormatted} salary. Keeping transport below £30 per month through walking, cycling, or lift
+            sharing is realistic in many areas. Despite the modest size of this income, it is worth checking whether you
+            qualify for the National Living Wage if you are employed, as workers aged 21 and over are entitled to at
+            least £12.21 per hour from April 2026.
+          </p>
+          <p>
+            For those using this role as a stepping stone, the experience you gain matters more than the pay right now.
+            Building a track record of reliability, learning transferable skills, and expanding your professional network
+            all contribute to future earning potential. Many people who started at {page.monthlyFormatted} per month move
+            to significantly higher salaries within two to three years by taking on more responsibility or transitioning
+            to roles that value the skills they developed along the way.
+          </p>
+        </>
+      ) : lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            Earning {page.monthlyFormatted} per month puts your annual income at {page.annualFormatted}, which typically
+            reflects part time work of around 15 to 25 hours per week. Many people in this range work in retail,
+            hospitality, cleaning, or care sectors, often fitting their job around childcare, education, or health needs.
+            Your take home of {page.englandFormatted.netMonthly} each month gives you a modest but real income to work
+            with. For someone sharing housing costs with a partner or housemates, this can cover your share of rent and
+            contribute to household bills. On your own, however, the numbers become tight.
+          </p>
+          <p>
+            Grocery shopping on this salary requires deliberate planning. Weekly food budgets of around £30 to £40 are
+            realistic if you cook at home and take advantage of supermarket deals. Meal planning, buying seasonal
+            produce, and batch cooking can stretch your food budget considerably. Many people at this income level also
+            benefit from community resources such as surplus food apps that connect you with discounted items from local
+            shops. A typical room in a shared house outside London costs between £400 and £600, which would leave little
+            from your monthly pay for other expenses.
+          </p>
+          <p>
+            Getting around on {page.monthlyFormatted} per month means prioritising cost effective transport. If you live
+            close to work, cycling saves a meaningful amount each month. For longer commutes, a combination of walking
+            and buses works for most people. Many local authorities offer discounted travel for low income residents, and
+            the Cycle to Work scheme through your employer can help you purchase a bike through salary sacrifice. Your
+            mobile phone bill can be kept under £10 per month with a SIM only deal, and energy costs depend on your
+            housing situation, though £50 to £80 per month is typical for a share of household bills.
+          </p>
+          <p>
+            If you are claiming Universal Credit alongside this employment, your earnings are assessed each month through
+            the Real Time Information system that HMRC operates. Every pound you earn does not reduce your Universal
+            Credit by a full pound. There is a taper rate of 55%, meaning for every £1 you earn above your work
+            allowance, your benefit reduces by 55p. Understanding this taper is essential for knowing your true effective
+            income at {page.monthlyFormatted} per month and for deciding whether additional hours are financially
+            worthwhile.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            With {page.monthlyFormatted} arriving in your bank account each month, your annual income of
+            {page.annualFormatted} sits near the Personal Allowance threshold. This means you keep almost everything
+            you earn, with little or no income tax being deducted. For many people, this salary represents the sweet
+            spot of part time professional work or full time employment at entry level, where you earn enough to
+            contribute meaningfully to your household while maintaining a manageable cost of living.
+          </p>
+          <p>
+            Your take home of {page.englandFormatted.netMonthly} provides genuine spending power. In affordable parts of
+            the UK such as the North East, Wales, or parts of Scotland, this income can cover a room in shared
+            accommodation, your food bill, and basic living expenses. In cities like Hull, Sunderland, Stoke, Dundee,
+            and Swansea, you can find a studio or small one bedroom flat for £350 to £500. In larger cities like
+            Manchester or Leeds, a room in a shared house is the more realistic option at £400 to £600.
+          </p>
+          <p>
+            At this level, you start to notice the practical impact of small financial decisions. Switching energy
+            providers can save £100 to £200 per year. Choosing a SIM only phone deal instead of a contract saves £20 to
+            £30 per month. Small savings like these add up quickly when your total income is {page.monthlyFormatted}, and
+            they can mean the difference between ending the month comfortably or dipping into an overdraft. Utilities,
+            council tax, and broadband form the backbone of your monthly fixed costs after housing, typically running
+            between £200 and £350 combined.
+          </p>
+          <p>
+            Many workers earning around {page.monthlyFormatted} per month hold roles such as teaching assistants on term
+            time contracts, healthcare support workers on part time hours, administrative staff on reduced schedules, or
+            skilled freelancers who set their own pace. If this income supports your lifestyle and goals, it represents a
+            perfectly valid choice. The UK tax system recognises this by ensuring you pay no income tax below the
+            {formatCurrency(PERSONAL_ALLOWANCE)} annual threshold, letting you keep the maximum possible share of what
+            you earn.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            With a take home of {page.englandFormatted.netMonthly} per month after tax and National Insurance, you are
+            in the part of the income spectrum where real financial choices become available. Your annual income of
+            {page.annualFormatted} is taxed at the basic rate on everything above the Personal Allowance, but the
+            effective rate of {page.englandFormatted.effectiveTaxRate} means the majority of your earnings still reach
+            your bank account. This is a proper working salary that many people across the UK live on full time, and it
+            supports a comfortable, if modest, standard of living.
+          </p>
+          <p>
+            Housing options at {page.englandFormatted.netMonthly} per month present a genuine range of possibilities.
+            Your housing budget of {rentBudget30} (following the 30% guideline) secures a comfortable one bedroom flat
+            in cities across the North of England, Wales, Northern Ireland, and much of Scotland. In cities like Bristol,
+            Brighton, or Cambridge, you would more likely be looking at a room in a shared house or a studio flat. The
+            gap between what {rentBudget30} buys in Sheffield versus what it buys in London is striking, and many people
+            at this salary level find that geography is one of the most powerful financial levers available to them.
+          </p>
+          <p>
+            At {page.monthlyFormatted} per month, your grocery budget can be more relaxed than at lower income levels.
+            Spending £45 to £65 per week on food allows for fresh vegetables, quality protein, and the occasional treat.
+            You can shop at mainstream supermarkets without sticking strictly to value ranges. Eating out once or twice
+            per month at an affordable restaurant, or ordering a takeaway, fits comfortably into this budget without
+            causing financial strain. Transport becomes a question of preference rather than pure necessity, as running a
+            modest car is feasible alongside public transport options.
+          </p>
+          <p>
+            Entertainment and social life can genuinely feature in your budget at this level. Allocating £100 to £200 per
+            month for leisure gives you room for a gym membership, streaming services, drinks with friends, and perhaps
+            one cultural outing such as cinema, theatre, or a sporting event each month. This is not luxury living, but
+            it is a balanced life where you are not constantly monitoring every pound. The key at {page.monthlyFormatted}
+            per month is making deliberate choices about your priorities rather than feeling constrained across the board.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Earning {page.monthlyFormatted} per month places you at or near the UK median salary. Your annual gross of
+            {page.annualFormatted} and monthly take home of {page.englandFormatted.netMonthly} provide a genuine sense
+            of financial stability. At this level, you are not just covering your bills. You have real choices about how
+            to shape your lifestyle and plan for the future. Most people earning in this range work in professional,
+            technical, or supervisory roles where their skills and experience command a respectable wage.
+          </p>
+          <p>
+            Your housing budget of {rentBudget30} per month (following the 30% guideline) opens up comfortable options
+            in most British cities. In Manchester, Bristol, or Edinburgh, this covers a quality one or two bedroom flat
+            in a desirable neighbourhood. Even in London, you can find a decent one bedroom in Zones 3 to 5 at this
+            price point, though the best value often lies just outside the centre. If you are considering buying rather
+            than renting, mortgage lenders typically offer up to 4.5 times your annual salary, giving you a potential
+            borrowing capacity of up to {mortgageMax} before factoring in your deposit.
+          </p>
+          <p>
+            Food, transport, and utilities become manageable without constant monitoring. A weekly grocery shop of £50 to
+            £80 keeps the fridge stocked, and there is room for dining out once or twice a week without guilt. Travel and
+            holidays become realistic: setting aside £100 to £200 per month allows for one or two holidays per year,
+            whether that means a week in southern Europe, a city break elsewhere in the UK, or a longer trip if you plan
+            well in advance. Many budget airlines serve UK airports with fares starting from £30 to £50 for short haul
+            European flights, making weekend breaks accessible.
+          </p>
+          <p>
+            What truly distinguishes this salary bracket from lower levels is the ability to build genuine financial
+            resilience. You can save several hundred pounds each month without feeling deprived, and those savings
+            compound over time. An emergency fund of three to six months of expenses, which at your spending level might
+            mean {emergencyFund3mo} to {emergencyFund6mo}, is achievable within a year or two of focused saving. Hobbies,
+            personal development, gym memberships, and regular social activities all fit within a sensible budget at
+            {page.monthlyFormatted} per month.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10c. Sample Monthly Budget -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Sample Monthly Budget on {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Seeing how your {page.englandFormatted.netMonthly} take home pay breaks down into a realistic monthly budget
+        helps you plan with confidence. The table below shows a suggested allocation based on commonly recommended
+        spending guidelines, adjusted for UK living costs. Every figure is calculated from your actual take home pay
+        at {page.monthlyFormatted} gross per month.
+      </p>
+
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th class="text-right">Monthly</th>
+              <th class="text-right">% of Net</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Housing (rent or mortgage)</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.30)}</td>
+              <td class="text-right">30%</td>
+            </tr>
+            <tr>
+              <td>Bills (council tax, energy, broadband, phone)</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.15)}</td>
+              <td class="text-right">15%</td>
+            </tr>
+            <tr>
+              <td>Food and groceries</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.12)}</td>
+              <td class="text-right">12%</td>
+            </tr>
+            <tr>
+              <td>Transport</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.10)}</td>
+              <td class="text-right">10%</td>
+            </tr>
+            <tr>
+              <td>Savings and emergency fund</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.10)}</td>
+              <td class="text-right">10%</td>
+            </tr>
+            <tr>
+              <td>Personal (clothing, toiletries, haircuts)</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.05)}</td>
+              <td class="text-right">5%</td>
+            </tr>
+            <tr>
+              <td>Leisure and social</td>
+              <td class="text-right tabular-nums">{formatCurrency(monthlyNet * 0.08)}</td>
+              <td class="text-right">8%</td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Buffer (unexpected costs)</strong></td>
+              <td class="text-right tabular-nums"><strong>{formatCurrency(monthlyNet * 0.10)}</strong></td>
+              <td class="text-right"><strong>10%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {budgetCommentaryAlt ? (
+        <>{budgetCommentaryAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' || lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, the budget above is theoretical rather than strictly practical for
+            independent living. A housing allocation of {formatCurrency(monthlyNet * 0.30)} is well below what even the
+            cheapest rooms cost in most UK areas. This is why most people earning at this level share costs with family
+            or a partner, live in subsidised housing, or receive housing support. The budget works best as a guide for
+            allocating whatever portion of your income goes toward personal expenses after your housing situation is
+            accounted for separately.
+          </p>
+          <p>
+            The food allocation of {formatCurrency(monthlyNet * 0.12)} per month, or roughly
+            {formatCurrency(monthlyNet * 0.12 / 4.33)} per week, is tight but workable for one person if you plan meals
+            carefully. Budget supermarkets, cooking in batches, and avoiding food waste are essential strategies at this
+            level. The savings allocation of {formatCurrency(monthlyNet * 0.10)} per month may feel impossible right now,
+            but even saving half that amount builds a useful emergency buffer over time. The most important thing is
+            creating the habit of putting something aside regularly, however small the amount.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            With a take home of {page.englandFormatted.netMonthly}, this budget starts to become realistic for
+            independent living in affordable parts of the UK. Your housing allocation of {formatCurrency(monthlyNet * 0.30)}
+            can cover a room in a shared house in most cities or a studio flat in lower cost areas. The food budget of
+            {formatCurrency(monthlyNet * 0.12)} per month works out to {formatCurrency(monthlyNet * 0.12 / 4.33)} per
+            week, which is enough for basic home cooking with fresh ingredients if you shop wisely.
+          </p>
+          <p>
+            Your transport budget of {formatCurrency(monthlyNet * 0.10)} covers a monthly bus pass in most areas or
+            the running costs of a bicycle. The savings allocation of {formatCurrency(monthlyNet * 0.10)} builds to
+            {formatCurrency(monthlyNet * 0.10 * 12)} over a full year, which creates a meaningful emergency fund. The
+            buffer of {formatCurrency(monthlyNet * 0.10)} provides breathing room for months when unexpected costs arise,
+            from a dental appointment to a replacement for a broken appliance.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            On your take home of {page.englandFormatted.netMonthly}, this budget provides a workable framework for
+            comfortable living. The housing allocation of {formatCurrency(monthlyNet * 0.30)} covers a decent one bedroom
+            flat in most cities outside London and the South East. Your food budget of {formatCurrency(monthlyNet * 0.12)}
+            per month, equivalent to {formatCurrency(monthlyNet * 0.12 / 4.33)} per week, allows for varied meals with
+            quality ingredients. The leisure allocation of {formatCurrency(monthlyNet * 0.08)} gives you genuine spending
+            money for socialising, hobbies, and entertainment each month.
+          </p>
+          <p>
+            The savings line of {formatCurrency(monthlyNet * 0.10)} per month accumulates to
+            {formatCurrency(monthlyNet * 0.10 * 12)} per year, which is enough to build a solid emergency fund and begin
+            saving toward longer term goals such as a house deposit, a car, or a holiday. Combined with the 10% buffer
+            of {formatCurrency(monthlyNet * 0.10)}, you have a 20% cushion built into your budget for both planned savings
+            and unexpected costs, which is a strong position for financial stability.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Your take home of {page.englandFormatted.netMonthly} supports a genuinely comfortable budget. The housing
+            allocation of {formatCurrency(monthlyNet * 0.30)} secures a good quality one or two bedroom property in most
+            UK cities. Your food budget of {formatCurrency(monthlyNet * 0.12)} per month, or
+            {formatCurrency(monthlyNet * 0.12 / 4.33)} per week, allows for quality groceries, dining out occasionally,
+            and trying new recipes without worrying about cost. The leisure allocation of
+            {formatCurrency(monthlyNet * 0.08)} supports a full social life including gym membership, entertainment
+            subscriptions, and regular outings.
+          </p>
+          <p>
+            Saving {formatCurrency(monthlyNet * 0.10)} per month grows to {formatCurrency(monthlyNet * 0.10 * 12)}
+            over a year. Over five years of consistent saving at this rate, you would accumulate roughly
+            {formatCurrency(monthlyNet * 0.10 * 60)} before any investment returns. If you invest through a stocks and
+            shares ISA earning a long term average of 7% annually, that figure grows substantially through compound
+            returns. The combination of your 10% savings and 10% buffer means 20% of your take home, or
+            {formatCurrency(monthlyNet * 0.20)} per month, is working toward your financial security and future goals.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10d. Salary Trends and Inflation Context -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>How Inflation Affects Your {page.monthlyFormatted} Salary Over Time</h2>
+
+      {inflationAlt ? (
+        <>{inflationAlt.map((p) => <p set:html={p} />)}</>
+      ) : (
+        <>
+          <p>
+            A salary of {page.monthlyFormatted} per month does not buy the same amount of goods and services every year.
+            Inflation gradually erodes the purchasing power of any fixed income. Between 2020 and 2025, UK inflation
+            averaged around 5% per year, driven by energy prices, supply chain disruptions, and rising food costs. This
+            means that {page.monthlyFormatted} in 2020 had roughly 25% more purchasing power than the same amount today.
+            If your salary has not increased over that period, you have effectively taken a pay cut in real terms.
+          </p>
+
+          <p>
+            For workers earning {page.monthlyFormatted} per month in the {TAX_YEAR} tax year, keeping pace with inflation
+            requires annual pay increases of at least 2% to 3% per year under normal economic conditions. Without those
+            increases, your take home of {page.englandFormatted.netMonthly} buys slightly less each year. Over a decade,
+            even modest inflation of 2.5% per year compounds to a total erosion of roughly 22%, meaning your salary
+            would need to rise from {page.monthlyFormatted} to approximately
+            {formatCurrency(page.monthly * Math.pow(1.025, 10))} just to maintain the same living standard.
+          </p>
+
+          <p>
+            This is one of the strongest arguments for proactive career management. Staying in the same role at the same
+            salary for several years almost always means losing ground financially, even if the nominal number on your
+            payslip stays the same. Requesting annual pay reviews, seeking promotions, developing new skills, and being
+            willing to change employers when appropriate are all strategies that help your income grow at or above the
+            rate of inflation. For employees on {page.monthlyFormatted} per month, even small percentage increases
+            translate to meaningful improvements in daily spending power because the base amount is one you rely on for
+            essential costs.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 11. Tax-Saving Tips -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Tax Tips for a {page.monthlyFormatted}/Month Salary</h2>
+
+      {page.tier === 'below-pa' ? (
+        <>
+          <p>
+            Since your {page.annualFormatted} salary is below the Personal Allowance, you do not owe income tax.
+            However, there are still important things to be aware of:
+          </p>
+          <ul>
+            <li>
+              <strong>Check your tax code:</strong> Make sure your employer is using the correct tax code (typically 1257L).
+              If you see BR or another code, contact HMRC, as you may be having tax deducted unnecessarily. You can
+              reclaim overpaid tax.
+            </li>
+            <li>
+              <strong>Marriage Allowance:</strong> If your spouse or civil partner earns more than you, you can transfer
+              up to £1,260 of your unused Personal Allowance to them through the Marriage Allowance, saving them up to
+              £252 per year in tax.
+            </li>
+            <li>
+              <strong>Savings interest:</strong> With a salary below the basic rate threshold, your Personal Savings
+              Allowance is £1,000, meaning the first £1,000 of savings interest is tax-free. You may also be eligible
+              for the starting rate for savings of up to £5,000.
+            </li>
+            {page.annual < 23808 && (
+              <li>
+                <strong>Minimum wage check:</strong> If you are working full-time (37.5 hours per week), check that
+                your hourly rate of {page.hourlyGross} meets the National Minimum Wage or National Living Wage for your
+                age group. The NLW for workers aged 21+ is £12.21 per hour from April 2026.
+              </li>
+            )}
+            <li>
+              <strong>Benefits eligibility:</strong> On this salary, you may be eligible for means-tested benefits
+              such as Universal Credit, Council Tax Reduction, or Housing Benefit. Use the gov.uk benefits calculator
+              to check.
+            </li>
+          </ul>
+        </>
+      ) : (
+        <>
+          <p>
+            Here are practical ways to keep more of your {page.monthlyFormatted}/month salary:
+          </p>
+          <ul>
+            <li>
+              <strong>Pension salary sacrifice:</strong> If your employer offers salary sacrifice for pension
+              contributions, this reduces your gross pay before tax and NI are calculated. For every £100 you
+              sacrifice, you save £20 in income tax and £8 in NI, so a £100 pension contribution only
+              costs you £72 in take-home pay. This is one of the most effective tax-saving strategies for
+              basic-rate taxpayers.
+            </li>
+            <li>
+              <strong>Check your tax code:</strong> Your tax code should be 1257L for the standard Personal Allowance.
+              If it contains a different number, HMRC may have adjusted your allowance. Log in to your Personal Tax
+              Account on gov.uk to check and correct it.
+            </li>
+            <li>
+              <strong>Use your ISA allowance:</strong> You can save or invest up to £20,000 per year in an ISA
+              (Individual Savings Account) where all returns are tax-free. A Cash ISA, Stocks & Shares ISA, or
+              Lifetime ISA (if you are under 40 and saving for a first home or retirement) can shelter your savings
+              from tax.
+            </li>
+            <li>
+              <strong>Claim work expenses:</strong> If you have to buy equipment, uniforms, or professional
+              subscriptions for work that your employer does not reimburse, you may be able to claim tax relief.
+              For example, a flat-rate deduction of £60 per year is available for uniform maintenance.
+            </li>
+            {page.annual >= 40000 && (
+              <li>
+                <strong>Watch the higher-rate threshold:</strong> The higher rate of income tax (40%) kicks in at
+                £50,270 per year. Your salary of {page.annualFormatted} is {formatCurrency(50270 - page.annual)} below
+                this threshold. If you receive a pay rise or bonus that pushes you over, the extra income above £50,270
+                will be taxed at 40% instead of 20%. Increasing pension contributions can keep you in the basic rate band.
+              </li>
+            )}
+            <li>
+              <strong>Childcare schemes:</strong> If you have children, Tax-Free Childcare tops up your payments by
+              25% (up to £2,000 per child per year). Alternatively, childcare vouchers through salary sacrifice can
+              save on both tax and NI.
+            </li>
+          </ul>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12. Practical Context -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What {page.monthlyFormatted} Per Month Means in Practice</h2>
+
+      {page.tier === 'below-pa' ? (
+        <>
+          <p>
+            With a take-home pay of {page.englandFormatted.netMonthly} per month, budgeting carefully is essential.
+            Here is how this income level typically breaks down in terms of major expenses:
+          </p>
+          <ul>
+            <li>
+              <strong>Housing:</strong> The general rule of thumb is spending no more than 30% of your net income on
+              rent or mortgage. At {page.englandFormatted.netMonthly} per month, that would be approximately
+              {formatCurrency(page.england.netAnnual / 12 * 0.3)}. In many parts of the UK, this makes flat-sharing
+              or living in lower-cost regions necessary.
+            </li>
+            <li>
+              <strong>Council Tax:</strong> Council Tax bills vary significantly by area and property band. On a low
+              income, you may qualify for Council Tax Reduction, which can reduce your bill by up to 100%.
+            </li>
+            <li>
+              <strong>Energy bills:</strong> Average UK household energy bills are approximately £1,700 per year
+              (£142/month). At this salary level, energy costs represent a significant proportion of your income.
+            </li>
+          </ul>
+          <p>
+            If this is your sole income, exploring benefit entitlements through the gov.uk benefits calculator is
+            strongly recommended. Many people at this income level receive top-up support through Universal Credit.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Your monthly take-home of {page.englandFormatted.netMonthly} gives you a practical budget to work with.
+            Here is how common expenses relate to this income:
+          </p>
+          <ul>
+            <li>
+              <strong>Housing (30% rule):</strong> Spending 30% of your net income on housing means a budget of
+              approximately <strong>{formatCurrency(page.england.netAnnual / 12 * 0.3)}/month</strong> for rent or
+              mortgage payments. This is achievable in most UK cities outside London, where average rents for a
+              one-bedroom flat range from £500 to £800 per month.
+            </li>
+            <li>
+              <strong>Mortgage affordability:</strong> Lenders typically offer 4 to 4.5 times your gross annual salary.
+              On {page.annualFormatted}, you could potentially borrow <strong>{formatCurrency(page.annual * 4)} to
+              {formatCurrency(page.annual * 4.5)}</strong> for a mortgage (subject to deposit, credit score, and other
+              factors).
+            </li>
+            <li>
+              <strong>Student loan repayments:</strong> If you have a student loan, repayments are not included in the
+              figures above (as they depend on your specific plan). Plan 2 repayments start at 9% of earnings above
+              £29,385 per year. {page.annual > 29385
+                ? `On your salary, that would be ${formatCurrency((page.annual - 29385) * 0.09)} per year (${formatCurrency((page.annual - 29385) * 0.09 / 12)}/month).`
+                : `Your salary is below the Plan 2 threshold, so no repayments would be due.`}
+            </li>
+            <li>
+              <strong>Disposable income:</strong> After housing (30%), bills (15%), food (15%), and transport (10%),
+              you would have roughly 30% of your net pay ({formatCurrency(page.england.netAnnual / 12 * 0.3)}/month)
+              for savings, entertainment, and other spending.
+            </li>
+          </ul>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12a. Career Paths at This Salary -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Typical Jobs and Career Paths at {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Knowing what kinds of roles typically pay {page.monthlyFormatted} per month helps you benchmark your own
+        position and plan your next career move. Salaries in the UK vary widely by industry, region, and experience
+        level, but certain patterns emerge at each pay bracket. Here is what the employment landscape looks like
+        at {page.annualFormatted} per year.
+      </p>
+
+      {careerAlt ? (
+        <>{careerAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' ? (
+        <>
+          <p>
+            A monthly income of {page.monthlyFormatted} typically comes from a few hours of work each week. The most
+            common roles at this level include casual retail shifts, weekend hospitality work, evening cleaning jobs,
+            and freelance tasks such as tutoring, dog walking, or delivery driving. Many students work these hours
+            alongside their studies, and parents often choose minimal hours to fit around school schedules. Even a few
+            hours per week builds valuable experience and keeps your CV active, which matters when you are ready to
+            take on more hours.
+          </p>
+          <p>
+            For those looking to increase their earnings from this starting point, the retail and hospitality sectors
+            offer the most accessible pathways. Supermarket chains, restaurant groups, and high street retailers
+            regularly offer additional shifts to reliable employees. If you demonstrate punctuality, a positive
+            attitude, and a willingness to handle varied tasks, supervisors tend to offer you first refusal on
+            available hours. Moving from {page.monthlyFormatted} to double that amount is often a matter of asking
+            for more shifts rather than changing jobs entirely.
+          </p>
+          <p>
+            Volunteering alongside paid work at this level is a strategy that many successful career builders use. If
+            you are earning {page.monthlyFormatted} from a few paid shifts, spending additional time volunteering in a
+            field you want to enter opens doors that job applications alone cannot. Charities, community organisations,
+            and NHS trusts all offer volunteer roles that provide genuine experience, strong references, and networking
+            opportunities that translate directly into paid employment.
+          </p>
+        </>
+      ) : lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, you are earning what many part time roles across the UK pay for steady
+            weekly work. Common jobs at this level include care home assistants working three or four shifts per week,
+            retail team members on reduced hour contracts, classroom teaching assistants on term time schedules, library
+            assistants, receptionists with limited hours, and administrative support staff. These are real roles with
+            defined responsibilities, and they form the backbone of many essential services across the country.
+          </p>
+          <p>
+            The care sector is one of the largest employers of people earning in this range. Care assistants, domiciliary
+            carers, and support workers frequently earn between £11 and £13 per hour on part time contracts, placing
+            their monthly income squarely around {page.monthlyFormatted}. While the work is demanding, it offers regular
+            shifts, opportunities for training including NVQ qualifications at no cost, and clear progression routes into
+            senior care roles, team leader positions, or nursing qualifications over time.
+          </p>
+          <p>
+            Retail remains one of the most accessible industries for part time work at this salary level. Major chains
+            such as Tesco, Sainsbury's, Boots, and Marks and Spencer employ thousands of part time staff across the UK.
+            Starting pay is typically at or just above the National Living Wage, with opportunities for overtime during
+            peak periods like Christmas and summer sales. Internal promotion into supervisor or team leader roles can
+            increase your hourly rate by £1 to £3, lifting your monthly income meaningfully without needing to change
+            employers.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            Earning {page.monthlyFormatted} per month often indicates full time work at or near the minimum wage, or
+            skilled part time work at a higher hourly rate. Typical roles include warehouse operatives, delivery drivers,
+            security guards, nursery practitioners, hairdressers, fitness instructors, and junior kitchen staff. In the
+            public sector, entry level NHS Band 2 and Band 3 roles, junior council positions, and school support staff
+            commonly earn in this range when employed on a full time basis.
+          </p>
+          <p>
+            The construction trades also feature prominently at this salary level, particularly for apprentices and
+            newly qualified tradespeople. A first year electrician, plumber, or carpenter can expect to earn between
+            {page.monthlyFormatted} and £1,200 per month during their training period. The investment in qualification
+            pays off significantly: fully qualified tradespeople regularly earn £30,000 to £45,000 once they complete
+            their apprenticeship and gain experience. The UK faces a persistent shortage of skilled tradespeople, which
+            means qualified workers enjoy strong job security and genuine negotiating power over their wages.
+          </p>
+          <p>
+            Customer service roles, both in person and in contact centres, frequently pay around {page.monthlyFormatted}
+            per month for full time positions. These roles develop transferable skills in communication, problem solving,
+            and performing under pressure that employers across many sectors value highly. Moving from a front line
+            customer service position into quality assurance, training delivery, or team management is a well trodden
+            path that can increase your salary by 30% to 50% within two to three years of focused development.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            A monthly salary of {page.monthlyFormatted} places you in the territory of established full time roles
+            across a wide range of industries. Typical positions include office managers, experienced teaching
+            assistants, NHS Band 4 and Band 5 staff, police community support officers, junior accountants, marketing
+            assistants, IT support technicians, and skilled manufacturing workers. These are roles where you bring
+            specific knowledge or experience that employers need, and your pay reflects that contribution.
+          </p>
+          <p>
+            In the public sector, this salary range covers a significant portion of the workforce. NHS administrative
+            staff, social work assistants, local authority officers, and further education lecturers all commonly earn
+            between {page.monthlyFormatted} and £2,000 per month. Public sector roles offer structured career
+            progression, generous pension contributions from your employer (typically 20% to 27% of your salary), and
+            clear pathways into more senior positions. The pension benefit alone adds substantial value beyond what your
+            payslip displays.
+          </p>
+          <p>
+            The technology sector offers multiple entry points at this salary level. Junior web developers, IT helpdesk
+            analysts, data entry specialists, and digital marketing assistants typically start in this range. The
+            progression potential in technology is particularly strong because the demand for digital skills continues to
+            outstrip supply. Within three to five years, many people who started at {page.monthlyFormatted} per month in
+            a tech role find themselves earning £30,000 to £40,000 as they gain experience with specific tools,
+            platforms, and programming languages that employers seek.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your salary of {page.annualFormatted} per year places you among the
+            core professional workforce of the United Kingdom. This is the salary range where experience, qualifications,
+            and sector expertise are clearly reflected in your pay. Common roles include experienced nurses at NHS Band 5
+            and 6, secondary school teachers in their mid career years, police officers, civil service executive
+            officers, project managers, qualified accountants, software developers, and senior administrative
+            professionals.
+          </p>
+          <p>
+            Career progression from {page.monthlyFormatted} per month usually follows one of two paths. The management
+            route involves taking on responsibility for a team or department, developing leadership skills, and moving
+            into positions where you manage people and budgets. The specialist route involves deepening your expertise in
+            a particular technical area, regulatory specialism, or industry niche until your knowledge commands a
+            premium. Both paths can lead to salaries above £40,000, but they require different aptitudes and suit
+            different personalities. Understanding which direction appeals to you helps focus your professional
+            development.
+          </p>
+          <p>
+            Continuing professional development is a hallmark of careers at this salary level. Whether it is a
+            professional qualification such as ACCA, CIPD, or PRINCE2, a postgraduate degree, or industry specific
+            training, investing in your skills delivers a measurable return. Research consistently shows that professional
+            qualifications add between £3,000 and £8,000 to annual salaries on average, and they unlock access to senior
+            roles that are simply closed without them. Many employers will contribute to or fully fund professional
+            development for their employees, so it is always worth raising the question.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12b. Understanding Your Payslip -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Understanding Your Payslip on {page.monthlyFormatted} Per Month</h2>
+      <p>
+        Your payslip is the official record of what you earn and what is deducted each pay period. If you are paid
+        monthly on a {page.monthlyFormatted} gross salary, here is what each line on your payslip means and approximately
+        what you should expect to see:
+      </p>
+      <ul>
+        <li>
+          <strong>Gross pay:</strong> This is your total pay before any deductions. On a monthly payslip, this
+          will show {page.monthlyFormatted}. If you receive overtime, bonuses, or commission, these will be added
+          to your gross figure for that month.
+        </li>
+        <li>
+          <strong>Tax code:</strong> Displayed as 1257L for most employees, this tells your employer how much of your
+          income is tax-free. The number 1257 means you have a Personal Allowance of £12,570. The letter L confirms
+          you are entitled to the standard allowance. If your code is different, it may affect your take-home pay.
+        </li>
+        <li>
+          <strong>PAYE tax:</strong> This is the income tax deducted under the Pay As You Earn system. Your employer
+          calculates this based on your tax code and earnings.{paysTax
+            ? ` Expect to see approximately ${formatCurrency(page.england.incomeTax / 12)} deducted each month.`
+            : ' At your salary level, this should show £0 as you are within the Personal Allowance.'}
+        </li>
+        <li>
+          <strong>National Insurance:</strong> Shown as "NI" or "Employee NI" on your payslip.{paysNI
+            ? ` You should see approximately ${formatCurrency(page.england.nationalInsurance / 12)} deducted monthly.`
+            : ' At your salary level, this should show £0 as your earnings are below the Primary Threshold.'}
+          Your NI category letter (usually A for most employees) determines which rates apply.
+        </li>
+        <li>
+          <strong>Net pay:</strong> This is the amount actually paid into your bank account after all deductions.
+          On {page.monthlyFormatted} gross, your net monthly pay should be approximately <strong>{page.englandFormatted.netMonthly}</strong>.
+          This is sometimes labelled "take-home pay" or "total payment".
+        </li>
+      </ul>
+      <p>
+        If any of these figures do not match what you expect based on this breakdown, check your tax code first. Common
+        reasons for discrepancies include an incorrect tax code, student loan deductions, workplace pension contributions,
+        or benefits in kind. You can view and update your tax code through your HMRC Personal Tax Account online.
+      </p>
+
+      {page.tier === 'below-pa' && (
+        <>
+          <h2>Why You Might Still Need to File a Tax Return</h2>
+          <p>
+            Even though you earn below the Personal Allowance and pay no income tax, there are situations where HMRC
+            may require you to complete a Self Assessment tax return. These include:
+          </p>
+          <ul>
+            <li>
+              <strong>Self-employment income:</strong> If you have any freelance or self-employment income alongside
+              your employed earnings, you must file a return if your total self-employment income exceeds £1,000
+              (the trading allowance).
+            </li>
+            <li>
+              <strong>Rental income:</strong> If you receive income from renting out property, you may need to declare
+              it even if your total income is below the Personal Allowance.
+            </li>
+            <li>
+              <strong>Savings and investment income:</strong> While the Personal Savings Allowance and dividend allowance
+              cover most situations, unusually high returns may trigger a filing requirement.
+            </li>
+            <li>
+              <strong>Reclaiming overpaid tax:</strong> If tax has been deducted incorrectly (for instance, you
+              started a new job mid-year with an emergency tax code), filing a return or contacting HMRC can help
+              you get a refund.
+            </li>
+          </ul>
+        </>
+      )}
+
+      {page.tier === 'basic-rate' && (
+        <>
+          <h2>How a Pay Rise Would Affect Your Take-Home</h2>
+          <p>
+            If you are earning {page.monthlyFormatted} per month and considering negotiating a pay rise, it helps to
+            understand how additional income is taxed. At your current salary level, your <strong>marginal tax
+            rate</strong> is {page.englandFormatted.marginalTaxRate}. This means for every extra £1 you earn, you
+            keep {formatCurrency(1 - (page.england.marginalTaxRate / 100), true)} after tax and NI.
+          </p>
+          <p>
+            For example, a £100 per month pay rise ({formatCurrency(1200)} per year) would increase your annual gross
+            from {page.annualFormatted} to {formatCurrency(page.annual + 1200)}. After the basic rate income tax (20%)
+            and NI ({(NI_MAIN_RATE * 100).toFixed(0)}%), you would keep approximately {formatCurrency(1200 * (1 - page.england.marginalTaxRate / 100))} of
+            that £1,200, adding roughly {formatCurrency(1200 * (1 - page.england.marginalTaxRate / 100) / 12)} to your
+            monthly take-home pay.
+          </p>
+          <p>
+            This is why understanding marginal rates matters when evaluating job offers or negotiating salary increases.
+            The headline increase is always more than what you actually receive in your bank account.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12d. Building Financial Security -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Building Financial Security on {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Whatever your salary level, building financial security is about making consistent, informed decisions over
+        time. On a take home of {page.englandFormatted.netMonthly} per month, the strategies that work best depend
+        on your current situation, your goals, and how much flexibility your budget allows. Here is how to think
+        about money management at {page.annualFormatted} per year.
+      </p>
+
+      {financialAlt ? (
+        <>{financialAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' ? (
+        <>
+          <p>
+            Financial planning on {page.monthlyFormatted} per month starts with understanding exactly where your money
+            goes. With {page.englandFormatted.netMonthly} coming in, every pound counts. Track your income and spending
+            for a full month, writing down every purchase however small. Many people are surprised to find that daily
+            expenses like a coffee or a bus ticket add up to a significant portion of their monthly income. This
+            awareness alone can change how you spend.
+          </p>
+          <p>
+            Even at {page.monthlyFormatted} per month, building a savings habit is worthwhile. Starting with £5 or £10
+            per month might feel insignificant, but the habit itself is what matters. Once you are accustomed to putting
+            money aside before spending, increasing the amount as your income grows becomes natural. Many banks now offer
+            round up savings features on debit cards, which automatically save the spare change from each transaction.
+            Over the course of a year, these small amounts can accumulate into a useful emergency buffer.
+          </p>
+          <p>
+            Looking ahead from {page.monthlyFormatted} per month, consider what steps would increase your earning
+            potential. Even modest investments in skills or qualifications, many of which are available free through
+            local colleges and online platforms, can lead to better paid opportunities within months. The UK government
+            funds free courses for adults through the National Skills Fund, covering areas from digital literacy to
+            business management. These cost you nothing but time and can meaningfully shift your income trajectory.
+          </p>
+        </>
+      ) : lifeBracket === 'parttime' ? (
+        <>
+          <p>
+            Managing finances on {page.monthlyFormatted} per month requires a structured approach that separates
+            essential spending from everything else. Start by listing your fixed monthly obligations: housing, council
+            tax share, energy bills, phone, and transport. Subtract these from your take home of
+            {page.englandFormatted.netMonthly}, and the remaining amount is what you have for food, personal items,
+            and discretionary spending. Knowing this number precisely removes the anxiety of guessing and helps you
+            avoid the end of month crunch.
+          </p>
+          <p>
+            Debt management deserves special attention at this salary level. If you carry any balances on credit cards,
+            overdrafts, or personal loans, the interest reduces your effective income further. Prioritising repayment
+            starting with the highest interest rate balances frees up money over time. If multiple debts feel
+            overwhelming, free advice services such as StepChange, National Debtline, and Citizens Advice can help
+            you create a manageable repayment plan and may negotiate with creditors on your behalf.
+          </p>
+          <p>
+            Building an emergency fund on {page.monthlyFormatted} per month is challenging but not impossible. Aim for
+            an initial target of £200 to £500, enough to cover a minor emergency such as an urgent dental bill, a
+            broken appliance, or an unexpected travel cost. Setting up a standing order for £20 per month on payday
+            means this target is reachable within one to two years. The security of knowing you have a small financial
+            cushion reduces stress noticeably and gives you more confidence when making decisions about your work.
+          </p>
+          <p>
+            State pension contributions matter even at this income. If you earn above the Lower Earnings Limit of £6,708
+            per year, your employer reports your earnings to HMRC and the year counts towards your State Pension
+            qualifying years. You need 35 qualifying years for the full amount. Checking your National Insurance record
+            online through the government website shows how many qualifying years you have and whether any action is
+            needed to protect your future pension.
+          </p>
+        </>
+      ) : lifeBracket === 'nearpa' ? (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your financial planning can move beyond basic survival budgeting into
+            building genuine security. With {page.englandFormatted.netMonthly} per month, you have enough income to
+            create a proper budget with categories for housing, food, transport, bills, savings, and personal spending.
+            The 50/30/20 framework, which allocates 50% to needs, 30% to wants, and 20% to savings, is a useful
+            starting point, although you may need to adjust the ratios to reflect housing costs in your particular area.
+          </p>
+          <p>
+            Your workplace pension is one of the most valuable financial tools available to you. Under auto enrolment
+            rules, your employer must contribute at least 3% of your qualifying earnings, while you contribute 5%. This
+            means that for every £100 of qualifying earnings, your pension pot grows by £8 before investment returns are
+            even considered. If your employer offers to match additional contributions beyond the legal minimum, that is
+            effectively free money and one of the best financial decisions you can make at any income level.
+          </p>
+          <p>
+            An ISA is the natural next step once you have a basic emergency fund in place. Cash ISAs offer a safe home
+            for savings with interest that is completely free from tax. For longer term goals, a Lifetime ISA adds a
+            25% government bonus to your contributions (up to £1,000 per year on a maximum of £4,000). If you are under
+            40 and saving for your first home, the Lifetime ISA is particularly attractive because the government tops
+            up every pound you save by 25p. That is a guaranteed 25% return before any interest is earned.
+          </p>
+          <p>
+            Contents insurance is worth considering even at {page.monthlyFormatted} per month. It costs as little as
+            £5 to £10 per month and protects your belongings against theft, fire, and water damage. Replacing a laptop,
+            a phone, and basic furniture after a burglary or flood could easily cost £1,000 to £2,000, which would be
+            devastating on this salary without insurance. The small monthly premium buys significant peace of mind.
+          </p>
+        </>
+      ) : lifeBracket === 'lower' ? (
+        <>
+          <p>
+            Financial planning on {page.monthlyFormatted} per month shifts from managing scarcity to making strategic
+            choices. Your take home of {page.englandFormatted.netMonthly} provides enough headroom to pursue multiple
+            financial goals at once. The most effective approach is to automate your finances so that savings, pension
+            contributions, and bill payments leave your account on payday. Whatever remains after these automatic
+            transfers is genuinely available to spend, and you can use it freely knowing that your essentials and future
+            are already covered.
+          </p>
+          <p>
+            Building an emergency fund of three to six months of essential expenses should be a top priority. At your
+            spending level, this means accumulating between {emergencyFund3mo} and {emergencyFund6mo} in an easily
+            accessible savings account. This fund serves as your personal safety net against job loss, illness, or
+            unexpected major expenses. Without it, a single financial shock can push you into debt that takes years to
+            clear. With it, you can handle most emergencies from a position of strength rather than panic.
+          </p>
+          <p>
+            If you are considering buying a home, understanding the numbers at {page.monthlyFormatted} per month is
+            essential. Mortgage lenders typically offer 4 to 4.5 times your annual gross salary, which means you could
+            potentially borrow up to {mortgageMax}. Combined with a deposit, this determines the property value you can
+            target. Government schemes such as the First Homes programme and shared ownership can bridge the gap if
+            property prices in your area exceed what your salary alone supports. Starting your deposit savings early
+            demonstrates the financial discipline that lenders assess favourably.
+          </p>
+          <p>
+            Tax efficient saving and investing deserve attention at this income level. Your annual ISA allowance of
+            £20,000 lets you shelter a meaningful amount of savings from tax. For basic rate taxpayers, a stocks and
+            shares ISA offers the potential for higher returns than cash over the long term, with all gains and
+            dividends remaining tax free. For pension savings, contributing above the auto enrolment minimum through
+            salary sacrifice builds your retirement fund faster and simultaneously reduces your income tax and National
+            Insurance deductions.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your financial planning can incorporate strategies that are simply not
+            available at lower income levels. Your take home of {page.englandFormatted.netMonthly} supports a comfortable
+            lifestyle while also allowing for serious wealth building. The key distinction at this level is moving from
+            merely saving money to actively investing it, because cash sitting in a current account loses purchasing
+            power to inflation over time. Making your surplus income work for you is the single most important
+            financial shift at this salary level.
+          </p>
+          <p>
+            Your pension strategy deserves careful thought. Every £80 you contribute to a pension becomes £100 in your
+            pot thanks to basic rate tax relief, and if your employer matches additional contributions, the returns
+            multiply further. Consider increasing your pension contribution by 1% each time you receive a pay rise. This
+            gradual approach builds a substantial retirement fund over your career without any noticeable impact on your
+            lifestyle, because you never become accustomed to spending the additional income in the first place.
+          </p>
+          <p>
+            Investment diversification becomes genuinely relevant at this salary level. Beyond your workplace pension and
+            a cash emergency fund, consider allocating {savingsAt10pct} per month to a stocks and shares ISA invested in
+            diversified index funds. The long term average return of global stock markets has historically exceeded 7%
+            per year before inflation, compared to cash savings that typically lag behind the rising cost of living. A
+            consistent monthly investment maintained over 20 years can grow into a significant sum through compound
+            returns.
+          </p>
+          <p>
+            Estate planning and protection insurance become worthwhile as your income and assets grow. A basic will
+            costs between £150 and £300 through a solicitor and ensures your assets are distributed according to your
+            wishes. Life insurance, if you have dependents, provides financial security for your family. Critical
+            illness cover pays a lump sum if you are diagnosed with a specified serious condition. At
+            {page.monthlyFormatted} per month, the premiums for these policies are affordable relative to the
+            protection they provide, and they form a responsible part of any comprehensive financial plan.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12e. Regional Cost of Living -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>How {page.monthlyFormatted} Per Month Compares Across UK Regions</h2>
+
+      <p>
+        The purchasing power of {page.monthlyFormatted} per month varies enormously depending on where you live in
+        the United Kingdom. Housing costs drive the biggest regional differences, but food, transport, childcare,
+        and entertainment also vary. The ONS publishes regional price parities showing that London prices sit
+        roughly 10% to 15% above the national average, while the North East is around 5% below. Here is what
+        that means in practice for your take home of {page.englandFormatted.netMonthly}.
+      </p>
+
+      {regionalAlt ? (
+        <>{regionalAlt.map((p) => <p set:html={p} />)}</>
+      ) : regionBracket === 'low' ? (
+        <>
+          <p>
+            For someone earning {page.monthlyFormatted} per month, choosing where to live can effectively change the
+            value of your salary. The same take home pay of {page.englandFormatted.netMonthly} stretches much further
+            in Burnley or Blackpool than in Bath or Brighton. The most affordable regions include the North East of
+            England, where a studio flat in cities like Middlesbrough or Sunderland costs as little as £300 per month,
+            and Northern Ireland, where Belfast offers significantly cheaper rents than any major English city. Wales
+            provides excellent value too, particularly in the Valleys and smaller coastal towns.
+          </p>
+          <p>
+            The South East and Greater London present a starkly different picture. In these areas, housing costs alone
+            can exceed your entire monthly salary of {page.monthlyFormatted}. If you live in a high cost area and earn
+            this amount, remote or hybrid work arrangements can allow you to earn a city wage while paying rural
+            housing costs. Even jobs that were traditionally location specific, such as customer service and data
+            processing, now frequently offer working from home options that can transform your financial situation
+            without changing your actual pay.
+          </p>
+        </>
+      ) : regionBracket === 'mid' ? (
+        <>
+          <p>
+            Your salary of {page.monthlyFormatted} per month goes furthest in the regions where housing costs are
+            lowest. In the North East, Yorkshire, the East Midlands, and the North West, average rents for a one
+            bedroom flat range from £400 to £550, leaving you with a meaningful portion of your
+            {page.englandFormatted.netMonthly} take home for other expenses. Scotland offers particularly good value
+            in cities like Aberdeen, Inverness, and Perth, where rents are lower than Edinburgh and Glasgow but local
+            amenities and job markets remain strong. Wales and Northern Ireland also provide excellent value at
+            this salary level.
+          </p>
+          <p>
+            London sits at the other extreme. Average rents for a one bedroom flat in the capital exceed £1,500, which
+            is more than your entire gross monthly salary. Even outer London boroughs like Havering, Bromley, and
+            Bexley see studio rents starting around £800. If your job requires proximity to London, exploring satellite
+            towns with fast commuter rail links, such as Luton, Stevenage, or Reading, can dramatically reduce your
+            housing costs while keeping the capital within reach for work. The difference between what
+            {rentBudget30} buys in Sheffield versus central London is remarkable.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            At {page.monthlyFormatted} per month, your choice of UK region has a direct and measurable impact on your
+            quality of life. Cities in the Midlands and the North offer the best combination of affordable living and
+            strong job markets. Birmingham, Manchester, Leeds, Sheffield, and Nottingham all have thriving economies
+            with opportunities across multiple sectors, while housing costs remain significantly below southern levels.
+            A two bedroom flat in Sheffield costs roughly half what a similar property in Reading would command. Your
+            housing budget of {rentBudget30} per month rents a spacious property in most northern cities, while the
+            same amount barely covers a studio in parts of the South East.
+          </p>
+          <p>
+            Scotland offers a compelling proposition for workers at {page.monthlyFormatted} per month. The Scottish
+            income tax system applies different rates, but as the comparison table above shows, the difference in take
+            home is often modest. Scotland compensates with several advantages including free prescriptions, more
+            generous student finance support, and generally lower housing costs outside Edinburgh. Glasgow, Aberdeen,
+            and Dundee all maintain strong job markets with notably lower living costs than their English equivalents.
+            If remote work allows you to choose your location freely, the financial case for Scotland is strong at
+            this salary level.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12f. Understanding Your True Hourly Rate -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Your True Hourly Rate on {page.monthlyFormatted} Per Month</h2>
+
+      <p>
+        Many people focus on their monthly or annual salary without considering what they actually earn per hour
+        after tax. On a gross salary of {page.monthlyFormatted} per month, your headline hourly rate is
+        {page.hourlyGross} based on a standard 37.5 hour working week. Once income tax and National Insurance are
+        deducted, your real hourly earning drops to approximately {hourlyNet}. This is your true hourly rate: the
+        amount you genuinely receive for each hour of your working time.
+      </p>
+
+      <p>
+        Understanding this number helps you make better decisions about both work and spending. If you earn
+        {hourlyNet} per hour after tax, then a £50 purchase represents roughly {hoursFor50} hours of your working
+        life. A £500 purchase represents {hoursFor500} hours. Thinking about spending in terms of hours worked
+        rather than pounds spent adds useful context to buying decisions. This does not mean you should never treat
+        yourself, but it gives you a concrete way to evaluate whether a purchase is genuinely worth the time you
+        traded to earn the money.
+      </p>
+
+      <p>
+        Your effective hourly rate also matters when evaluating overtime or additional work opportunities. If
+        overtime is paid at time and a half, your gross hourly rate of {page.hourlyGross} would increase to
+        approximately {formatCurrency(page.annual / (52 * 37.5) * 1.5)} per hour for those extra hours. However,
+        the additional income is taxed at your marginal rate, so the true benefit is less than the headline figure.
+        {page.tier === 'basic-rate'
+          ? ` At your current salary level, each extra pound earned is subject to 20% income tax and ${(NI_MAIN_RATE * 100).toFixed(0)}% National Insurance, meaning you keep about 72p of every additional pound.`
+          : ` Since your salary is within the Personal Allowance, any extra earnings remain largely untaxed until you cross the ${formatCurrency(PERSONAL_ALLOWANCE)} annual threshold.`}
+        Knowing this helps you decide whether extra hours are worth the time, or whether that time would be better
+        invested in rest, family, or professional development that could lead to a higher base salary in the future.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12g. Unique Band Context -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>{bandContext.heading}</h2>
+      {bandContext.paragraphs.map((p) => (
+        <p>{p}</p>
+      ))}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12h. Career Description -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Career Benchmarks at {page.monthlyFormatted} Per Month</h2>
+      <p>{careerDescription}</p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12i. Unique Salary Comparisons -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>{uniqueComparisons.heading}</h2>
+      <ul>
+        {uniqueComparisons.comparisons.map((c) => (
+          <li>{c}</li>
+        ))}
+      </ul>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12j. Pay Rise Simulation -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>{raiseSimulation.heading}</h2>
+      <p>
+        Understanding how much of a pay rise you actually keep helps you negotiate effectively
+        and set realistic expectations about salary increases. Here are four common raise
+        scenarios applied to your current salary of {page.monthlyFormatted} per month:
+      </p>
+      <ul>
+        {raiseSimulation.scenarios.map((s) => (
+          <li><strong>{s.label}:</strong> {s.detail}</li>
+        ))}
+      </ul>
+      <p>{raiseSimulation.summary}</p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12k. Personalised Tax Tips -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Personalised Tax Efficiency Tips for {page.monthlyFormatted}/Month</h2>
+      <p>
+        These tax-saving strategies are calculated specifically for your salary of
+        {page.annualFormatted} per year, using your actual marginal tax rate and deduction figures:
+      </p>
+      {taxTips.map((tip) => (
+        <>
+          <h3>{tip.title}</h3>
+          <p>{tip.detail}</p>
+        </>
+      ))}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12l. Detailed Budget with Notes -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Detailed Budget Planner for {page.englandFormatted.netMonthly} Take-Home</h2>
+      <p>
+        This detailed budget breaks your monthly take-home of {page.englandFormatted.netMonthly}
+        into practical spending categories with weekly equivalents and context notes specific
+        to your salary level:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th class="text-right">Monthly</th>
+              <th class="text-right">Weekly</th>
+              <th class="text-right">%</th>
+            </tr>
+          </thead>
+          <tbody>
+            {budgetBreakdownData.map((cat) => (
+              <tr>
+                <td>{cat.name}</td>
+                <td class="text-right tabular-nums">{cat.formatted}</td>
+                <td class="text-right tabular-nums">{cat.weeklyFormatted}</td>
+                <td class="text-right">{cat.percentage}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        {budgetBreakdownData.map((cat) => (
+          <li><strong>{cat.name}:</strong> {cat.note}</li>
+        ))}
+      </ul>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 13. FAQs -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Frequently Asked Questions</h2>
+      {faqs.map((faq) => (
+        <details class="group border-b border-gray-200 py-4 dark:border-gray-700">
+          <summary class="cursor-pointer list-none font-semibold text-gray-900 dark:text-white [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center justify-between">
+              {faq.question}
+              <svg class="ml-2 h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">{faq.answer}</p>
+        </details>
+      ))}
+      {uniqueFaqs.map((faq) => (
+        <details class="group border-b border-gray-200 py-4 dark:border-gray-700">
+          <summary class="cursor-pointer list-none font-semibold text-gray-900 dark:text-white [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center justify-between">
+              {faq.question}
+              <svg class="ml-2 h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">{faq.answer}</p>
+        </details>
+      ))}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 14. Second CTA -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <div class="not-prose my-8 text-center">
+        <a
+          href="/"
+          data-gross={ctaGross}
+          class="cta-calc inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+        >
+          Try the full salary calculator &rarr;
+        </a>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Add student loans, pension, Scotland rates, and more.
+        </p>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 15. Related Calculators -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Related Calculators</h2>
+      <div class="not-prose grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <a href="/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Salary Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Full UK salary calculator with all options.</p>
+        </a>
+        <a href="/take-home-pay/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Take-Home Pay</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">See your net pay after all deductions.</p>
+        </a>
+        <a href="/income-tax/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Income Tax Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your UK income tax band by band.</p>
+        </a>
+        <a href="/national-insurance/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">National Insurance Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your NI contributions for {TAX_YEAR}.</p>
+        </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 16. Sources -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">GOV.UK: Income Tax rates and Personal Allowances</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener noreferrer">GOV.UK: National Insurance rates</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">GOV.UK: Scottish Income Tax</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">GOV.UK: Rates and thresholds for employers {TAX_YEAR}</a></li>
+        <li><a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours" target="_blank" rel="noopener noreferrer">ONS: Earnings and working hours</a></li>
+      </ul>
+
+    </article>
+
+    <div class="mt-8 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
+      <img src="/team/mottalib-radif.jpg" alt="Mottalib Radif, personal finance expert at Real Salary" class="h-12 w-12 rounded-full object-cover" width="48" height="48" loading="lazy" />
+      <div class="text-sm">
+        <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Mottalib Radif</a></p>
+        <p class="text-gray-500 dark:text-gray-400">MBA INSEAD &middot; Finance Enthusiast</p>
+      </div>
+    </div>
+
+    <p class="mt-4 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+
+  <script>
+    // Append ?gross= only on real user clicks so crawlers never see query-string URLs.
+    document.querySelectorAll('a.cta-calc').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const gross = (a as HTMLAnchorElement).dataset.gross;
+        if (gross) {
+          e.preventDefault();
+          window.location.href = `/#gross=${gross}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

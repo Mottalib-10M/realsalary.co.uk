@@ -312,4 +312,52 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
       },
     ],
   },
+
+  // ── Scottish Tax ─────────────────────────────────────────────────
+  'scottish-tax-calculator': {
+    slug: '/scottish-tax-calculator/',
+    title: 'Scottish Tax Calculator',
+    metaTitle: `Scottish Tax Calculator ${TAX_YEAR} - Scotland Income Tax Rates`,
+    metaDescription: `Calculate your Scottish income tax for ${TAX_YEAR}. Compare Scotland vs England take-home pay with all six tax bands. Free HMRC rates and thresholds.`,
+    h1: `Scottish Tax Calculator ${TAX_YEAR}`,
+    intro: 'Compare Scottish income tax rates with England, Wales, and Northern Ireland. See the difference in your take-home pay.',
+    faqs: [
+      {
+        question: 'How many tax bands does Scotland have?',
+        answer: 'Scotland has six income tax bands: starter (19%), basic (20%), intermediate (21%), higher (42%), advanced (45%), and top (48%). England has three: basic (20%), higher (40%), and additional (45%).',
+      },
+      {
+        question: 'Do I pay more tax in Scotland?',
+        answer: 'It depends on your salary. Lower earners may pay slightly less due to the 19% starter rate, while higher earners typically pay more due to higher rates kicking in at lower thresholds.',
+      },
+      {
+        question: 'Is National Insurance different in Scotland?',
+        answer: 'No. National Insurance rates and thresholds are the same across the entire UK. Only income tax differs in Scotland.',
+      },
+    ],
+  },
+
+  // ── Employer Cost ────────────────────────────────────────────────
+  'employer-cost': {
+    slug: '/employer-cost/',
+    title: 'Employer Cost Calculator',
+    metaTitle: `Employer Cost Calculator UK ${TAX_YEAR} - Total Cost to Hire`,
+    metaDescription: `Calculate the total cost of employing someone in the UK for ${TAX_YEAR}. Includes employer NI at 15%, pension contributions, and Employment Allowance.`,
+    h1: `Employer Cost Calculator ${TAX_YEAR}`,
+    intro: 'See the true cost of employing someone in the UK, including employer National Insurance and pension contributions.',
+    faqs: [
+      {
+        question: 'How much does it cost to employ someone in the UK?',
+        answer: `The total cost includes the gross salary plus employer NI (15% on earnings above £5,000) and minimum pension contributions (3% of qualifying earnings). For a £30,000 salary, employer costs add roughly £4,500–£5,000 on top.`,
+      },
+      {
+        question: 'What is the Employment Allowance?',
+        answer: 'The Employment Allowance reduces your employer NI bill by up to £10,500 per year. Most businesses with employer NI below £100,000 in the previous year are eligible.',
+      },
+      {
+        question: 'What is the employer NI rate for ${TAX_YEAR}?',
+        answer: 'Employers pay 15% NI on employee earnings above £5,000 per year. There is no upper limit, unlike employee NI.',
+      },
+    ],
+  },
 };

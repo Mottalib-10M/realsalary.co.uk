@@ -1,0 +1,932 @@
+---
+/**
+ * Dynamic route for hourly rate landing pages.
+ * Generates 20 static pages at build time for the most searched UK hourly rates.
+ */
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import BaseHead from '../../components/seo/BaseHead.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import '../../styles/global.css';
+import { generateHourlyRatePages, type HourlyRatePageData } from '../../data/hourly-rate-pages';
+import {
+  buildTitle,
+  buildCanonical,
+  SITE_NAME,
+  SITE_URL,
+  OG_IMAGE,
+  OG_IMAGE_WIDTH,
+  OG_IMAGE_HEIGHT,
+  breadcrumbSchema,
+  articleSchema,
+  faqSchema,
+  organizationSchema,
+  personSchema,
+  LAST_UPDATED,
+} from '../../lib/seo';
+import { formatCurrency, formatPercent } from '../../lib/format';
+import {
+  PERSONAL_ALLOWANCE,
+  NI_PRIMARY_THRESHOLD,
+  NI_UPPER_EARNINGS_LIMIT,
+  NI_MAIN_RATE,
+  NI_ADDITIONAL_RATE,
+  TAX_YEAR,
+} from '../../data/tax-rules-2026-27';
+
+export function getStaticPaths() {
+  const pages = generateHourlyRatePages();
+  return pages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+interface Props {
+  page: HourlyRatePageData;
+}
+
+const { page } = Astro.props;
+
+// ─── SEO ──────────────────────────────────────────────────────────────────
+const title = `\u00A3${page.hourlyRate} Per Hour After Tax UK - Take Home Pay ${TAX_YEAR}`;
+const metaTitle = buildTitle(title);
+const description = `Earning \u00A3${page.hourlyRate} per hour in the UK? See your annual salary equivalent, take home pay, tax breakdown and Scotland comparison for ${TAX_YEAR}.`;
+const canonical = buildCanonical(`/hourly/${page.slug}`);
+
+const breadcrumbItems = [
+  { name: 'Home', url: SITE_URL },
+  { name: 'Hourly Rates', url: `${SITE_URL}/hourly/` },
+  { name: `\u00A3${page.hourlyRate} Per Hour`, url: canonical },
+];
+
+const article = articleSchema({
+  headline: title,
+  description,
+  url: canonical,
+});
+
+// ─── Context helpers ────────────────────────────────────────────────────
+const annualGross = page.annualEquivalent;
+const monthlyGross = annualGross / 12;
+const weeklyGross = annualGross / 52;
+const monthlyNet = page.england.netAnnual / 12;
+const weeklyNet = page.england.netAnnual / 52;
+const dailyNet = page.england.netAnnual / 260;
+const paysTax = annualGross > PERSONAL_ALLOWANCE;
+const paysNI = annualGross > NI_PRIMARY_THRESHOLD;
+const taxableIncome = paysTax ? annualGross - PERSONAL_ALLOWANCE : 0;
+const niableIncome = paysNI ? Math.min(annualGross, NI_UPPER_EARNINGS_LIMIT) - NI_PRIMARY_THRESHOLD : 0;
+const ctaGross = annualGross;
+
+// Minimum wage context
+const nlw2026 = 12.21;
+const nlwAnnual = nlw2026 * 52 * 37.5;
+const isAboveNLW = page.hourlyRate >= nlw2026;
+const medianHourly = 17.94; // ONS 2024 median hourly rate for full-time UK employees
+const isAboveMedian = page.hourlyRate >= medianHourly;
+
+// ─── Rate-tiered prose context ──────────────────────────────────────────
+type RateTier = 'near-minimum' | 'entry-average' | 'above-median' | 'skilled-professional' | 'senior-specialist' | 'executive';
+
+function getRateTier(rate: number): RateTier {
+  if (rate <= 12) return 'near-minimum';
+  if (rate <= 17) return 'entry-average';
+  if (rate <= 25) return 'above-median';
+  if (rate <= 40) return 'skilled-professional';
+  if (rate <= 75) return 'senior-specialist';
+  return 'executive';
+}
+
+const rateTier = getRateTier(page.hourlyRate);
+
+// ─── FAQs (unique per hourly rate level) ─────────────────────────────────
+const faqs: { question: string; answer: string }[] = [];
+
+// Universal FAQs that adapt to the specific rate
+faqs.push({
+  question: `What is ${page.hourlyFormatted} per hour as an annual salary?`,
+  answer: `${page.hourlyFormatted} per hour equals ${page.annualFormatted} per year, based on a standard 37.5-hour working week (${page.hourlyFormatted} \u00D7 37.5 hours \u00D7 52 weeks). This is the gross annual salary before any tax or National Insurance deductions for the ${TAX_YEAR} tax year.`,
+});
+
+faqs.push({
+  question: `How much do I take home on ${page.hourlyFormatted} per hour?`,
+  answer: `On ${page.hourlyFormatted} per hour (${page.annualFormatted} per year) in England, your take-home pay is approximately ${page.englandFormatted.netMonthly} per month or ${page.englandFormatted.netHourly} per hour after income tax and National Insurance for the ${TAX_YEAR} tax year.`,
+});
+
+// Rate-specific FAQs
+if (rateTier === 'near-minimum') {
+  faqs.push({
+    question: `Is ${page.hourlyFormatted} per hour above the minimum wage in the UK?`,
+    answer: `The National Living Wage (NLW) for workers aged 21 and over is \u00A312.21 per hour from April 2026. At ${page.hourlyFormatted} per hour, your rate is ${page.hourlyRate >= nlw2026 ? 'at or above' : 'below'} the NLW. ${page.hourlyRate < nlw2026 ? 'If you are aged 21 or over working full-time, your employer must pay at least \u00A312.21 per hour.' : 'You are earning at or above the legal minimum for full-time workers aged 21+.'}`,
+  });
+  faqs.push({
+    question: `Do I pay tax on ${page.hourlyFormatted} per hour?`,
+    answer: `On ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), ${paysTax ? `you pay ${page.englandFormatted.incomeTax} in income tax per year because your annual salary exceeds the Personal Allowance of ${formatCurrency(PERSONAL_ALLOWANCE)}.` : `you pay no income tax because your annual equivalent of ${page.annualFormatted} is below the Personal Allowance of ${formatCurrency(PERSONAL_ALLOWANCE)}.`} ${paysNI ? `You also pay ${page.englandFormatted.nationalInsurance} in National Insurance.` : 'You also pay no National Insurance as your earnings are below the Primary Threshold.'}`,
+  });
+  faqs.push({
+    question: `Can I live on ${page.hourlyFormatted} per hour in the UK?`,
+    answer: `On ${page.hourlyFormatted} per hour full-time, your monthly take-home is approximately ${page.englandFormatted.netMonthly}. This is challenging in high-cost areas like London, where average rents for a room exceed \u00A3700/month. In lower-cost regions such as the North East or Wales, it is more manageable. You may also be eligible for Universal Credit or other means-tested benefits to supplement your income.`,
+  });
+} else if (rateTier === 'entry-average') {
+  faqs.push({
+    question: `Is ${page.hourlyFormatted} an hour a good wage in the UK?`,
+    answer: `The UK median hourly rate for full-time employees is approximately \u00A317.94 (ONS data). At ${page.hourlyFormatted} per hour, your rate is ${isAboveMedian ? 'above' : 'below'} the national median. ${page.hourlyRate >= 15 ? 'This is a reasonable wage for many entry-level to mid-level roles across the UK, particularly outside London.' : 'This is typical of entry-level full-time roles, retail, hospitality, and care sector positions.'}`,
+  });
+  faqs.push({
+    question: `How much tax is deducted from ${page.hourlyFormatted} per hour?`,
+    answer: `On ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), you pay ${page.englandFormatted.incomeTax} in income tax and ${page.englandFormatted.nationalInsurance} in National Insurance per year. Your effective tax rate is ${page.englandFormatted.effectiveTaxRate}, meaning you keep ${page.englandFormatted.netHourly} of every ${page.hourlyFormatted} earned.`,
+  });
+  faqs.push({
+    question: `What jobs pay ${page.hourlyFormatted} per hour in the UK?`,
+    answer: `Roles paying around ${page.hourlyFormatted} per hour include experienced retail staff, warehouse operatives, administrative assistants, teaching assistants, care workers with experience, junior tradespeople, and entry-level office roles. Many NHS Band 2-4 positions and local government roles also pay in this range.`,
+  });
+} else if (rateTier === 'above-median') {
+  faqs.push({
+    question: `Is ${page.hourlyFormatted} per hour above average in the UK?`,
+    answer: `Yes. The UK median hourly rate for full-time employees is approximately \u00A317.94. At ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), you are earning above the national median. This rate is typical of skilled roles, mid-level professionals, and experienced workers across many sectors.`,
+  });
+  faqs.push({
+    question: `What is the effective tax rate on ${page.hourlyFormatted} per hour?`,
+    answer: `On ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), your effective tax rate in England is ${page.englandFormatted.effectiveTaxRate}. This includes ${page.englandFormatted.incomeTax} in income tax and ${page.englandFormatted.nationalInsurance} in National Insurance per year. Your net hourly rate after all deductions is ${page.englandFormatted.netHourly}.`,
+  });
+  faqs.push({
+    question: `What is the difference between ${page.hourlyFormatted} per hour in England and Scotland?`,
+    answer: `On ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), your net annual pay in England is ${page.englandFormatted.netAnnual} compared to ${page.scotlandFormatted.netAnnual} in Scotland. The difference is ${formatCurrency(Math.abs(page.england.netAnnual - page.scotland.netAnnual))} per year due to Scotland's different income tax bands.`,
+  });
+} else if (rateTier === 'skilled-professional') {
+  faqs.push({
+    question: `Am I a higher rate taxpayer on ${page.hourlyFormatted} per hour?`,
+    answer: `At ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), ${annualGross > 50270 ? 'yes, part of your income falls in the Higher Rate tax band (40%). Any earnings above \u00A350,270 per year are taxed at 40% instead of the basic rate of 20%.' : 'no, your income falls within the Basic Rate tax band (20%). The Higher Rate threshold starts at \u00A350,270 per year.'} Your total income tax is ${page.englandFormatted.incomeTax} per year.`,
+  });
+  faqs.push({
+    question: `How does pension salary sacrifice help at ${page.hourlyFormatted} per hour?`,
+    answer: `At ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), pension salary sacrifice reduces your gross pay before tax and NI are calculated. ${annualGross > 50270 ? 'Since part of your income is taxed at 40%, every \u00A3100 you sacrifice saves \u00A340 in tax plus \u00A38 in NI (\u00A32 if above the UEL), so a \u00A3100 pension contribution costs you as little as \u00A352 in take-home pay.' : 'Every \u00A3100 you sacrifice saves \u00A320 in income tax and \u00A38 in NI, so a \u00A3100 pension contribution costs you only \u00A372 in take-home pay.'}`,
+  });
+  faqs.push({
+    question: `What professional roles pay ${page.hourlyFormatted} per hour?`,
+    answer: `Roles in the ${page.hourlyFormatted} per hour range include qualified accountants, experienced software developers, project managers, engineering professionals, NHS Band 7-8 positions, senior teachers, and mid-level legal and financial services roles. Contract and freelance rates in these fields are often higher to account for holiday pay and benefits.`,
+  });
+} else if (rateTier === 'senior-specialist') {
+  faqs.push({
+    question: `How much of ${page.hourlyFormatted} per hour do I lose to tax?`,
+    answer: `On ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), you pay ${page.englandFormatted.totalDeductions} in total deductions per year (income tax: ${page.englandFormatted.incomeTax}, National Insurance: ${page.englandFormatted.nationalInsurance}). Your effective tax rate is ${page.englandFormatted.effectiveTaxRate}, leaving you with ${page.englandFormatted.netHourly} per hour after tax.`,
+  });
+  faqs.push({
+    question: `Is ${page.hourlyFormatted} per hour considered a high salary in the UK?`,
+    answer: `Yes. ${page.hourlyFormatted} per hour equates to ${page.annualFormatted} per year, which places you well above the UK median salary of approximately \u00A335,000. This level of pay is typical of senior management, specialist consultants, experienced legal and medical professionals, and senior technology roles.`,
+  });
+  faqs.push({
+    question: `Should I use a limited company at ${page.hourlyFormatted} per hour?`,
+    answer: `At ${page.hourlyFormatted} per hour, the decision between employment and operating through a limited company depends on your working arrangements. If you are a contractor, a limited company may be more tax-efficient, allowing you to take a combination of salary and dividends. However, IR35 rules may apply if HMRC considers you effectively employed. Seek professional advice from a qualified accountant.`,
+  });
+} else {
+  faqs.push({
+    question: `What is the marginal tax rate on ${page.hourlyFormatted} per hour?`,
+    answer: `At ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), your marginal tax rate is ${page.englandFormatted.marginalTaxRate}. This means for every additional \u00A31 earned, you lose ${page.englandFormatted.marginalTaxRate} to income tax and National Insurance combined. ${annualGross > 100000 ? 'Note: between \u00A3100,000 and \u00A3125,140, the effective marginal rate reaches 60% due to the Personal Allowance taper.' : ''}`,
+  });
+  faqs.push({
+    question: `How can I reduce my tax bill on ${page.hourlyFormatted} per hour?`,
+    answer: `At ${page.hourlyFormatted} per hour (${page.annualFormatted} per year), key tax-reduction strategies include: maximising pension contributions (which receive tax relief at your marginal rate), using your full ISA allowance of \u00A320,000 per year, making charitable donations via Gift Aid, and considering salary sacrifice for benefits like electric vehicles or additional pension contributions. ${annualGross > 100000 ? 'Pension contributions above the \u00A3100,000 threshold can be particularly effective as they restore your Personal Allowance.' : ''}`,
+  });
+  faqs.push({
+    question: `What type of roles pay ${page.hourlyFormatted} per hour in the UK?`,
+    answer: `Roles at ${page.hourlyFormatted} per hour (${page.annualFormatted} per year) include C-suite executives, senior partners in law and consulting firms, specialist medical consultants, highly experienced technology architects, investment banking professionals, and senior management in large organisations. Contract and freelance professionals in IT, law, and finance can also command this rate.`,
+  });
+}
+
+const faqStructuredData = faqSchema(faqs);
+
+const schemas = [
+  breadcrumbSchema(breadcrumbItems),
+  article,
+  faqStructuredData,
+  organizationSchema(),
+  personSchema(),
+];
+
+// ─── Pre-computed strings for template section ───────────────────────────
+// Avoids template literals with ${} inside JSX expression containers,
+// which can confuse esbuild's parser during the Astro build.
+const paContext = annualGross <= PERSONAL_ALLOWANCE
+  ? 'falls within the Personal Allowance, meaning you pay no income tax on this income'
+  : 'is above the Personal Allowance of ' + formatCurrency(PERSONAL_ALLOWANCE) + ', so you pay income tax on the portion above this threshold';
+
+const paTaperNote = annualGross > 100000
+  ? ' Be aware that between \u00A3100,000 and \u00A3125,140, the Personal Allowance is tapered away at a rate of \u00A31 for every \u00A32 earned above \u00A3100,000, creating an effective marginal rate of 60%. Pension contributions above this threshold can restore your Personal Allowance.'
+  : '';
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{metaTitle}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="Mottalib Radif" />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content={`${page.hourlyFormatted} per hour after tax UK - hourly rate breakdown`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <BaseHead slug={`/hourly/${page.slug}/`} pageType="salary" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="alternate" hreflang="en-GB" href={canonical} />
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  {schemas.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumbs items={breadcrumbItems} />
+    <article class="prose prose-gray dark:prose-invert max-w-none">
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 1. H1 + Intro -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h1>{page.hourlyFormatted} Per Hour After Tax UK {TAX_YEAR}</h1>
+
+      <p>
+        If you earn <strong>{page.hourlyFormatted} per hour</strong> in the United Kingdom, your gross annual salary
+        equivalent is <strong>{page.annualFormatted}</strong> (based on a standard 37.5-hour working week). After income
+        tax and National Insurance, your take-home pay is approximately <strong>{page.englandFormatted.netMonthly} per
+        month</strong> or <strong>{page.englandFormatted.netHourly} per hour</strong> in England. This page provides a
+        complete breakdown of your deductions, a band-by-band tax analysis, a Scotland comparison, and practical context
+        for the {TAX_YEAR} tax year.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 2. Quick Summary Cards -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <div class="not-prose my-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div class="rounded-lg border border-gray-200 p-4 text-center dark:border-gray-700">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Annual equivalent</div>
+          <div class="mt-1 text-xl font-bold text-navy-700 dark:text-navy-300">{page.annualFormatted}</div>
+        </div>
+        <div class="rounded-lg border border-gray-200 p-4 text-center dark:border-gray-700">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Monthly take-home</div>
+          <div class="mt-1 text-xl font-bold text-navy-700 dark:text-navy-300">{page.englandFormatted.netMonthly}</div>
+        </div>
+        <div class="rounded-lg border border-gray-200 p-4 text-center dark:border-gray-700">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Weekly take-home</div>
+          <div class="mt-1 text-xl font-bold text-navy-700 dark:text-navy-300">{formatCurrency(weeklyNet)}</div>
+        </div>
+        <div class="rounded-lg border border-gray-200 p-4 text-center dark:border-gray-700">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Effective tax rate</div>
+          <div class="mt-1 text-xl font-bold text-navy-700 dark:text-navy-300">{page.englandFormatted.effectiveTaxRate}</div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 3. Tax Breakdown Table -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Tax Breakdown on {page.hourlyFormatted} Per Hour</h2>
+      <p>
+        Here is how your {page.hourlyFormatted} per hour ({page.annualFormatted} per year) salary is broken down in
+        England, Wales, and Northern Ireland for the {TAX_YEAR} tax year:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="text-right">Annual</th>
+              <th class="text-right">Monthly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gross salary</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossMonthly}</td>
+            </tr>
+            <tr>
+              <td>Income tax</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+              <td class="text-right tabular-nums">{formatCurrency(page.england.incomeTax / 12)}</td>
+            </tr>
+            <tr>
+              <td>National Insurance</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.nationalInsurance}</td>
+              <td class="text-right tabular-nums">{formatCurrency(page.england.nationalInsurance / 12)}</td>
+            </tr>
+            <tr>
+              <td><strong>Total deductions</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.totalDeductions}</strong></td>
+              <td class="text-right tabular-nums"><strong>{formatCurrency(page.england.totalDeductions / 12)}</strong></td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Take-home pay</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netAnnual}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netMonthly}</strong></td>
+            </tr>
+            <tr>
+              <td>Effective tax rate</td>
+              <td class="text-right" colspan="2">{page.englandFormatted.effectiveTaxRate}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CTA -->
+      <div class="not-prose my-8 text-center">
+        <a
+          href="/"
+          data-gross={ctaGross}
+          class="cta-calc inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+        >
+          Calculate your exact take-home pay &rarr;
+        </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 4. Income Tax Band-by-Band Breakdown -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      {page.england.incomeTaxBands.length > 0 && (
+        <>
+          <h2>Income Tax Band-by-Band Breakdown</h2>
+          <p>
+            The table below shows exactly how much of your {page.annualFormatted} annual salary falls in each income tax
+            band for England, Wales, and Northern Ireland in {TAX_YEAR}:
+          </p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tax Band</th>
+                  <th class="text-right">Rate</th>
+                  <th class="text-right">Taxable Amount</th>
+                  <th class="text-right">Tax</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Personal Allowance</td>
+                  <td class="text-right">0%</td>
+                  <td class="text-right tabular-nums">{formatCurrency(page.england.personalAllowance)}</td>
+                  <td class="text-right tabular-nums">&pound;0</td>
+                </tr>
+                {page.england.incomeTaxBands.map((band) => (
+                  <tr>
+                    <td>{band.name}</td>
+                    <td class="text-right">{(band.rate * 100).toFixed(0)}%</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.taxableAmount)}</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.tax)}</td>
+                  </tr>
+                ))}
+                <tr class="font-semibold">
+                  <td>Total</td>
+                  <td class="text-right"></td>
+                  <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+                  <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 5. National Insurance Breakdown -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>National Insurance on {page.hourlyFormatted} Per Hour</h2>
+      {paysNI ? (
+        <>
+          <p>
+            National Insurance Contributions (NICs) are calculated separately from income tax. For employees in
+            the {TAX_YEAR} tax year, Class 1 NICs are charged at:
+          </p>
+          <ul>
+            <li><strong>{(NI_MAIN_RATE * 100).toFixed(0)}%</strong> on earnings between {formatCurrency(NI_PRIMARY_THRESHOLD)} and {formatCurrency(NI_UPPER_EARNINGS_LIMIT)} per year</li>
+            <li><strong>{(NI_ADDITIONAL_RATE * 100).toFixed(0)}%</strong> on earnings above {formatCurrency(NI_UPPER_EARNINGS_LIMIT)} per year</li>
+          </ul>
+          <p>
+            On your annual salary equivalent of {page.annualFormatted}, National Insurance totals
+            <strong>{page.englandFormatted.nationalInsurance}</strong> per year, or approximately
+            {formatCurrency(page.england.nationalInsurance / 12)} per month.
+          </p>
+        </>
+      ) : (
+        <p>
+          Your annual salary equivalent of {page.annualFormatted} is at or below the NI Primary Threshold of
+          {formatCurrency(NI_PRIMARY_THRESHOLD)} per year, so <strong>you pay no National Insurance</strong> at
+          this hourly rate.
+        </p>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 6. Period Breakdown Table -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What You Take Home Each Pay Period</h2>
+      <p>
+        Here is what {page.hourlyFormatted} per hour looks like across different pay periods, showing both your
+        gross (before-tax) and net (after-tax) amounts for England in {TAX_YEAR}:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Period</th>
+              <th class="text-right">Gross</th>
+              <th class="text-right">Take-Home</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.periods.map((p) => (
+              <tr>
+                <td>{p.label}</td>
+                <td class="text-right tabular-nums">{p.gross}</td>
+                <td class="text-right tabular-nums">{p.net}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        At {page.hourlyFormatted} per hour gross, your take-home hourly rate is {page.englandFormatted.netHourly} after
+        income tax and National Insurance. Your daily take-home is approximately {formatCurrency(dailyNet)} based on
+        a 7.5-hour working day.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 7. Scotland Comparison -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>England vs Scotland: {page.hourlyFormatted} Per Hour Comparison</h2>
+      <p>
+        Scotland has its own income tax rates that differ from England, Wales, and Northern Ireland. If you live in
+        Scotland and earn {page.hourlyFormatted} per hour, your take-home pay may differ. National Insurance rates
+        are the same across the UK. Here is the comparison:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="text-right">England</th>
+              <th class="text-right">Scotland</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gross annual</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.grossAnnual}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.grossAnnual}</td>
+            </tr>
+            <tr>
+              <td>Income tax</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.incomeTax}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.incomeTax}</td>
+            </tr>
+            <tr>
+              <td>National Insurance</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.nationalInsurance}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.nationalInsurance}</td>
+            </tr>
+            <tr>
+              <td>Total deductions</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.totalDeductions}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.totalDeductions}</td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Net annual</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netAnnual}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.scotlandFormatted.netAnnual}</strong></td>
+            </tr>
+            <tr class="bg-accent-50 dark:bg-accent-500/10">
+              <td><strong>Net monthly</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.englandFormatted.netMonthly}</strong></td>
+              <td class="text-right tabular-nums"><strong>{page.scotlandFormatted.netMonthly}</strong></td>
+            </tr>
+            <tr>
+              <td>Net hourly</td>
+              <td class="text-right tabular-nums">{page.englandFormatted.netHourly}</td>
+              <td class="text-right tabular-nums">{page.scotlandFormatted.netHourly}</td>
+            </tr>
+            <tr>
+              <td>Effective rate</td>
+              <td class="text-right">{page.englandFormatted.effectiveTaxRate}</td>
+              <td class="text-right">{page.scotlandFormatted.effectiveTaxRate}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {page.england.incomeTax !== page.scotland.incomeTax ? (
+        <p>
+          The difference in take-home pay between England and Scotland on {page.hourlyFormatted}/hour
+          is <strong>{formatCurrency(Math.abs(page.england.netAnnual - page.scotland.netAnnual))} per year</strong>
+          ({formatCurrency(Math.abs(page.england.netAnnual - page.scotland.netAnnual) / 12)} per month).
+          {page.england.netAnnual > page.scotland.netAnnual
+            ? ' You take home more in England due to the lower starter/basic rate structure.'
+            : ' You take home more in Scotland at this income level.'}
+        </p>
+      ) : (
+        <p>
+          At this hourly rate, income tax is the same in both England and Scotland ({page.englandFormatted.incomeTax}),
+          so your take-home pay is identical regardless of where you live in the UK.
+        </p>
+      )}
+
+      <!-- Scottish tax bands detail -->
+      {page.scotland.incomeTaxBands.length > 0 && (
+        <>
+          <h3>Scottish Income Tax Bands on {page.annualFormatted}</h3>
+          <p>Scotland uses a six-band income tax system for {TAX_YEAR}:</p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Band</th>
+                  <th class="text-right">Rate</th>
+                  <th class="text-right">Taxable Amount</th>
+                  <th class="text-right">Tax</th>
+                </tr>
+              </thead>
+              <tbody>
+                {page.scotland.incomeTaxBands.map((band) => (
+                  <tr>
+                    <td>{band.name}</td>
+                    <td class="text-right">{(band.rate * 100).toFixed(0)}%</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.taxableAmount)}</td>
+                    <td class="text-right tabular-nums">{formatCurrency(band.tax)}</td>
+                  </tr>
+                ))}
+                <tr class="font-semibold">
+                  <td>Total Scottish tax</td>
+                  <td></td>
+                  <td></td>
+                  <td class="text-right tabular-nums">{page.scotlandFormatted.incomeTax}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 8. What Does This Hourly Rate Mean? -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>What Does {page.hourlyFormatted} Per Hour Mean?</h2>
+
+      {rateTier === 'near-minimum' && (
+        <>
+          <p>
+            At {page.hourlyFormatted} per hour, your earnings are {page.hourlyRate < nlw2026 ? 'below' : 'near'} the
+            National Living Wage of &pound;12.21 per hour for workers aged 21 and over (April 2026). This rate is
+            common in retail, hospitality, care work, and entry-level positions across the UK.
+            {page.hourlyRate < nlw2026 && ' If you are aged 21 or over and working full-time, check that your employer is paying at least the legal minimum.'}
+          </p>
+          <p>
+            Your annual equivalent of {page.annualFormatted} {paContext}.
+            At this income level, you may be eligible for Universal Credit, Council Tax Reduction, or other
+            means-tested benefits. Use the gov.uk benefits calculator to check your entitlements.
+          </p>
+          <p>
+            Many workers at this rate are in roles that offer opportunities for progression. Supermarkets, restaurant
+            chains, and retail outlets regularly promote reliable staff to supervisory positions paying &pound;13-&pound;16
+            per hour. Apprenticeships and on-the-job training in trades such as plumbing, electrical work, and carpentry
+            can lead to significantly higher earnings within a few years.
+          </p>
+        </>
+      )}
+
+      {rateTier === 'entry-average' && (
+        <>
+          <p>
+            At {page.hourlyFormatted} per hour ({page.annualFormatted} per year), you are earning {isAboveMedian ? 'above' : 'around or approaching'} the
+            UK median hourly rate of approximately &pound;17.94. This is a common rate for experienced workers in
+            retail management, skilled warehouse roles, NHS Band 3-5 positions, administrative professionals,
+            and entry-level office roles in professional services.
+          </p>
+          <p>
+            Your annual equivalent of {page.annualFormatted} places you firmly in the basic rate income tax band (20%).
+            After income tax of {page.englandFormatted.incomeTax} and National Insurance of
+            {page.englandFormatted.nationalInsurance}, your monthly take-home of {page.englandFormatted.netMonthly}
+            provides a reasonable standard of living in most UK regions outside London. In the North of England,
+            the Midlands, Wales, and Scotland, this income comfortably covers rent, bills, and everyday expenses.
+          </p>
+          <p>
+            Career progression from this level typically involves gaining qualifications, moving into supervisory or
+            team leader roles, or transitioning into higher-paying sectors. Many workers earning {page.hourlyFormatted}
+            per hour can increase their earnings to &pound;18-&pound;25 per hour within a few years through professional
+            development and strategic career moves.
+          </p>
+        </>
+      )}
+
+      {rateTier === 'above-median' && (
+        <>
+          <p>
+            At {page.hourlyFormatted} per hour ({page.annualFormatted} per year), you are earning above the UK median
+            hourly rate. This rate is typical of qualified professionals, experienced tradespeople, mid-level managers,
+            NHS Band 5-7 positions, and skilled workers in construction, IT, and engineering.
+          </p>
+          <p>
+            Your income places you in the basic rate tax band, with an effective tax rate of
+            {page.englandFormatted.effectiveTaxRate}. Your monthly take-home of {page.englandFormatted.netMonthly}
+            supports a comfortable lifestyle in most UK regions, with reasonable housing options in all areas except
+            central London. At this level, building an emergency fund, contributing to a pension beyond the minimum,
+            and considering a Stocks and Shares ISA are sound financial priorities.
+          </p>
+          <p>
+            Workers at {page.hourlyFormatted} per hour are often well-positioned for further career growth. Gaining
+            chartered status, professional certifications, or management experience can move earnings into the
+            &pound;30-&pound;40 per hour range. Contracting or freelancing at this skill level often commands a premium
+            of 20-50% above the equivalent employed rate to account for holiday pay, pension, and job security.
+          </p>
+        </>
+      )}
+
+      {rateTier === 'skilled-professional' && (
+        <>
+          <p>
+            At {page.hourlyFormatted} per hour ({page.annualFormatted} per year), you are in the upper echelon of UK
+            earners. This rate is typical of experienced accountants, software developers, project managers, senior
+            nurses and allied health professionals, experienced solicitors, and engineering professionals.
+            {annualGross > 50270 ? ' Part of your income is now taxed at the higher rate of 40%.' : ' Your income remains within the basic rate band, though close to the higher rate threshold of \u00A350,270.'}
+          </p>
+          <p>
+            Your monthly take-home of {page.englandFormatted.netMonthly} provides significant financial flexibility.
+            Key financial planning considerations at this level include maximising pension contributions (especially
+            via salary sacrifice to save on NI), using your full &pound;20,000 ISA allowance, and considering
+            overpaying your mortgage if you are a homeowner. At this income, mortgage lenders would typically offer
+            between {formatCurrency(annualGross * 4)} and {formatCurrency(annualGross * 4.5)}.
+          </p>
+          <p>
+            Many professionals at this level work on a contract or freelance basis, where day rates of
+            {formatCurrency(page.hourlyRate * 7.5)} to {formatCurrency(page.hourlyRate * 8)} are common. If you are
+            considering contracting, the tax implications differ significantly from employment, and specialist
+            accountant advice is recommended.
+          </p>
+        </>
+      )}
+
+      {rateTier === 'senior-specialist' && (
+        <>
+          <p>
+            At {page.hourlyFormatted} per hour ({page.annualFormatted} per year), you are among the highest earners
+            in the UK. This rate is typical of senior management positions, specialist consultants, experienced legal
+            professionals, senior IT architects, and medical consultants. Your income is well above the UK median
+            and places you in the {annualGross > 50270 ? 'higher rate' : 'basic rate'} tax band.
+          </p>
+          <p>
+            Your effective tax rate of {page.englandFormatted.effectiveTaxRate} means total deductions of
+            {page.englandFormatted.totalDeductions} per year. Tax planning becomes increasingly important at this level.
+            Key strategies include pension salary sacrifice (which saves both income tax at your marginal rate and NI),
+            using your full ISA allowance, and considering Venture Capital Trusts (VCTs) or Enterprise Investment
+            Schemes (EIS) for tax-efficient investing.
+            {paTaperNote}
+          </p>
+          <p>
+            Professionals earning {page.hourlyFormatted} per hour as contractors typically work through a limited company
+            or umbrella company. The most tax-efficient approach depends on IR35 status and individual circumstances.
+            A specialist contractor accountant can advise on the optimal salary/dividend split and allowable expenses.
+          </p>
+        </>
+      )}
+
+      {rateTier === 'executive' && (
+        <>
+          <p>
+            At {page.hourlyFormatted} per hour ({page.annualFormatted} per year), you are in the top tier of UK
+            earners. This rate is typical of C-suite executives, senior partners in professional services firms,
+            specialist medical consultants, high-value technology architects, and senior investment banking professionals.
+          </p>
+          <p>
+            At this income level, the Personal Allowance has been fully tapered away (it reduces to zero at &pound;125,140),
+            and a significant portion of your income is taxed at the additional rate of 45%. Your effective tax rate is
+            {page.englandFormatted.effectiveTaxRate}, with total annual deductions of {page.englandFormatted.totalDeductions}.
+            Professional tax planning is essential at this level to ensure you are making the most of available reliefs
+            and allowances.
+          </p>
+          <p>
+            Key tax planning strategies include maximising pension contributions (annual allowance of &pound;60,000 plus
+            any unused allowance from the previous three years), charitable giving via Gift Aid (which extends your
+            basic rate band), and ensuring you claim all available reliefs. Many professionals at this level benefit from
+            specialist financial advice to coordinate pension planning, investment strategy, and inheritance tax planning.
+          </p>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 9. Nearby Hourly Rate Comparisons -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Nearby Hourly Rate Comparisons</h2>
+      <p>
+        How does a change in hourly rate affect your take-home pay? The table below compares hourly rates
+        near {page.hourlyFormatted}, showing the net pay and the difference from your current rate:
+      </p>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Hourly Rate</th>
+              <th class="text-right">Net Hourly</th>
+              <th class="text-right">Net Annual</th>
+              <th class="text-right">vs {page.hourlyFormatted}/hr</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.nearby.map((n) => (
+              <tr>
+                <td><a href={`/hourly/${n.slug}/`} class="text-navy-600 hover:underline dark:text-navy-300">{n.hourlyFormatted}/hr</a></td>
+                <td class="text-right tabular-nums">{n.netHourly}</td>
+                <td class="text-right tabular-nums">{n.netAnnual}</td>
+                <td class="text-right tabular-nums">{n.difference}/yr</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        As you can see, each &pound;1 increase in hourly rate does not result in a full &pound;1 increase in
+        net hourly pay. After income tax and National Insurance, you keep approximately
+        {paysTax ? (annualGross > 50270 ? '52p' : '72p') : 'most'} of every additional &pound;1 earned at your
+        current tax bracket.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 10. Tax Tips -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Tax Tips for {page.hourlyFormatted} Per Hour Earners</h2>
+
+      {rateTier === 'near-minimum' || rateTier === 'entry-average' ? (
+        <>
+          <p>Here are practical ways to keep more of your {page.hourlyFormatted}/hour earnings:</p>
+          <ul>
+            <li>
+              <strong>Check your tax code:</strong> Make sure your employer is using the correct tax code (typically 1257L).
+              If you see BR or another code, contact HMRC, as you may be having tax deducted unnecessarily.
+            </li>
+            <li>
+              <strong>Marriage Allowance:</strong> If your spouse or civil partner earns more than you, you can transfer
+              up to &pound;1,260 of your unused Personal Allowance to them, saving up to &pound;252 per year.
+            </li>
+            <li>
+              <strong>Pension auto-enrolment:</strong> If you are enrolled in a workplace pension, your contributions
+              receive tax relief. Even at the basic rate, this means the government adds &pound;25 for every &pound;100
+              you contribute (via relief at source).
+            </li>
+            {!isAboveNLW && (
+              <li>
+                <strong>Minimum wage check:</strong> If you are 21 or over, your employer must pay at least &pound;12.21
+                per hour from April 2026. If your rate is below this, contact HMRC or ACAS.
+              </li>
+            )}
+            <li>
+              <strong>Benefits check:</strong> On {page.annualFormatted} per year, you may be eligible for Universal
+              Credit, Council Tax Reduction, or help with childcare costs. Use the gov.uk benefits calculator.
+            </li>
+          </ul>
+        </>
+      ) : (
+        <>
+          <p>Here are practical strategies to optimise your tax position on {page.hourlyFormatted}/hour:</p>
+          <ul>
+            <li>
+              <strong>Pension salary sacrifice:</strong> Reduces your gross pay before tax and NI. Every &pound;100 you
+              sacrifice saves {annualGross > 50270 ? '&pound;40 in tax and &pound;2-8 in NI' : '&pound;20 in tax and &pound;8 in NI'},
+              making this one of the most effective tax-saving strategies.
+            </li>
+            <li>
+              <strong>ISA allowance:</strong> Shelter up to &pound;20,000 per year in an ISA where all returns are
+              tax-free. At your income level, a Stocks and Shares ISA is worth considering for long-term growth.
+            </li>
+            <li>
+              <strong>Check your tax code:</strong> Your tax code should be 1257L for the standard Personal Allowance.
+              Log in to your Personal Tax Account on gov.uk to verify.
+            </li>
+            {annualGross > 50270 && annualGross <= 60000 && (
+              <li>
+                <strong>Watch the higher-rate threshold:</strong> Part of your income is taxed at 40%. Increasing pension
+                contributions can bring your taxable income below &pound;50,270 and keep you entirely in the basic rate band.
+              </li>
+            )}
+            {annualGross > 100000 && (
+              <li>
+                <strong>Personal Allowance taper:</strong> Above &pound;100,000, your Personal Allowance is reduced by
+                &pound;1 for every &pound;2 earned, creating a 60% effective marginal rate. Pension contributions above
+                &pound;100,000 can restore your allowance and are extremely tax-efficient.
+              </li>
+            )}
+            <li>
+              <strong>Claim work expenses:</strong> If you pay for professional subscriptions, equipment, or uniform
+              maintenance that your employer does not reimburse, you can claim tax relief through HMRC.
+            </li>
+          </ul>
+        </>
+      )}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 11. FAQs -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Frequently Asked Questions</h2>
+      {faqs.map((faq) => (
+        <details class="group border-b border-gray-200 py-4 dark:border-gray-700">
+          <summary class="cursor-pointer list-none font-semibold text-gray-900 dark:text-white [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center justify-between">
+              {faq.question}
+              <svg class="ml-2 h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">{faq.answer}</p>
+        </details>
+      ))}
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 12. Second CTA -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <div class="not-prose my-8 text-center">
+        <a
+          href="/"
+          data-gross={ctaGross}
+          class="cta-calc inline-block rounded-lg bg-navy-600 px-6 py-3 text-lg font-semibold text-white shadow-md transition-colors hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+        >
+          Try the full salary calculator &rarr;
+        </a>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Add student loans, pension, Scotland rates, and more.
+        </p>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 13. Related Calculators -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Related Calculators</h2>
+      <div class="not-prose grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <a href="/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Salary Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Full UK salary calculator with all options.</p>
+        </a>
+        <a href="/hourly-rate/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Hourly Rate Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Convert any hourly rate to annual salary and take-home pay.</p>
+        </a>
+        <a href="/income-tax/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">Income Tax Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your UK income tax band by band.</p>
+        </a>
+        <a href="/national-insurance/" class="rounded-lg border border-gray-200 p-4 transition-colors hover:border-navy-300 hover:bg-navy-50 dark:border-gray-700 dark:hover:border-navy-600 dark:hover:bg-navy-900/20">
+          <h3 class="font-semibold text-navy-700 dark:text-navy-300">National Insurance Calculator</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Calculate your NI contributions for {TAX_YEAR}.</p>
+        </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- 14. Sources -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">GOV.UK: Income Tax rates and Personal Allowances</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener noreferrer">GOV.UK: National Insurance rates</a></li>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">GOV.UK: Scottish Income Tax</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">GOV.UK: Rates and thresholds for employers {TAX_YEAR}</a></li>
+        <li><a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours" target="_blank" rel="noopener noreferrer">ONS: Earnings and working hours</a></li>
+      </ul>
+
+    </article>
+
+    <div class="mt-8 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
+      <img src="/team/mottalib-radif.jpg" alt="Mottalib Radif, personal finance expert at Real Salary" class="h-12 w-12 rounded-full object-cover" width="48" height="48" loading="lazy" />
+      <div class="text-sm">
+        <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Mottalib Radif</a></p>
+        <p class="text-gray-500 dark:text-gray-400">MBA INSEAD &middot; Finance Enthusiast</p>
+      </div>
+    </div>
+
+    <p class="mt-4 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+
+  <script>
+    // Append ?gross= only on real user clicks so crawlers never see query-string URLs.
+    document.querySelectorAll('a.cta-calc').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const gross = (a as HTMLAnchorElement).dataset.gross;
+        if (gross) {
+          e.preventDefault();
+          window.location.href = `/#gross=${gross}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

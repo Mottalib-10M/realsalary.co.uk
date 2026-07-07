@@ -1,6 +1,6 @@
 ---
 /**
- * Hub page listing all 59 monthly salary landing pages.
+ * Hub page listing all monthly and annual salary landing pages.
  * Groups salaries by range for easy browsing and internal linking.
  */
 import Header from '../../components/layout/Header.astro';
@@ -9,6 +9,7 @@ import BaseHead from '../../components/seo/BaseHead.astro';
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import '../../styles/global.css';
 import { generateMonthlySalaryPages } from '../../data/monthly-salary-pages';
+import { generateAnnualSalaryPages } from '../../data/annual-salary-pages';
 import {
   buildTitle,
   buildCanonical,
@@ -26,12 +27,11 @@ import { formatCurrency } from '../../lib/format';
 import { TAX_YEAR } from '../../data/tax-rules-2026-27';
 
 const pages = generateMonthlySalaryPages();
+const annualPages = generateAnnualSalaryPages();
 
-// Title: 57 chars, keyword-rich, no site name
-const pageTitle = `Monthly Salary After Tax UK ${TAX_YEAR} - £100 to £3,000`;
+const pageTitle = `UK Salary After Tax ${TAX_YEAR} - Monthly & Annual Breakdown`;
 const metaTitle = buildTitle(pageTitle);
-// Description: 158 chars
-const description = `Browse UK take home pay for every monthly salary from £100 to £3,000. Income tax, National Insurance and net pay breakdowns for the ${TAX_YEAR} tax year. Free.`;
+const description = `Browse UK take home pay for monthly salaries £100–£3,000 and annual salaries £15,000–£200,000. Income tax, National Insurance and net pay for ${TAX_YEAR}. Free.`;
 const canonical = buildCanonical('/salary/');
 
 const breadcrumbItems = [
@@ -51,6 +51,15 @@ const groups = [
   { label: '£550 – £1,000', pages: pages.filter((p) => p.monthly >= 550 && p.monthly <= 1000) },
   { label: '£1,050 – £2,000', pages: pages.filter((p) => p.monthly >= 1050 && p.monthly <= 2000) },
   { label: '£2,050 – £3,000', pages: pages.filter((p) => p.monthly >= 2050 && p.monthly <= 3000) },
+];
+
+const annualGroups = [
+  { label: '£15,000 – £25,000', pages: annualPages.filter((p) => p.annual >= 15000 && p.annual <= 25000) },
+  { label: '£26,000 – £40,000', pages: annualPages.filter((p) => p.annual >= 26000 && p.annual <= 40000) },
+  { label: '£41,000 – £60,000', pages: annualPages.filter((p) => p.annual >= 41000 && p.annual <= 60000) },
+  { label: '£61,000 – £100,000', pages: annualPages.filter((p) => p.annual >= 61000 && p.annual <= 100000) },
+  { label: '£101,000 – £150,000', pages: annualPages.filter((p) => p.annual >= 101000 && p.annual <= 150000) },
+  { label: '£151,000 – £200,000', pages: annualPages.filter((p) => p.annual >= 151000 && p.annual <= 200000) },
 ];
 ---
 
@@ -72,7 +81,7 @@ const groups = [
   <meta property="og:image" content={OG_IMAGE} />
   <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
   <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
-  <meta property="og:image:alt" content="UK monthly salary after tax - take home pay from £100 to £3,000" />
+  <meta property="og:image:alt" content="UK monthly and annual salary after tax - take home pay for £100–£3,000/month and £15,000–£200,000/year" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
@@ -93,10 +102,11 @@ const groups = [
   <main id="main-content" class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumbs items={breadcrumbItems} />
     <div class="prose prose-gray dark:prose-invert max-w-none">
-      <h1>UK Monthly Salary After Tax: Every Amount from £100 to £3,000</h1>
+      <h1>UK Salary After Tax: Monthly &amp; Annual Breakdowns</h1>
       <p>
-        Browse our complete guide to monthly take-home pay in the UK. Each page below shows a detailed breakdown
-        of income tax, National Insurance, net pay, Scotland comparisons, and practical tips for the
+        Browse our complete guide to take-home pay in the UK. Choose from monthly salaries (£100–£3,000) or
+        annual salaries (£15,000–£200,000). Each page shows a detailed breakdown of income tax, National Insurance,
+        net pay, Scotland comparisons, and practical tips for the
         <strong>{TAX_YEAR} tax year</strong>. Click any salary to see the full analysis.
       </p>
     </div>
@@ -126,9 +136,42 @@ const groups = [
     ))}
 
     <div class="prose prose-gray dark:prose-invert mt-12 max-w-none">
+      <h2>Annual Salaries: £15,000 to £200,000</h2>
+      <p>
+        See what you actually take home on any annual salary from £15,000 to £200,000. Each page shows income tax,
+        National Insurance, Scotland comparisons, and practical financial context for the
+        <strong>{TAX_YEAR} tax year</strong>.
+      </p>
+    </div>
+
+    {annualGroups.map((group) => (
+      <section class="mt-10">
+        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">{group.label} Per Year</h2>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {group.pages.map((p) => (
+            <a
+              href={`/salary/${p.slug}/`}
+              class="group rounded-lg border border-gray-200 p-4 transition-all hover:border-navy-300 hover:shadow-md dark:border-gray-700 dark:hover:border-navy-600"
+            >
+              <div class="text-lg font-bold text-navy-700 group-hover:text-navy-600 dark:text-navy-300 dark:group-hover:text-navy-200">
+                {p.annualFormatted}<span class="text-sm font-normal text-gray-400">/yr</span>
+              </div>
+              <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Take-home: <span class="font-medium text-gray-700 dark:text-gray-200">{p.englandFormatted.netAnnual}</span>
+              </div>
+              <div class="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
+                {p.englandFormatted.netMonthly}/month &middot; {p.englandFormatted.effectiveTaxRate} tax rate
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <div class="prose prose-gray dark:prose-invert mt-12 max-w-none">
       <h2>How These Figures Are Calculated</h2>
       <p>
-        Every figure on these pages is calculated using official HMRC rates for the {TAX_YEAR} tax year
+        Every figure on these monthly and annual salary pages is calculated using official HMRC rates for the {TAX_YEAR} tax year
         (6 April 2026 to 5 April 2027). We assume the standard tax code 1257L, no student loans, and no
         pension deductions. The calculations include both income tax and employee National Insurance
         contributions. Use our <a href="/">full salary calculator</a> to add student loans, pension

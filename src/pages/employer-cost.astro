@@ -1,0 +1,174 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import EmployerCostCalculator from '../components/calculators/EmployerCostCalculator';
+
+// ─── Employer cost example calculations for SEO table ───────────────────────
+const EMPLOYER_NI_RATE = 0.15;
+const EMPLOYER_NI_THRESHOLD = 5_000;
+const PENSION_LOWER = 6_240;
+const PENSION_UPPER = 50_270;
+const PENSION_RATE = 0.03;
+
+function calcEmployerNI(gross: number): number {
+  return gross > EMPLOYER_NI_THRESHOLD
+    ? Math.round((gross - EMPLOYER_NI_THRESHOLD) * EMPLOYER_NI_RATE)
+    : 0;
+}
+
+function calcPension(gross: number): number {
+  const qualifying = Math.max(0, Math.min(gross, PENSION_UPPER) - PENSION_LOWER);
+  return Math.round(qualifying * PENSION_RATE);
+}
+
+function fmtGBP(n: number): string {
+  return new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
+const exampleSalaries = [25_000, 30_000, 40_000, 50_000, 75_000, 100_000];
+const examples = exampleSalaries.map((gross) => {
+  const ni = calcEmployerNI(gross);
+  const pension = calcPension(gross);
+  const total = gross + ni + pension;
+  return { gross, ni, pension, total };
+});
+
+const meta = {
+  slug: '/employer-cost/',
+  title: 'Employer Cost Calculator',
+  metaTitle: 'Employer Cost Calculator UK 2026/27 - True Hiring Cost',
+  metaDescription: 'Calculate the total cost of employing someone in the UK for 2026/27. Includes employer National Insurance (15%), pension contributions, and Employment Allowance.',
+  h1: 'Employer Cost Calculator 2026/27',
+  intro: 'See the true cost of employment beyond the gross salary. Includes employer National Insurance at 15%, pension contributions, and Employment Allowance eligibility.',
+  faqs: [
+    {
+      question: 'How much does it cost to employ someone on £30,000?',
+      answer: 'On a gross salary of £30,000, the employer also pays approximately £3,750 in employer National Insurance and £713 in minimum pension contributions (3% of qualifying earnings). The total cost to the employer is roughly £34,463 per year, around 15% above the headline salary.',
+    },
+    {
+      question: 'What is employer National Insurance?',
+      answer: 'Employer National Insurance is a separate tax paid by the employer on top of the employee\'s gross salary. From April 2025, the rate is 15% on all earnings above the secondary threshold of £5,000 per year. Unlike employee NI, there is no upper earnings limit — employers pay 15% on all earnings above the threshold with no cap.',
+    },
+    {
+      question: 'What is the Employment Allowance?',
+      answer: 'The Employment Allowance is a £10,500 annual reduction in employer National Insurance for eligible businesses. It effectively means the first £10,500 of employer NI is written off. However, it is not available to companies where the only employee is a director, or to public sector employers. Eligible businesses can claim it through their payroll software.',
+    },
+    {
+      question: 'Do all employers have to pay pension contributions?',
+      answer: 'Under auto-enrolment rules, employers must contribute a minimum of 3% of qualifying earnings to eligible employees\' pensions. Qualifying earnings are between £6,240 and £50,270 per year for 2026/27. Some employers choose to contribute more, or calculate pension on the full salary rather than just qualifying earnings.',
+    },
+    {
+      question: 'How much is employer NI in 2026/27?',
+      answer: 'Employer NI is 15% on earnings above the secondary threshold of £5,000 per year. There is no upper limit. For example, on a £50,000 salary, employer NI is £6,750 (15% of £45,000). This rate has been in effect since April 2025 and applies for the 2026/27 tax year.',
+    },
+  ],
+};
+---
+
+<CalculatorLayout {...meta}>
+  <EmployerCostCalculator client:idle />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How Employer Costs Work in the UK</h2>
+      <p>
+        When hiring an employee in the UK, the gross salary is only part of the cost. Employers must also pay employer National Insurance contributions on top of the gross salary, and make pension contributions under auto-enrolment. Together, these additional costs typically add 14% to 19% to the headline salary figure, depending on the salary level and pension scheme.
+      </p>
+      <p>
+        The three components of total employer cost are:
+      </p>
+      <ol>
+        <li><strong>Gross salary</strong> — the headline figure agreed with the employee.</li>
+        <li><strong>Employer National Insurance</strong> — a tax on the employer, charged at 15% on all earnings above £5,000 per year.</li>
+        <li><strong>Employer pension contribution</strong> — a minimum of 3% of qualifying earnings under auto-enrolment rules.</li>
+      </ol>
+      <p>
+        Understanding the true cost of employment is essential for budgeting, headcount planning, and negotiating salaries. A role advertised at £40,000 actually costs the employer over £46,000 when employer NI and pension are included.
+      </p>
+
+      <h2>Employer National Insurance 2026/27</h2>
+      <p>
+        Employer NI is charged at <strong>15%</strong> on all employee earnings above the secondary threshold of <strong>£5,000 per year</strong>. This rate took effect in April 2025 (increased from 13.8%) and continues into the 2026/27 tax year.
+      </p>
+      <p>
+        A critical difference from employee NI: there is <strong>no upper earnings limit</strong> for employer NI. While employees pay a reduced 2% NI rate above £50,270, employers continue to pay the full 15% on all earnings above the threshold, no matter how high the salary. This makes employer NI particularly significant for high earners. On a £100,000 salary, employer NI alone is £14,250.
+      </p>
+      <p>
+        Employer NI is not deducted from the employee's pay — it is an additional cost borne entirely by the employer. However, economists widely agree that employer NI is effectively passed on to employees through lower wages than would otherwise be offered.
+      </p>
+
+      <h2>Employer Pension Contributions</h2>
+      <p>
+        Under auto-enrolment, employers must contribute a minimum of <strong>3%</strong> of <strong>qualifying earnings</strong> to eligible employees' workplace pensions. Qualifying earnings are the portion of salary between £6,240 and £50,270 per year for 2026/27.
+      </p>
+      <p>
+        For example, on a £30,000 salary, qualifying earnings are £23,760 (£30,000 minus £6,240), and the minimum employer pension contribution is £713 per year (3% of £23,760).
+      </p>
+      <p>
+        Many employers choose to contribute more than the 3% minimum, or to calculate pension contributions based on the full gross salary rather than qualifying earnings. This calculator lets you adjust both the percentage and the calculation basis to match your specific scheme.
+      </p>
+
+      <h2>Employment Allowance</h2>
+      <p>
+        The Employment Allowance lets eligible employers reduce their employer NI bill by up to <strong>£10,500 per year</strong>. It is claimed through payroll software and reduces the employer NI due each pay period until the allowance is used up.
+      </p>
+      <p>
+        Not all employers qualify. The Employment Allowance is <strong>not available</strong> to:
+      </p>
+      <ul>
+        <li>Companies where the sole employee is also a director</li>
+        <li>Public sector employers and those carrying out more than half their work in the public sector</li>
+        <li>Employers using deemed payment rules (IR35 applied by the employer)</li>
+      </ul>
+      <p>
+        For eligible small businesses, the Employment Allowance can eliminate employer NI entirely on lower salaries. For example, a £30,000 salary generates £3,750 in employer NI, which is fully covered by the £10,500 allowance.
+      </p>
+
+      <h2>Employer Cost Examples</h2>
+      <p>
+        The table below shows the total annual cost to an employer at common salary levels, assuming the minimum 3% employer pension on qualifying earnings and no Employment Allowance:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Gross Salary</th>
+            <th class="text-right">Employer NI</th>
+            <th class="text-right">Pension (3%)</th>
+            <th class="text-right">Total Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          {examples.map((row) => (
+            <tr>
+              <td>{fmtGBP(row.gross)}</td>
+              <td class="text-right">{fmtGBP(row.ni)}</td>
+              <td class="text-right">{fmtGBP(row.pension)}</td>
+              <td class="text-right"><strong>{fmtGBP(row.total)}</strong></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p>
+        At lower salary levels the additional costs represent around 14-15% on top of the gross salary. At higher salaries the percentage rises because employer NI has no cap, while pension contributions are limited to qualifying earnings up to £50,270.
+      </p>
+
+      <h2>Sources</h2>
+      <ul>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">Rates and thresholds for employers 2026/27: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/national-insurance-rates-letters" target="_blank" rel="noopener noreferrer">National Insurance rates and categories: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/claim-employment-allowance" target="_blank" rel="noopener noreferrer">Claim Employment Allowance: GOV.UK</a></li>
+        <li><a href="https://www.gov.uk/workplace-pensions/what-you-your-employer-and-the-government-pay" target="_blank" rel="noopener noreferrer">Workplace pension contributions: GOV.UK</a></li>
+        <li><a href="https://www.thepensionsregulator.gov.uk/en/employers" target="_blank" rel="noopener noreferrer">Auto-enrolment for employers: The Pensions Regulator</a></li>
+      </ul>
+      <p>
+        For a complete overview of all tax rates and thresholds this year, see our <a href="/guides/uk-tax-year-2026-27/">UK Tax Year 2026/27 guide</a>.
+      </p>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

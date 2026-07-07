@@ -1,0 +1,192 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import SalaryCalculator from '../components/calculators/SalaryCalculator';
+import { calculateTakeHome } from '../lib/uk-tax-engine';
+import { formatCurrency } from '../lib/format';
+
+const meta = {
+  slug: '/scottish-tax-calculator/',
+  title: 'Scottish Tax Calculator',
+  metaTitle: 'Scottish Tax Calculator 2026/27 - Take Home Pay Scotland',
+  metaDescription: 'Free Scottish income tax calculator for 2026/27. See your take home pay with Scotland\'s six tax bands. Compare with England rates. Updated HMRC figures.',
+  h1: 'Scottish Tax Calculator 2026/27',
+  intro: 'Calculate your take home pay using Scottish income tax rates. Scotland has six tax bands with rates from 19% to 48%, compared to three bands in the rest of the UK.',
+  faqs: [
+    {
+      question: 'What are the Scottish income tax rates for 2026/27?',
+      answer: 'Scotland has six income tax bands for 2026/27: Starter Rate at 19% (£12,570\u2013£16,537), Basic Rate at 20% (£16,537\u2013£29,526), Intermediate Rate at 21% (£29,526\u2013£43,662), Higher Rate at 42% (£43,662\u2013£75,000), Advanced Rate at 45% (£75,000\u2013£125,140), and Top Rate at 48% (over £125,140). The Personal Allowance of £12,570 is tax-free.',
+    },
+    {
+      question: 'Do I pay more tax in Scotland?',
+      answer: 'It depends on your salary. If you earn under about £28,000, you actually pay slightly less tax in Scotland thanks to the 19% starter rate. Above that level, Scottish taxpayers pay progressively more. At £50,000, you pay roughly £1,500 more per year than in England. At £80,000, the difference grows to around £2,300 per year.',
+    },
+    {
+      question: 'How do I know if I pay Scottish tax?',
+      answer: 'Check your tax code on your payslip. If it starts with the letter "S" (e.g., S1257L), you are a Scottish taxpayer and Scottish income tax rates apply to you. HMRC determines your tax code based on where you live, not where you work. If you live in Scotland but work in England, you still pay Scottish rates.',
+    },
+    {
+      question: 'Does National Insurance differ in Scotland?',
+      answer: 'No. National Insurance is the same across the entire UK. Scotland only has the power to set its own income tax rates and bands. NI rates, thresholds, and calculations are identical whether you live in Scotland, England, Wales, or Northern Ireland.',
+    },
+    {
+      question: 'What is the Scottish Starter Rate?',
+      answer: 'The Scottish Starter Rate is a 19% income tax band that applies to earnings between £12,570 and £16,537. This rate is 1% lower than the 20% basic rate used in England for the same income range, meaning Scottish taxpayers pay slightly less tax on the first £3,967 of taxable income.',
+    },
+  ],
+};
+
+// Calculate comparison figures using the actual tax engine
+const comparisonSalaries = [25_000, 30_000, 40_000, 50_000, 60_000, 80_000, 100_000];
+
+const comparisons = comparisonSalaries.map((salary) => {
+  const eng = calculateTakeHome({ grossAnnual: salary, region: 'england', _skipMarginal: true });
+  const scot = calculateTakeHome({ grossAnnual: salary, region: 'scotland', _skipMarginal: true });
+  const taxDiff = scot.incomeTax - eng.incomeTax;
+  return {
+    salary,
+    engTax: eng.incomeTax,
+    scotTax: scot.incomeTax,
+    engNI: eng.nationalInsurance,
+    scotNI: scot.nationalInsurance,
+    engNet: eng.netAnnual,
+    scotNet: scot.netAnnual,
+    taxDiff,
+  };
+});
+---
+
+<CalculatorLayout {...meta}>
+  <script>
+    // Default to Scotland if no region is set in URL
+    if (!window.location.search.includes('region=')) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('region', 'scotland');
+      window.history.replaceState({}, '', url.toString());
+    }
+  </script>
+  <SalaryCalculator client:idle />
+
+  <Fragment slot="content">
+    <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
+
+      <h2>How Scottish Income Tax Differs from England</h2>
+      <p>
+        Since 2017, the Scottish Parliament has had the power to set its own income tax rates and bands. Scotland now operates a significantly different system from England, Wales, and Northern Ireland. While the rest of the UK uses three tax bands (Basic, Higher, and Additional), Scotland has six bands: Starter, Basic, Intermediate, Higher, Advanced, and Top.
+      </p>
+      <p>
+        The key differences are at both ends of the scale. At the bottom, Scotland's Starter Rate of 19% is 1% lower than England's Basic Rate, giving Scottish taxpayers a small saving on the first portion of taxable income. However, above £43,662, Scotland's Higher Rate of 42% kicks in earlier and at a higher rate than England's 40% threshold at £50,270. At the very top, Scotland's Top Rate of 48% exceeds England's Additional Rate of 45% by three percentage points.
+      </p>
+      <p>
+        The net effect is that lower earners in Scotland pay marginally less income tax, while those earning above roughly £28,000 start paying more. The gap widens significantly at higher salaries. National Insurance, however, remains identical across the UK, so the total deductions difference is purely from income tax.
+      </p>
+
+      <h2>Scottish Income Tax Bands 2026/27</h2>
+      <p>
+        The following income tax bands apply to Scottish taxpayers for the tax year running from 6 April 2026 to 5 April 2027. These rates are set by the Scottish Parliament and apply to all non-savings, non-dividend income for individuals identified as Scottish taxpayers by HMRC.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Band</th><th>Taxable Income</th><th>Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Personal Allowance</td><td>Up to &pound;12,570</td><td>0%</td></tr>
+          <tr><td>Starter Rate</td><td>&pound;12,570 &ndash; &pound;16,537</td><td>19%</td></tr>
+          <tr><td>Basic Rate</td><td>&pound;16,537 &ndash; &pound;29,526</td><td>20%</td></tr>
+          <tr><td>Intermediate Rate</td><td>&pound;29,526 &ndash; &pound;43,662</td><td>21%</td></tr>
+          <tr><td>Higher Rate</td><td>&pound;43,662 &ndash; &pound;75,000</td><td>42%</td></tr>
+          <tr><td>Advanced Rate</td><td>&pound;75,000 &ndash; &pound;125,140</td><td>45%</td></tr>
+          <tr><td>Top Rate</td><td>Over &pound;125,140</td><td>48%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The Personal Allowance of &pound;12,570 is set by the UK Government and applies across the whole of the UK, including Scotland. The taper rules are also the same: if your adjusted net income exceeds &pound;100,000, your personal allowance is reduced by &pound;1 for every &pound;2 over the threshold, reaching zero at &pound;125,140. This creates a marginal tax rate of 63.25% for Scottish taxpayers in that income range (compared to 62% in England).
+      </p>
+
+      <h2>Scotland vs England Tax Comparison</h2>
+      <p>
+        The table below compares income tax, National Insurance, and take home pay at common salary levels. All figures are annual and calculated for the 2026/27 tax year using standard assumptions (no pension, no student loans, standard personal allowance).
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Gross Salary</th>
+            <th>England Tax</th>
+            <th>Scotland Tax</th>
+            <th>NI (Same)</th>
+            <th>England Net</th>
+            <th>Scotland Net</th>
+            <th>Difference</th>
+          </tr>
+        </thead>
+        <tbody>
+          {comparisons.map((c) => (
+            <tr>
+              <td>{formatCurrency(c.salary)}</td>
+              <td>{formatCurrency(c.engTax)}</td>
+              <td>{formatCurrency(c.scotTax)}</td>
+              <td>{formatCurrency(c.engNI)}</td>
+              <td>{formatCurrency(c.engNet)}</td>
+              <td>{formatCurrency(c.scotNet)}</td>
+              <td>{c.taxDiff > 0 ? `+${formatCurrency(c.taxDiff)}` : `-${formatCurrency(Math.abs(c.taxDiff))}`}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p>
+        At &pound;25,000 and &pound;30,000, Scottish taxpayers actually pay slightly less income tax than their English counterparts, thanks to the 19% Starter Rate. The crossover point is around &pound;28,000, above which Scotland becomes more expensive. By &pound;50,000, the difference is roughly &pound;1,500 per year. At &pound;100,000, Scottish taxpayers pay &pound;3,300 more in income tax annually.
+      </p>
+      <p>
+        National Insurance is identical at every salary level because NI is a UK-wide tax. The "Difference" column reflects only the income tax gap. Use the calculator above to check your exact salary and see how pensions, student loans, or a different tax code affect the comparison.
+      </p>
+
+      <h2>Who Pays Scottish Tax?</h2>
+      <p>
+        You pay Scottish income tax if HMRC classifies you as a "Scottish taxpayer." This is determined by where you live, not where you work. If your main home is in Scotland on any day of the tax year, you are likely a Scottish taxpayer for that entire year.
+      </p>
+      <p>
+        The simplest way to check is your tax code. Scottish taxpayers have a tax code beginning with the letter "S," such as S1257L. This tells your employer to apply Scottish rates when calculating your PAYE deductions. If you move to or from Scotland during the tax year, HMRC will update your tax code accordingly, though there may be a delay.
+      </p>
+      <p>
+        HMRC uses your address as registered with them (typically via your Self Assessment return or your employer's records) to determine residency. If you have homes in more than one part of the UK, the rules consider factors such as where you spend the most time, where your family lives, and where your main place of work is located.
+      </p>
+      <p>
+        It is important to note that Scottish income tax only applies to non-savings, non-dividend income. Your savings interest and dividend income are always taxed at UK rates, regardless of where you live. This means the Scottish rates affect your employment income, self-employment profits, pension income, and rental income, but not your ISA-exempt savings or dividend income from shares.
+      </p>
+
+      <h2>How to Reduce Your Tax Bill in Scotland</h2>
+      <p>
+        While you cannot choose to opt out of Scottish tax rates, there are several legitimate ways to reduce the amount of income tax you pay:
+      </p>
+      <ul>
+        <li>
+          <strong>Pension contributions:</strong> Contributions to a workplace pension via salary sacrifice reduce your taxable income before tax is calculated. This is particularly effective for Scottish taxpayers in the Intermediate (21%), Higher (42%), or Advanced (45%) bands. For example, a 5% salary sacrifice on a &pound;50,000 salary saves approximately &pound;1,050 in income tax alone for a Scottish taxpayer, compared to &pound;750 for an English taxpayer at the same salary.
+        </li>
+        <li>
+          <strong>Marriage Allowance:</strong> If you are married or in a civil partnership and one partner earns less than &pound;12,570, the lower earner can transfer &pound;1,260 of their personal allowance to the higher earner. This reduces the higher earner's tax bill by up to &pound;252 per year. The higher earner must be a basic rate taxpayer (earning under &pound;43,662 in Scotland) to qualify.
+        </li>
+        <li>
+          <strong>Professional subscriptions:</strong> If you pay membership fees to an HMRC-approved professional body (such as the Law Society of Scotland, ICAS, or the Royal College of Nursing), you can claim tax relief on these fees. The relief is given at your highest marginal rate, so Scottish taxpayers in the 42% band get more relief per pound than basic rate taxpayers.
+        </li>
+        <li>
+          <strong>Working from home allowance:</strong> If your employer requires you to work from home, you can claim &pound;6 per week (&pound;312 per year) without needing to provide receipts. This is deducted from your taxable income and saves between &pound;59 and &pound;150 depending on your tax band.
+        </li>
+        <li>
+          <strong>Charitable donations via Gift Aid:</strong> Higher and additional rate Scottish taxpayers can reclaim the difference between their marginal rate and the basic rate on Gift Aid donations through Self Assessment. At the 42% Higher Rate, you can claim an extra 22p for every &pound;1 donated.
+        </li>
+      </ul>
+
+      <h2>Sources</h2>
+      <p>
+        All rates and thresholds used in this calculator are sourced from official UK and Scottish Government publications:
+      </p>
+      <ul>
+        <li><a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">GOV.UK: Scottish income tax</a></li>
+        <li><a href="https://www.revenue.scot/taxes/income-tax" target="_blank" rel="noopener noreferrer">Revenue Scotland: Income tax</a></li>
+        <li><a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">GOV.UK: Income tax rates and personal allowances</a></li>
+        <li><a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">GOV.UK: Rates and thresholds for employers 2026/27</a></li>
+        <li><a href="https://www.gov.uk/check-income-tax-current-year" target="_blank" rel="noopener noreferrer">GOV.UK: Check your income tax for the current year</a></li>
+      </ul>
+
+    </article>
+  </Fragment>
+</CalculatorLayout>

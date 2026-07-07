@@ -1,11 +1,11 @@
 ---
 import { TAX_YEAR } from '../../data/tax-rules-2026-27';
-import { footerCalculatorLinks as calculatorLinks, footerSalaryLinks as salaryLinks, footerInfoLinks as infoLinks } from '../../data/nav';
+import { footerCalculatorLinks as calculatorLinks, footerSalaryLinks as salaryLinks, footerHourlyLinks as hourlyLinks, footerAnnualLinks as annualLinks, footerInfoLinks as infoLinks } from '../../data/nav';
 ---
 
 <footer class="border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950">
   <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
       <!-- Brand -->
       <div>
         <a href="/" class="text-lg font-bold text-navy-700 dark:text-white">Real Salary</a>
@@ -44,7 +44,35 @@ import { footerCalculatorLinks as calculatorLinks, footerSalaryLinks as salaryLi
           </ul>
         </div>
 
-        <!-- Legal -->
+        <!-- Annual Salaries -->
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Annual Salaries</h3>
+          <ul class="mt-3 space-y-2">
+            {annualLinks.map((link) => (
+              <li>
+                <a href={link.href} class="text-sm text-gray-500 hover:text-navy-600 dark:text-gray-400 dark:hover:text-navy-300">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Hourly Rates -->
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Hourly Rates</h3>
+          <ul class="mt-3 space-y-2">
+            {hourlyLinks.map((link) => (
+              <li>
+                <a href={link.href} class="text-sm text-gray-500 hover:text-navy-600 dark:text-gray-400 dark:hover:text-navy-300">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Information -->
         <div>
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Information</h3>
           <ul class="mt-3 space-y-2">

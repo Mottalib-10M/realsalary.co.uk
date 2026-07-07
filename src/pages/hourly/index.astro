@@ -1,0 +1,166 @@
+---
+/**
+ * Hub page listing all 20 hourly rate landing pages.
+ * Groups rates by level for easy browsing and internal linking.
+ */
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import BaseHead from '../../components/seo/BaseHead.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import '../../styles/global.css';
+import { generateHourlyRatePages } from '../../data/hourly-rate-pages';
+import {
+  buildTitle,
+  buildCanonical,
+  SITE_NAME,
+  SITE_URL,
+  OG_IMAGE,
+  OG_IMAGE_WIDTH,
+  OG_IMAGE_HEIGHT,
+  breadcrumbSchema,
+  organizationSchema,
+  personSchema,
+  LAST_UPDATED,
+} from '../../lib/seo';
+import { formatCurrency } from '../../lib/format';
+import { TAX_YEAR } from '../../data/tax-rules-2026-27';
+
+const pages = generateHourlyRatePages();
+
+const pageTitle = `Hourly Rate After Tax UK ${TAX_YEAR} - \u00A310 to \u00A3100 Per Hour`;
+const metaTitle = buildTitle(pageTitle);
+const description = `Browse UK take-home pay for every popular hourly rate from \u00A310 to \u00A3100 per hour. Income tax, National Insurance and net pay breakdowns for the ${TAX_YEAR} tax year. Free.`;
+const canonical = buildCanonical('/hourly/');
+
+const breadcrumbItems = [
+  { name: 'Home', url: SITE_URL },
+  { name: 'Hourly Rates', url: canonical },
+];
+
+const schemas = [
+  breadcrumbSchema(breadcrumbItems),
+  organizationSchema(),
+  personSchema(),
+];
+
+// Group pages by rate level
+const groups = [
+  {
+    label: '\u00A310 \u2013 \u00A317 Per Hour',
+    subtitle: 'Near minimum to average wage',
+    pages: pages.filter((p) => p.hourlyRate >= 10 && p.hourlyRate <= 17),
+  },
+  {
+    label: '\u00A318 \u2013 \u00A330 Per Hour',
+    subtitle: 'Above average wage',
+    pages: pages.filter((p) => p.hourlyRate >= 18 && p.hourlyRate <= 30),
+  },
+  {
+    label: '\u00A335 \u2013 \u00A3100 Per Hour',
+    subtitle: 'Senior and specialist roles',
+    pages: pages.filter((p) => p.hourlyRate >= 35 && p.hourlyRate <= 100),
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{metaTitle}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="Mottalib Radif" />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:image:width" content={OG_IMAGE_WIDTH} />
+  <meta property="og:image:height" content={OG_IMAGE_HEIGHT} />
+  <meta property="og:image:alt" content="UK hourly rate after tax - take home pay from \u00A310 to \u00A3100 per hour" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <BaseHead slug="/hourly/" pageType="hub" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  {schemas.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
+</head>
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <a href="#main-content" class="skip-link bg-navy-600 text-white">Skip to content</a>
+  <Header />
+
+  <main id="main-content" class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <Breadcrumbs items={breadcrumbItems} />
+    <div class="prose prose-gray dark:prose-invert max-w-none">
+      <h1>UK Hourly Rate After Tax: Every Rate from &pound;10 to &pound;100 Per Hour</h1>
+      <p>
+        Browse our complete guide to hourly rate take-home pay in the UK. Each page below shows a detailed breakdown
+        of the annual salary equivalent, income tax, National Insurance, net pay, Scotland comparisons, and practical
+        tips for the <strong>{TAX_YEAR} tax year</strong>. Click any rate to see the full analysis.
+      </p>
+    </div>
+
+    {groups.map((group) => (
+      <section class="mt-10">
+        <h2 class="mb-1 text-xl font-bold text-gray-900 dark:text-white">{group.label}</h2>
+        <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">{group.subtitle}</p>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {group.pages.map((p) => (
+            <a
+              href={`/hourly/${p.slug}/`}
+              class="group rounded-lg border border-gray-200 p-4 transition-all hover:border-navy-300 hover:shadow-md dark:border-gray-700 dark:hover:border-navy-600"
+            >
+              <div class="text-lg font-bold text-navy-700 group-hover:text-navy-600 dark:text-navy-300 dark:group-hover:text-navy-200">
+                {p.hourlyFormatted}<span class="text-sm font-normal text-gray-400">/hr</span>
+              </div>
+              <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {p.annualFormatted}<span class="text-xs text-gray-400">/year</span>
+              </div>
+              <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Take-home: <span class="font-medium text-gray-700 dark:text-gray-200">{p.englandFormatted.netMonthly}</span><span class="text-xs text-gray-400">/mo</span>
+              </div>
+              <div class="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
+                {p.englandFormatted.effectiveTaxRate} tax rate
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <div class="prose prose-gray dark:prose-invert mt-12 max-w-none">
+      <h2>How These Figures Are Calculated</h2>
+      <p>
+        Every figure on these pages is calculated using official HMRC rates for the {TAX_YEAR} tax year
+        (6 April 2026 to 5 April 2027). Annual salary equivalents assume a standard 37.5-hour working week
+        (hourly rate &times; 37.5 hours &times; 52 weeks). We assume the standard tax code 1257L, no student
+        loans, and no pension deductions. The calculations include both income tax and employee National Insurance
+        contributions. Use our <a href="/">full salary calculator</a> or <a href="/hourly-rate/">hourly rate
+        calculator</a> to add student loans, pension contributions, Scottish tax rates, and other options.
+      </p>
+    </div>
+
+    <div class="mt-8 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
+      <img src="/team/mottalib-radif.jpg" alt="Mottalib Radif, personal finance expert at Real Salary" class="h-12 w-12 rounded-full object-cover" width="48" height="48" loading="lazy" />
+      <div class="text-sm">
+        <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Mottalib Radif</a></p>
+        <p class="text-gray-500 dark:text-gray-400">MBA INSEAD &middot; Finance Enthusiast</p>
+      </div>
+    </div>
+
+    <p class="mt-4 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+  </main>
+
+  <Footer />
+</body>
+</html>
