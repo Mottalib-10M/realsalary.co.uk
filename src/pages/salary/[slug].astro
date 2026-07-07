@@ -35,6 +35,15 @@ import {
   getUniqueComparisons,
 } from '../../lib/salary-content';
 import {
+  getDailyLifeAlt,
+  getCareerAlt,
+  getFinancialPlanningAlt,
+  getInflationAlt,
+  getRegionalAlt,
+  getBudgetCommentaryAlt,
+  getSalaryPositionAlt,
+} from '../../lib/salary-prose';
+import {
   PERSONAL_ALLOWANCE,
   NI_PRIMARY_THRESHOLD,
   NI_UPPER_EARNINGS_LIMIT,
@@ -162,6 +171,15 @@ const uniqueFaqs = buildUniqueFaqs(page.monthly, page.england);
 const raiseSimulation = getRaiseSimulation(page.monthly, page.england);
 const budgetBreakdownData = getBudgetBreakdown(monthlyNet);
 const uniqueComparisons = getUniqueComparisons(page.monthly, page.england);
+
+// ─── Alternate prose content (reduces cross-page duplication) ────────────
+const dailyLifeAlt = getDailyLifeAlt(page.monthly, page.england);
+const careerAlt = getCareerAlt(page.monthly, page.england);
+const financialAlt = getFinancialPlanningAlt(page.monthly, page.england);
+const inflationAlt = getInflationAlt(page.monthly, page.england);
+const regionalAlt = getRegionalAlt(page.monthly, page.england);
+const budgetCommentaryAlt = getBudgetCommentaryAlt(page.monthly, page.england);
+const salaryPositionAlt = getSalaryPositionAlt(page.monthly, page.england);
 
 // FAQ structured data includes both standard and unique FAQs
 const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
@@ -647,7 +665,9 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
         At {page.monthlyFormatted} per month ({page.annualFormatted} per year), your salary
         is <strong>{percentOfMedian}% of the UK median</strong>.
       </p>
-      {page.annual < 15000 ? (
+      {salaryPositionAlt ? (
+        <p set:html={salaryPositionAlt} />
+      ) : page.annual < 15000 ? (
         <p>
           This salary level is typical of part-time work, entry-level positions, or roles with reduced hours.
           Many people earning in this range work in retail, hospitality, care work, or are supplementing other income.
@@ -688,7 +708,9 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
         United Kingdom.
       </p>
 
-      {lifeBracket === 'minimal' ? (
+      {dailyLifeAlt ? (
+        <>{dailyLifeAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' ? (
         <>
           <p>
             An income of {page.monthlyFormatted} per month adds up to {page.annualFormatted} over a full year. For most
@@ -925,7 +947,9 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
         </table>
       </div>
 
-      {lifeBracket === 'minimal' || lifeBracket === 'parttime' ? (
+      {budgetCommentaryAlt ? (
+        <>{budgetCommentaryAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' || lifeBracket === 'parttime' ? (
         <>
           <p>
             At {page.monthlyFormatted} per month, the budget above is theoretical rather than strictly practical for
@@ -1006,32 +1030,38 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <h2>How Inflation Affects Your {page.monthlyFormatted} Salary Over Time</h2>
 
-      <p>
-        A salary of {page.monthlyFormatted} per month does not buy the same amount of goods and services every year.
-        Inflation gradually erodes the purchasing power of any fixed income. Between 2020 and 2025, UK inflation
-        averaged around 5% per year, driven by energy prices, supply chain disruptions, and rising food costs. This
-        means that {page.monthlyFormatted} in 2020 had roughly 25% more purchasing power than the same amount today.
-        If your salary has not increased over that period, you have effectively taken a pay cut in real terms.
-      </p>
+      {inflationAlt ? (
+        <>{inflationAlt.map((p) => <p set:html={p} />)}</>
+      ) : (
+        <>
+          <p>
+            A salary of {page.monthlyFormatted} per month does not buy the same amount of goods and services every year.
+            Inflation gradually erodes the purchasing power of any fixed income. Between 2020 and 2025, UK inflation
+            averaged around 5% per year, driven by energy prices, supply chain disruptions, and rising food costs. This
+            means that {page.monthlyFormatted} in 2020 had roughly 25% more purchasing power than the same amount today.
+            If your salary has not increased over that period, you have effectively taken a pay cut in real terms.
+          </p>
 
-      <p>
-        For workers earning {page.monthlyFormatted} per month in the {TAX_YEAR} tax year, keeping pace with inflation
-        requires annual pay increases of at least 2% to 3% per year under normal economic conditions. Without those
-        increases, your take home of {page.englandFormatted.netMonthly} buys slightly less each year. Over a decade,
-        even modest inflation of 2.5% per year compounds to a total erosion of roughly 22%, meaning your salary
-        would need to rise from {page.monthlyFormatted} to approximately
-        {formatCurrency(page.monthly * Math.pow(1.025, 10))} just to maintain the same living standard.
-      </p>
+          <p>
+            For workers earning {page.monthlyFormatted} per month in the {TAX_YEAR} tax year, keeping pace with inflation
+            requires annual pay increases of at least 2% to 3% per year under normal economic conditions. Without those
+            increases, your take home of {page.englandFormatted.netMonthly} buys slightly less each year. Over a decade,
+            even modest inflation of 2.5% per year compounds to a total erosion of roughly 22%, meaning your salary
+            would need to rise from {page.monthlyFormatted} to approximately
+            {formatCurrency(page.monthly * Math.pow(1.025, 10))} just to maintain the same living standard.
+          </p>
 
-      <p>
-        This is one of the strongest arguments for proactive career management. Staying in the same role at the same
-        salary for several years almost always means losing ground financially, even if the nominal number on your
-        payslip stays the same. Requesting annual pay reviews, seeking promotions, developing new skills, and being
-        willing to change employers when appropriate are all strategies that help your income grow at or above the
-        rate of inflation. For employees on {page.monthlyFormatted} per month, even small percentage increases
-        translate to meaningful improvements in daily spending power because the base amount is one you rely on for
-        essential costs.
-      </p>
+          <p>
+            This is one of the strongest arguments for proactive career management. Staying in the same role at the same
+            salary for several years almost always means losing ground financially, even if the nominal number on your
+            payslip stays the same. Requesting annual pay reviews, seeking promotions, developing new skills, and being
+            willing to change employers when appropriate are all strategies that help your income grow at or above the
+            rate of inflation. For employees on {page.monthlyFormatted} per month, even small percentage increases
+            translate to meaningful improvements in daily spending power because the base amount is one you rely on for
+            essential costs.
+          </p>
+        </>
+      )}
 
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <!-- 11. Tax-Saving Tips -->
@@ -1199,7 +1229,9 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
         at {page.annualFormatted} per year.
       </p>
 
-      {lifeBracket === 'minimal' ? (
+      {careerAlt ? (
+        <>{careerAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' ? (
         <>
           <p>
             A monthly income of {page.monthlyFormatted} typically comes from a few hours of work each week. The most
@@ -1440,7 +1472,9 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
         about money management at {page.annualFormatted} per year.
       </p>
 
-      {lifeBracket === 'minimal' ? (
+      {financialAlt ? (
+        <>{financialAlt.map((p) => <p set:html={p} />)}</>
+      ) : lifeBracket === 'minimal' ? (
         <>
           <p>
             Financial planning on {page.monthlyFormatted} per month starts with understanding exactly where your money
@@ -1609,7 +1643,9 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
         that means in practice for your take home of {page.englandFormatted.netMonthly}.
       </p>
 
-      {regionBracket === 'low' ? (
+      {regionalAlt ? (
+        <>{regionalAlt.map((p) => <p set:html={p} />)}</>
+      ) : regionBracket === 'low' ? (
         <>
           <p>
             For someone earning {page.monthlyFormatted} per month, choosing where to live can effectively change the
