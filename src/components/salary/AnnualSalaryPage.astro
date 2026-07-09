@@ -715,7 +715,7 @@ const contextParas = (contextVariants[page.tier] ?? contextVariants['basic'])[vI
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <h2>What £{annualF} a Year Means in Practice</h2>
       {contextParas.map((para) => (
-        <p>{para}</p>
+        <p set:html={para} />
       ))}
 
       <!-- ═══════════════════════════════════════════════════════════════ -->
