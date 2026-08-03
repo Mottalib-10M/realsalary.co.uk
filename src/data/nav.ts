@@ -37,7 +37,7 @@ export const guideLinks: NavLink[] = [
 
 export const moreLinks: NavLink[] = [
   { href: '/salary/', label: 'Monthly Salaries' },
-  { href: '/hourly/', label: 'Hourly Rates' },
+  { href: '/hourly-rate/', label: 'Hourly Rate' },
   { href: '/news/', label: 'Tax News' },
   { href: '/glossary/', label: 'Glossary' },
 ];
@@ -69,21 +69,7 @@ export const footerSalaryLinks: NavLink[] = [
 ];
 
 export const footerHourlyLinks: NavLink[] = [
-  { href: '/hourly/', label: 'All Hourly Rates' },
-  { href: '/hourly/10-per-hour/', label: '£10 Per Hour' },
-  { href: '/hourly/15-per-hour/', label: '£15 Per Hour' },
-  { href: '/hourly/20-per-hour/', label: '£20 Per Hour' },
-  { href: '/hourly/25-per-hour/', label: '£25 Per Hour' },
-  { href: '/hourly/30-per-hour/', label: '£30 Per Hour' },
-];
-
-export const footerAnnualLinks: NavLink[] = [
-  { href: '/salary/25000-a-year/', label: '£25,000 A Year' },
-  { href: '/salary/30000-a-year/', label: '£30,000 A Year' },
-  { href: '/salary/35000-a-year/', label: '£35,000 A Year' },
-  { href: '/salary/40000-a-year/', label: '£40,000 A Year' },
-  { href: '/salary/50000-a-year/', label: '£50,000 A Year' },
-  { href: '/salary/60000-a-year/', label: '£60,000 A Year' },
+  { href: '/hourly-rate/', label: 'Hourly Rate Calculator' },
 ];
 
 export const footerInfoLinks: NavLink[] = [

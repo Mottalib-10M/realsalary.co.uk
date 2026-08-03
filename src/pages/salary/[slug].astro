@@ -1,34 +1,20 @@
 ---
 /**
  * Dynamic route for salary landing pages.
- * Routes monthly pages (59 x £100-£3,000) and annual pages (186 x £15K-£200K)
- * to their respective components.
+ * Routes monthly pages (59 x £100-£3,000) to MonthlySalaryPage.
  */
 import MonthlySalaryPage from '../../components/salary/MonthlySalaryPage.astro';
-import AnnualSalaryPage from '../../components/salary/AnnualSalaryPage.astro';
 import { generateMonthlySalaryPages, type MonthlySalaryPageData } from '../../data/monthly-salary-pages';
-import { generateAnnualSalaryPages, type AnnualSalaryPageData } from '../../data/annual-salary-pages';
 
 export function getStaticPaths() {
   const monthly = generateMonthlySalaryPages();
-  const annual = generateAnnualSalaryPages();
-  return [
-    ...monthly.map((p) => ({
-      params: { slug: p.slug },
-      props: { monthlyPage: p, annualPage: null as AnnualSalaryPageData | null },
-    })),
-    ...annual.map((p) => ({
-      params: { slug: p.slug },
-      props: { monthlyPage: null as MonthlySalaryPageData | null, annualPage: p },
-    })),
-  ];
+  return monthly.map((p) => ({
+    params: { slug: p.slug },
+    props: { page: p },
+  }));
 }
 
-const { monthlyPage, annualPage } = Astro.props;
+const { page } = Astro.props;
 ---
 <!DOCTYPE html>
-{annualPage ? (
-  <AnnualSalaryPage page={annualPage} />
-) : monthlyPage ? (
-  <MonthlySalaryPage page={monthlyPage} />
-) : null}
+<MonthlySalaryPage page={page} />

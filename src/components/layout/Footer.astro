@@ -1,6 +1,6 @@
 ---
 import { TAX_YEAR } from '../../data/tax-rules-2026-27';
-import { footerSalaryLinks as salaryLinks, footerHourlyLinks as hourlyLinks, footerAnnualLinks as annualLinks, footerInfoLinks as infoLinks } from '../../data/nav';
+import { footerSalaryLinks as salaryLinks, footerHourlyLinks as hourlyLinks, footerInfoLinks as infoLinks } from '../../data/nav';
 
 const topCalculators = [
   { href: '/', label: 'Salary Calculator' },
@@ -46,16 +46,6 @@ const topCalculators = [
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Salary Pages</h3>
           <ul class="mt-3 space-y-2">
             {salaryLinks.map((link) => (
-              <li>
-                <a href={link.href} class="text-sm text-gray-500 hover:text-navy-600 dark:text-gray-400 dark:hover:text-navy-300">
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <h4 class="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">Annual</h4>
-          <ul class="mt-2 space-y-2">
-            {annualLinks.map((link) => (
               <li>
                 <a href={link.href} class="text-sm text-gray-500 hover:text-navy-600 dark:text-gray-400 dark:hover:text-navy-300">
                   {link.label}
