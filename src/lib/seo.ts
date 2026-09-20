@@ -120,10 +120,10 @@ export function organizationSchema() {
       `${SITE_URL}/about/`,
     ],
     founder: {
-      '@type': 'Person',
-      name: 'Mottalib Radif',
+      '@type': 'Organization',
+      name: 'Radif Partners',
       jobTitle: 'Personal Finance and Taxation Expert',
-      description: 'Personal finance and taxation expert, MBA INSEAD graduate. Specialized in UK income tax, National Insurance, and pension contribution analysis.',
+      description: 'Personal finance and taxation expert, Publisher of calculators and practical guides graduate. Specialized in UK income tax, National Insurance, and pension contribution analysis.',
     },
     contactPoint: {
       '@type': 'ContactPoint',
@@ -136,15 +136,10 @@ export function organizationSchema() {
 export function personSchema() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Mottalib Radif',
+    '@type': 'Organization',
+    name: 'Radif Partners',
     jobTitle: 'Personal Finance and Taxation Expert',
-    description: 'Personal finance and taxation expert, MBA INSEAD graduate. Specialized in UK income tax, National Insurance, and pension contribution analysis.',
-    alumniOf: {
-      '@type': 'EducationalOrganization',
-      name: 'INSEAD',
-    },
-    image: `${SITE_URL}/team/mottalib-radif.jpg`,
+    description: 'Personal finance and taxation expert, Publisher of calculators and practical guides graduate. Specialized in UK income tax, National Insurance, and pension contribution analysis.',
     url: `${SITE_URL}/about/`,
   };
 }
@@ -165,10 +160,9 @@ export function articleSchema(options: {
     dateModified: options.dateModified ?? '2026-06-19',
     inLanguage: 'en-GB',
     author: {
-      '@type': 'Person',
-      name: 'Mottalib Radif',
+      '@type': 'Organization',
+      name: 'Radif Partners',
       url: `${SITE_URL}/about/`,
-      image: `${SITE_URL}/team/mottalib-radif.jpg`,
     },
     publisher: {
       '@type': 'Organization',
