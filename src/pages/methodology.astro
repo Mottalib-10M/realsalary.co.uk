@@ -1,0 +1,50 @@
+---
+import GuideLayout from '../layouts/GuideLayout.astro';
+---
+<GuideLayout
+  title="Methodology - How we calculate Income Tax, NI and pension | RealSalary"
+  description="The order of operations behind our UK salary calculator: personal allowance taper, the three income tax bands, National Insurance thresholds, student loan plans and auto-enrolment pension."
+  slug="/methodology/"
+>
+  <div class="max-w-3xl mx-auto">
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-primary">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-800">Methodology</span>
+    </nav>
+
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">How RealSalary calculates your UK take-home pay</h1>
+
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-3">The order in which the calculation runs</h2>
+      <p class="text-gray-700 leading-relaxed mb-3">The calculator follows the sequence a payroll system uses, because the order changes the answer. Pension contributions deducted under a net pay arrangement come off first and reduce taxable pay; deductions taken after tax do not.</p>
+      <p class="text-gray-700 leading-relaxed mb-3"><strong>Income Tax</strong> is then charged on what remains above the personal allowance, through the basic, higher and additional rate bands. The allowance itself is not fixed: above &pound;100,000 it tapers away by &pound;1 for every &pound;2 of income, which produces an effective marginal rate of 60&nbsp;% on that stretch of income. The calculator models the taper explicitly rather than applying a flat band, which is where simpler tools diverge most.</p>
+      <p class="text-gray-700 leading-relaxed mb-3"><strong>National Insurance</strong> is charged separately, on earnings between the primary threshold and the upper earnings limit at the main rate, and above the upper earnings limit at the reduced rate. It is assessed per pay period, not cumulatively, so the monthly figure is the authoritative one and the annual figure is its sum.</p>
+      <p class="text-gray-700 leading-relaxed mb-3"><strong>Student loan</strong> repayments, where selected, are a fixed percentage of income above the threshold for the relevant plan. Plans 1, 2, 4, 5 and the postgraduate loan have different thresholds and are charged in parallel where both apply.</p>
+    </section>
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-3">Scotland is calculated separately</h2>
+      <p class="text-gray-700 leading-relaxed mb-3">Income tax on earnings is devolved in Scotland, which uses its own bands and rates. National Insurance is not devolved and remains identical across the UK. Selecting Scotland changes only the income tax part of the calculation, and the calculator says so in the breakdown rather than silently applying different numbers.</p>
+    </section>
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-3">What the calculator does not do</h2>
+      <p class="text-gray-700 leading-relaxed mb-3">It does not model salary sacrifice, benefits in kind and the P11D, the Marriage Allowance, the High Income Child Benefit Charge, blind person's allowance, or tax codes other than the standard one. It assumes a single employment on a cumulative code.</p>
+      <p class="text-gray-700 leading-relaxed mb-3">It is an estimate for guidance. Your real deductions depend on the tax code HMRC has issued to your employer, and on adjustments carried over from previous years.</p>
+    </section>
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-3">When the figures are updated</h2>
+      <p class="text-gray-700 leading-relaxed mb-3">Rates and thresholds change at the start of the tax year on 6&nbsp;April, and occasionally mid-year. We update after the rates are published by HMRC, not on the strength of Budget coverage. Each page shows the date of its last revision, taken from the site's version history.</p>
+    </section>
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-3">Where the figures come from</h2>
+      <p class="text-gray-700 leading-relaxed mb-3">Every rate and threshold is taken from the following official publications:</p>
+      <ul class="list-disc pl-6 text-gray-700 space-y-2">
+        <li><a class="underline" href="https://www.gov.uk/income-tax-rates" rel="nofollow noopener" target="_blank">GOV.UK &mdash; Income Tax rates and Personal Allowances</a></li>
+        <li><a class="underline" href="https://www.gov.uk/national-insurance-rates-letters" rel="nofollow noopener" target="_blank">GOV.UK &mdash; National Insurance rates and categories</a></li>
+        <li><a class="underline" href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" rel="nofollow noopener" target="_blank">GOV.UK &mdash; Repaying your student loan</a></li>
+        <li><a class="underline" href="https://www.thepensionsregulator.gov.uk/en/employers/new-employers/im-an-employer-who-has-to-provide-a-pension/declaration-of-compliance/contributions-and-funding" rel="nofollow noopener" target="_blank">The Pensions Regulator &mdash; Automatic enrolment contributions</a></li>
+        <li><a class="underline" href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours" rel="nofollow noopener" target="_blank">Office for National Statistics &mdash; Earnings and hours worked</a></li>
+      </ul>
+    </section>
+  </div>
+</GuideLayout>
