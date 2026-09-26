@@ -4,7 +4,7 @@ import Footer from '../../components/layout/Footer.astro';
 import BaseHead from '../../components/seo/BaseHead.astro';
 import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import '../../styles/global.css';
-import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, organizationSchema, personSchema, LAST_UPDATED } from '../../lib/seo';
+import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, faqSchema, organizationSchema, personSchema, LAST_UPDATED } from '../../lib/seo';
 
 const title = 'UK Tax & Salary Guides 2026/27: PAYE, Income Tax & More';
 const description = 'Free guides to UK income tax, National Insurance, PAYE, student loans, pensions and the 2026/27 tax year. Plain English explanations with worked examples.';
@@ -15,7 +15,17 @@ const breadcrumbItems = [
   { name: 'Guides', url: canonical },
 ];
 
+const faqs = [
+  { question: "Which guide should I read first?", answer: "If you have just started a job, the PAYE guide and the tax year guide between them explain the first payslip. If you are checking a deduction, the National Insurance and income tax band guides answer most questions. If you are trying to keep more of your pay, start with salary sacrifice." },
+  { question: "Are these guides UK-wide?", answer: "They cover the whole UK and flag where Scotland differs, which is on income tax rates and bands only. National Insurance, student loan repayment and pension rules are identical across the four nations. Where a rule differs in Scotland, the guide says so in the paragraph concerned rather than in a footnote, because the difference changes the arithmetic rather than the principle." },
+  { question: "How often are they updated?", answer: "At the start of each tax year, when the new rates and thresholds are published, and at any point when a rule changes mid-year. Each guide carries the date of its last check rather than the date it was served." },
+  { question: "Who writes them?", answer: "Radif Partners, which publishes this site. The figures come from HMRC and the Scottish Government, each guide names the source of any rate it quotes, and none of it is a substitute for advice from an accountant who knows your circumstances." },
+  { question: "Do these guides replace an accountant?", answer: "No. They explain the rules that apply to everyone and the figures behind them, which is enough to check a payslip or a tax code. A return with rental income, share options or a business in it needs someone who can see the whole picture." },
+  { question: "Can I use the figures in these guides for my tax return?", answer: "As a check, yes. The rates and thresholds quoted are the published ones, so a guide is a good way to see whether a number looks plausible. The return itself depends on documents only you hold, and on choices such as filing status that a guide cannot make for you." },
+];
+
 const schemas = [
+  faqSchema(faqs),
   breadcrumbSchema(breadcrumbItems),
   organizationSchema(),
   personSchema(),
@@ -117,6 +127,18 @@ const guides = [
     </div>
 
     <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+    <section class="mt-10">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Frequently asked questions</h2>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
+        {faqs.map((faq) => (
+          <details class="group p-4">
+            <summary class="cursor-pointer font-medium text-gray-900 dark:text-white">{faq.question}</summary>
+            <p class="mt-2 leading-relaxed text-gray-600 dark:text-gray-300">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
   </main>
 
   <Footer />

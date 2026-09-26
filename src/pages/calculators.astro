@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer.astro';
 import BaseHead from '../components/seo/BaseHead.astro';
 import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
 import '../styles/global.css';
-import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, organizationSchema, personSchema, LAST_UPDATED } from '../lib/seo';
+import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, faqSchema, organizationSchema, personSchema, LAST_UPDATED } from '../lib/seo';
 
 const title = 'All UK Salary & Tax Calculators 2026/27 | Free Online Tools';
 const description = 'Free UK salary, tax, NI, pension, student loan and bonus calculators for the 2026/27 tax year. HMRC-verified rates, instant results, no sign-up required.';
@@ -15,7 +15,17 @@ const breadcrumbItems = [
   { name: 'All Calculators', url: canonical },
 ];
 
+const faqs = [
+  { question: "Which calculator should I use?", answer: "Start with the take-home pay calculator if you know your annual salary and want the monthly figure. Use the reverse calculator if you know the net pay you need and want the gross to ask for. The others answer narrower questions: bonuses, two jobs, pensions, student loans and employer cost." },
+  { question: "Are these calculators up to date for 2026/27?", answer: "Yes. The rates, thresholds and bands come from the published HMRC figures for the 2026/27 tax year, including the Scottish bands, and each page carries the date of its last check rather than the date it was served. When a threshold moves mid-year, the page is updated and the date with it." },
+  { question: "Do they work for Scotland?", answer: "Yes. Income tax is devolved and Scotland has six bands instead of three, so every calculator here applies the Scottish rates when you select Scotland, and the dedicated Scottish calculator shows the difference against the rest of the UK side by side." },
+  { question: "Do the calculators store what I enter?", answer: "No. The calculation runs in your browser and nothing you type is sent to a server or stored. That is also why no result is saved between visits: there is no account and nothing to sign up for. Audience measurement records the page visited, never the figures you type into a field." },
+  { question: "How accurate are the results?", answer: "They are exact for the standard case: one job, the standard tax code, no benefits in kind. A non-standard code, a company car, salary sacrifice taken outside payroll or a mid-year job change will shift the figure, and only a payslip settles it." },
+  { question: "Why does my payslip differ from the calculator?", answer: "Usually the tax code, a student loan plan the calculator was not told about, or a pension contribution deducted after tax rather than before. Comparing the gross, the taxable pay and the code on the payslip against the inputs here finds the difference in a minute." },
+];
+
 const schemas = [
+  faqSchema(faqs),
   breadcrumbSchema(breadcrumbItems),
   organizationSchema(),
   personSchema(),
@@ -113,6 +123,18 @@ const calculators = [
     </div>
 
     <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+    <section class="mt-10">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Frequently asked questions</h2>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
+        {faqs.map((faq) => (
+          <details class="group p-4">
+            <summary class="cursor-pointer font-medium text-gray-900 dark:text-white">{faq.question}</summary>
+            <p class="mt-2 leading-relaxed text-gray-600 dark:text-gray-300">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
   </main>
 
   <Footer />

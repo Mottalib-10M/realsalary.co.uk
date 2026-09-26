@@ -4,7 +4,7 @@ import Footer from '../components/layout/Footer.astro';
 import BaseHead from '../components/seo/BaseHead.astro';
 import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
 import '../styles/global.css';
-import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, organizationSchema, personSchema, LAST_UPDATED } from '../lib/seo';
+import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, faqSchema, organizationSchema, personSchema, LAST_UPDATED } from '../lib/seo';
 import { TAX_YEAR } from '../data/tax-rules-2026-27';
 
 const title = `UK Tax News ${TAX_YEAR}: Rate Changes, Thresholds & Updates`;
@@ -16,7 +16,17 @@ const breadcrumbItems = [
   { name: 'News', url: canonical },
 ];
 
+const faqs = [
+  { question: "What changed for the 2026/27 tax year?", answer: "The personal allowance and the higher-rate threshold remain frozen, which raises the effective burden as wages rise, employer National Insurance stays at the rate and threshold set in April 2025, and the Scottish bands continue to diverge further from the rest of the UK." },
+  { question: "Why do frozen thresholds increase my tax?", answer: "Because wages rise while the thresholds do not, so a pay rise that only matches inflation can still push part of your income into a higher band. The effect is often called fiscal drag, and it raises revenue without any rate changing." },
+  { question: "When are new rates announced?", answer: "Usually at the autumn Budget, with the figures taking effect from 6 April. Scotland sets its own income tax rates in a separate Budget, generally in December, which is why the Scottish figures sometimes arrive after the UK-wide ones. Payroll software is updated in March, ready for the new year." },
+  { question: "Do these changes affect my payslip automatically?", answer: "The rates do, through payroll. Your tax code does not always follow: a change of benefit, a new job or an underpayment from an earlier year all need HMRC to issue a new code, and the first payslip of the tax year is the one to check." },
+  { question: "Where can I verify these figures?", answer: "In the HMRC rates and thresholds guidance for employers and, for Scotland, the Scottish Government's income tax policy page. Every figure quoted here is checked against those sources, and the date of the last check appears at the top of the page." },
+  { question: "How often is this page updated?", answer: "Whenever a rate, threshold or allowance changes, and at the start of each tax year when the new figures take effect. Nothing is rewritten simply to refresh a date: the date shown is the date of the last genuine check." },
+];
+
 const schemas = [
+  faqSchema(faqs),
   breadcrumbSchema(breadcrumbItems),
   articleSchema({ headline: title, description, url: canonical }),
   organizationSchema(),
@@ -158,6 +168,18 @@ const items: NewsItem[] = [
     </div>
 
     <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+    <section class="mt-10">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Frequently asked questions</h2>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
+        {faqs.map((faq) => (
+          <details class="group p-4">
+            <summary class="cursor-pointer font-medium text-gray-900 dark:text-white">{faq.question}</summary>
+            <p class="mt-2 leading-relaxed text-gray-600 dark:text-gray-300">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
   </main>
 
   <Footer />

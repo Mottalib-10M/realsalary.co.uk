@@ -4,15 +4,17 @@ import Footer from '../components/layout/Footer.astro';
 import BaseHead from '../components/seo/BaseHead.astro';
 import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
 import '../styles/global.css';
-import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, organizationSchema, personSchema, LAST_UPDATED } from '../lib/seo';
+import { buildTitle, buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE_HEIGHT, breadcrumbSchema, articleSchema, faqSchema, organizationSchema, personSchema, LAST_UPDATED } from '../lib/seo';
 
 interface Props {
   title: string;
   description: string;
   slug: string;
+  /** §7 : trois à cinq questions propres au guide, affichées et balisées. */
+  faqs?: { question: string; answer: string }[];
 }
 
-const { title, description, slug } = Astro.props;
+const { title, description, slug, faqs = [] } = Astro.props;
 const pageTitle = buildTitle(title);
 const canonical = buildCanonical(slug);
 const isGuide = slug.startsWith('/guides/');
@@ -31,6 +33,10 @@ const schemas: object[] = [
 
 if (isGuide) {
   schemas.push(articleSchema({ headline: title, description, url: canonical }));
+}
+
+if (faqs.length > 0) {
+  schemas.push(faqSchema(faqs));
 }
 ---
 
@@ -81,11 +87,25 @@ if (isGuide) {
       <slot />
     </article>
 
+    {faqs.length > 0 && (
+      <section class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Frequently asked questions</h2>
+        <div class="divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
+          {faqs.map((faq) => (
+            <details class="group p-4">
+              <summary class="cursor-pointer font-medium text-gray-900 dark:text-white">{faq.question}</summary>
+              <p class="mt-2 leading-relaxed text-gray-600 dark:text-gray-300">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
     {isGuide && (
       <div class="mt-10 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
         <div class="text-sm">
           <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Radif Partners</a></p>
-          <p class="text-gray-500 dark:text-gray-400">Éditeur de calculateurs et de guides pratiques &middot; Finance Enthusiast</p>
+          <p class="text-gray-500 dark:text-gray-400">Publisher of UK salary calculators and practical tax guides</p>
         </div>
       </div>
     )}

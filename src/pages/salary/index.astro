@@ -18,6 +18,7 @@ import {
   OG_IMAGE_WIDTH,
   OG_IMAGE_HEIGHT,
   breadcrumbSchema,
+  faqSchema,
   organizationSchema,
   personSchema,
   LAST_UPDATED,
@@ -36,7 +37,17 @@ const breadcrumbItems = [
   { name: 'Salary Pages', url: canonical },
 ];
 
+const faqs = [
+  { question: "How are these salary pages calculated?", answer: "Each one applies the 2026/27 income tax bands, National Insurance thresholds and the standard tax code to the salary in its title, then shows the monthly, weekly and hourly equivalents. The same engine drives the calculators, so the figures agree across the site." },
+  { question: "Do the pages account for Scotland?", answer: "Yes. Every salary page shows the England, Wales and Northern Ireland figure alongside the Scottish one, because the six Scottish bands produce a different take-home at almost every salary above the personal allowance. National Insurance is identical across the UK, so only the tax line moves." },
+  { question: "Do they include student loan or pension deductions?", answer: "No, they show the baseline: income tax and National Insurance on the standard tax code. A student loan repayment or a pension contribution lowers the figure, and the dedicated calculators let you add both to see the effect. A five per cent pension contribution typically changes the monthly figure by more than the whole Scottish divergence does." },
+  { question: "Which salary page should I look at?", answer: "The one matching your gross annual or monthly salary. If your figure sits between two pages, the calculator gives the exact answer, and the two neighbouring pages bracket it closely enough for a quick sanity check. Salaries are listed by annual figure and by monthly figure, so either entry point works." },
+  { question: "Why does my payslip show a different amount?", answer: "Usually a non-standard tax code, a student loan plan, a pension contribution taken after tax, or a benefit in kind such as a company car. Comparing the taxable pay line on the payslip with the gross used here finds the difference quickly." },
+  { question: "How often are these figures updated?", answer: "At the start of each tax year, when the new bands and thresholds take effect, and whenever a threshold changes mid-year. Each page carries the date of its last check rather than the date it was served. A frozen threshold still counts as a check: the figure is verified even when it has not moved." },
+];
+
 const schemas = [
+  faqSchema(faqs),
   breadcrumbSchema(breadcrumbItems),
   organizationSchema(),
   personSchema(),
@@ -138,11 +149,23 @@ const groups = [
     <div class="mt-8 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
       <div class="text-sm">
         <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Radif Partners</a></p>
-        <p class="text-gray-500 dark:text-gray-400">Éditeur de calculateurs et de guides pratiques &middot; Finance Enthusiast</p>
+        <p class="text-gray-500 dark:text-gray-400">Publisher of UK salary calculators and practical tax guides</p>
       </div>
     </div>
 
     <p class="mt-4 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+    <section class="mt-10">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Frequently asked questions</h2>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
+        {faqs.map((faq) => (
+          <details class="group p-4">
+            <summary class="cursor-pointer font-medium text-gray-900 dark:text-white">{faq.question}</summary>
+            <p class="mt-2 leading-relaxed text-gray-600 dark:text-gray-300">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
   </main>
 
   <Footer />

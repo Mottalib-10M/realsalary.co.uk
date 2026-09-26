@@ -26,6 +26,7 @@ import {
   LAST_UPDATED,
 } from '../../lib/seo';
 import { formatCurrency, formatPercent } from '../../lib/format';
+import { etofferFaq } from '../../lib/faq-bornes';
 import {
   getBandContext,
   getCareerDescription,
@@ -161,6 +162,16 @@ const bandContext = getBandContext(page.monthly, page.england);
 const careerDescription = getCareerDescription(page.monthly);
 const taxTips = getTaxTips(page.monthly, page.england);
 const uniqueFaqs = buildUniqueFaqs(page.monthly, page.england);
+
+// §7 : les réponses tenaient en 17 à 39 mots. Les faits ci-dessous, tirés de
+// cette page, les portent dans les bornes sans remplissage.
+const faitsFaq = [
+  `The figures use the ${TAX_YEAR} tax year, a Personal Allowance of ${formatCurrency(PERSONAL_ALLOWANCE)} and a 37.5-hour week.`,
+  `On ${page.annualFormatted} gross a year, ${page.englandFormatted.netAnnual} reaches your account, or ${page.englandFormatted.netMonthly} a month.`,
+  `National Insurance sits on top of income tax and takes ${page.englandFormatted.nationalInsurance} a year at this salary.`,
+  `They assume the standard tax code, with no student loan repayment and no pre-tax pension contribution.`,
+  `A pension contribution by salary sacrifice lowers taxable pay, so it cuts both the income tax and the National Insurance due.`,
+];
 const raiseSimulation = getRaiseSimulation(page.monthly, page.england);
 const budgetBreakdownData = getBudgetBreakdown(monthlyNet);
 const uniqueComparisons = getUniqueComparisons(page.monthly, page.england);
@@ -175,7 +186,11 @@ const budgetCommentaryAlt = getBudgetCommentaryAlt(page.monthly, page.england);
 const salaryPositionAlt = getSalaryPositionAlt(page.monthly, page.england);
 
 // FAQ structured data includes both standard and unique FAQs
-const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
+// §7 : le plafond de huit questions vaut pour la page entière, pas pour chaque
+// liste : les deux cumulées en affichaient neuf.
+const faqsEtoffees = etofferFaq(faqs, faitsFaq, { plafond: 4 });
+const uniqueFaqsEtoffees = etofferFaq(uniqueFaqs, faitsFaq, { plafond: 8 - faqsEtoffees.length });
+const faqStructuredData = faqSchema([...faqsEtoffees, ...uniqueFaqsEtoffees]);
 ---
 
 <html lang="en-GB">
@@ -1829,7 +1844,7 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
       <!-- 13. FAQs -->
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <h2>Frequently Asked Questions</h2>
-      {faqs.map((faq) => (
+      {faqsEtoffees.map((faq) => (
         <details class="group border-b border-gray-200 py-4 dark:border-gray-700">
           <summary class="cursor-pointer list-none font-semibold text-gray-900 dark:text-white [&::-webkit-details-marker]:hidden">
             <span class="flex items-center justify-between">
@@ -1840,7 +1855,7 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
           <p class="mt-3 text-gray-600 dark:text-gray-300">{faq.answer}</p>
         </details>
       ))}
-      {uniqueFaqs.map((faq) => (
+      {uniqueFaqsEtoffees.map((faq) => (
         <details class="group border-b border-gray-200 py-4 dark:border-gray-700">
           <summary class="cursor-pointer list-none font-semibold text-gray-900 dark:text-white [&::-webkit-details-marker]:hidden">
             <span class="flex items-center justify-between">
@@ -1908,7 +1923,7 @@ const faqStructuredData = faqSchema([...faqs, ...uniqueFaqs]);
     <div class="mt-8 flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 px-5 py-4">
       <div class="text-sm">
         <p class="font-semibold text-gray-900 dark:text-white">Written by <a href="/about/" class="text-navy-600 hover:underline dark:text-navy-400">Radif Partners</a></p>
-        <p class="text-gray-500 dark:text-gray-400">Éditeur de calculateurs et de guides pratiques &middot; Finance Enthusiast</p>
+        <p class="text-gray-500 dark:text-gray-400">Publisher of UK salary calculators and practical tax guides</p>
       </div>
     </div>
 
