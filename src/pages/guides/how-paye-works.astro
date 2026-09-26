@@ -1,9 +1,11 @@
 ---
 import GuideLayout from '../../layouts/GuideLayout.astro';
+const resumeCitable = "PAYE collects income tax and National Insurance as you are paid rather than at the end of the year. Your employer applies the tax code HMRC has issued, works out the tax due on your income so far this year, and deducts the difference from the current payment. That cumulative method is why a single unusual month, a bonus or a first payslip in a new job, can look strangely taxed and then correct itself. Three documents matter: the P45 when you leave a job, the P60 summarising the year by 31 May, and the P11D listing benefits in kind. The tax code on your payslip is the first thing to check when a figure looks wrong, because an emergency or BR code taxes everything from the first pound.";
+
 ---
 
 <GuideLayout
-  title="How PAYE Works in the UK 2026/27 - Tax Deductions Explained"
+  title="PAYE in the UK 2026/27: every payslip deduction explained"
   description="Learn how PAYE deducts income tax and National Insurance from your UK salary. Tax codes, payslip breakdown and how to check you are paying the correct amount."
   slug="/guides/how-paye-works"
   faqs={[
@@ -14,6 +16,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
   ]}
 >
   <h1>How PAYE Works in the UK</h1>
+    <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+      {resumeCitable}
+    </p>
 
   <p>
     PAYE (Pay As You Earn) is the system HMRC uses to collect income tax and National Insurance from employees' wages before they receive their pay. Rather than paying a large tax bill once a year, PAYE spreads your tax liability across every pay period, making it manageable and largely invisible. If you're an employee in the UK, PAYE is the reason your payslip shows deductions and why your bank balance doesn't match your contract salary.

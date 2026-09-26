@@ -1,9 +1,11 @@
 ---
 import GuideLayout from '../../layouts/GuideLayout.astro';
+const resumeCitable = "National Insurance differs from income tax in three ways that matter to a payslip. It falls on earnings from work rather than on total income, so pensions, savings interest, dividends and rent escape it entirely. It has its own thresholds and an unusual shape: employees pay 8 per cent between \u00a312,570 and \u00a350,270 and only 2 per cent above, so the marginal rate falls as income rises. And it buys entitlement rather than simply funding the state, since a qualifying year counts towards the 35 needed for the full new state pension. Employers pay a separate 15 per cent on earnings above \u00a35,000 with no upper limit, which is why the cost of a hire sits well above the salary agreed. Contributions stop at state pension age for the employee, though the employer keeps paying its share on the same earnings.";
+
 ---
 
 <GuideLayout
-  title="National Insurance Explained UK - What NI Is and How It Works"
+  title="National Insurance explained: rates, thresholds and record"
   description="Complete guide to UK National Insurance. What NI funds, how contributions are calculated, employee vs employer rates and how NI affects your State Pension."
   slug="/guides/national-insurance-explained"
   faqs={[
@@ -14,6 +16,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
   ]}
 >
   <h1>National Insurance Explained</h1>
+    <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+      {resumeCitable}
+    </p>
 
   <p>
     National Insurance (NI) is one of the UK's most misunderstood taxes. Despite its name suggesting an insurance scheme, it functions as a payroll tax, automatically deducted from your pay alongside income tax. This guide explains what NI is, why you pay it, how it's calculated, and what you get in return.

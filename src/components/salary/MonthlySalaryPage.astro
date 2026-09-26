@@ -188,6 +188,20 @@ const salaryPositionAlt = getSalaryPositionAlt(page.monthly, page.england);
 // FAQ structured data includes both standard and unique FAQs
 // §7 : le plafond de huit questions vaut pour la page entière, pas pour chaque
 // liste : les deux cumulées en affichaient neuf.
+// §21 : un paragraphe qui se suffit à lui-même, composé des chiffres de cette
+// page, servi haut pour être cité.
+const resumeCitable = [
+  `A salary of ${page.monthlyFormatted} a month is ${page.annualFormatted} a year gross, and in England it leaves`,
+  `${page.englandFormatted.netMonthly} a month in hand, or ${page.englandFormatted.netAnnual} over the year,`,
+  `once income tax of ${page.englandFormatted.incomeTax} and National Insurance of ${page.englandFormatted.nationalInsurance} have come off.`,
+  `That is an effective rate of ${page.englandFormatted.effectiveTaxRate}, well below the marginal rate that applies to the last pound earned,`,
+  `because the first ${formatCurrency(PERSONAL_ALLOWANCE)} is covered by the personal allowance.`,
+  `On a 37.5-hour week the gross works out at ${page.hourlyGross} an hour.`,
+  `A Scottish taxpayer on the same salary takes home ${page.scotlandFormatted.netAnnual}, since Scotland applies six bands rather than three.`,
+  `The figures assume the standard tax code, with no student loan repayment, no pension contribution and no benefits in kind;`,
+  `each of those lowers the net figure, and a pension contribution by salary sacrifice lowers the tax and the National Insurance with it.`,
+].join(' ');
+
 const faqsEtoffees = etofferFaq(faqs, faitsFaq, { plafond: 4 });
 const uniqueFaqsEtoffees = etofferFaq(uniqueFaqs, faitsFaq, { plafond: 8 - faqsEtoffees.length });
 const faqStructuredData = faqSchema([...faqsEtoffees, ...uniqueFaqsEtoffees]);
@@ -235,6 +249,10 @@ const faqStructuredData = faqSchema([...faqsEtoffees, ...uniqueFaqsEtoffees]);
   <main id="main-content" class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
     <Breadcrumbs items={breadcrumbItems} />
     <article class="prose prose-gray dark:prose-invert max-w-none">
+
+      <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+        {resumeCitable}
+      </p>
 
       <!-- ═══════════════════════════════════════════════════════════════ -->
       <!-- 1. H1 + Intro -->

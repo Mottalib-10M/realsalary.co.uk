@@ -1,5 +1,7 @@
 ---
 import GuideLayout from '../../layouts/GuideLayout.astro';
+const resumeCitable = "A UK student loan behaves like a tax rather than a conventional debt. You repay nine per cent of everything above your plan threshold, or six per cent above the postgraduate threshold, and the deduction comes out through payroll on each pay period rather than being calculated on the year. That timing matters: a month containing a bonus triggers a larger repayment with no averaging afterwards and no refund if the annual total falls short. Which plan applies depends on where and when you studied, and the thresholds differ by thousands of pounds between Plans 1, 2, 4 and 5. Because most borrowers never clear the balance before write-off, at 25, 30 or 40 years depending on the plan, paying extra usually buys nothing at all.";
+
 ---
 
 <GuideLayout
@@ -14,6 +16,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
   ]}
 >
   <h1>UK Student Loan Repayment Guide</h1>
+    <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+      {resumeCitable}
+    </p>
 
   <p>
     UK student loans are unlike any other form of debt. They're collected through your payslip like a tax, they're written off after a set period regardless of the balance, and they don't appear on your credit report. Understanding how your student loan works can save you money and help you make better financial decisions, particularly around whether to make voluntary overpayments.

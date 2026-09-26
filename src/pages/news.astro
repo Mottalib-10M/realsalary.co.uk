@@ -8,7 +8,7 @@ import { buildCanonical, SITE_NAME, SITE_URL, OG_IMAGE, OG_IMAGE_WIDTH, OG_IMAGE
 import { TAX_YEAR } from '../data/tax-rules-2026-27';
 
 const title = `UK Tax News ${TAX_YEAR}: Rate Changes, Thresholds & Updates`;
-const description = `All important UK tax and salary changes for the ${TAX_YEAR} tax year. Income tax bands, NI rates, student loan thresholds and pension limits updated.`;
+const description = `Every UK tax and salary change that reaches a payslip in ${TAX_YEAR}: income tax bands, NI rates, student loan thresholds, pension limits and the key dates.`;
 const canonical = buildCanonical('/news/');
 
 const breadcrumbItems = [
@@ -101,6 +101,10 @@ const items: NewsItem[] = [
     content: 'The Marriage Allowance transfer stays at £1,260 (10% of the Personal Allowance), saving up to £252 per year. Available where one partner earns under £12,570 and the other is a basic rate taxpayer.',
   },
 ];
+const resumeCitable = "This page tracks the UK tax and salary changes that actually reach a payslip. For 2026/27 the personal allowance and the higher-rate threshold remain frozen, which raises the effective burden as wages rise without any rate changing, an effect usually called fiscal drag. Employer National Insurance stays at the rate and threshold introduced in April 2025, and the Scottish bands continue to diverge from the rest of the UK. Rates are generally announced at the autumn Budget and take effect on 6 April, with Scotland setting its own income tax in a separate Budget in December. Every figure here is checked against the HMRC guidance for employers, and the date of the last check appears at the top of the page. A change in the published rates does not always reach your payslip on its own: a new tax code has to be issued for benefits or corrections.";
+
+const corpsRedige = [{"titre": "What frozen thresholds actually cost you", "paragraphes": ["Freezing a threshold is a tax rise that never has to be announced. When the personal allowance and the higher-rate threshold stay at £12,570 and £50,270 while wages rise, more of each salary falls into the taxed bands and some salaries cross into the higher rate for the first time. The effect compounds: a worker whose pay rises with inflation for several years ends up paying a higher effective rate on the same real income.", "The scale is easy to underestimate. On a £45,000 salary rising three per cent a year, the extra tax from a frozen higher-rate threshold reaches several hundred pounds within a few years, and the worker crosses into the 40 per cent band without ever having received a real pay rise. That is why the freeze has raised more revenue than most of the rate changes announced alongside it."]}, {"titre": "The dates that matter in a tax year", "paragraphes": ["The tax year runs from 6 April to 5 April. Rates announced at the autumn Budget take effect on that April date, and payroll software is updated in March ready for it. Scotland sets its own income tax in a separate Budget, generally in December, which is why the Scottish figures sometimes arrive after the UK-wide ones and occasionally change late.", "For anyone filing a return, 31 October is the deadline for a paper self-assessment and 31 January for an online one, with the balancing payment due on the same day and the second payment on account on 31 July. Missing the January date brings an automatic penalty regardless of whether tax is owed, which is the most common avoidable cost in the whole calendar.", "Two other dates are worth noting. P60s must reach employees by 31 May, and P11Ds covering benefits in kind by 6 July. Both are the documents that let you check a year's tax rather than assume it, and both are worth keeping for at least three years in case HMRC opens an enquiry."]}, {"titre": "Changes worth watching over the next year", "paragraphes": ["Three things move the figures on this site. The first is the Budget, where rates and thresholds are set, usually in the autumn for the following April. The second is the Scottish Budget, which sets Scottish income tax separately and has widened the gap with the rest of the UK in each of the last several years. The third is the annual uprating of the student loan thresholds, which is announced quietly and changes the repayment for millions of people.", "Two slower changes matter as much. The National Insurance rate and threshold for employers, altered sharply in April 2025, continue to shape hiring costs and therefore pay offers. And the repeated freezing of the personal allowance and the higher-rate threshold continues to move workers into higher bands without any headline rate changing, which is the largest single tax change of the decade by revenue."]}, {"titre": "How we verify what appears on this page", "paragraphes": ["Every rate quoted here is checked against the HMRC rates and thresholds guidance for employers, or against the Scottish Government's published income tax policy for the Scottish bands. Where a figure comes from a Budget announcement that has not yet reached the guidance, the page says so rather than presenting it as settled.", "Pages carry the date of their last genuine check, not the date they were served. A threshold that has been frozen is still checked each year: the figure is verified even when it has not moved, and that is what the date records. When a rate changes mid-year, the affected calculators are updated first and the news page follows."]}, {"titre": "Scotland: a widening divergence", "paragraphes": ["Scotland has added bands rather than simply changing rates, which is why the comparison with the rest of the UK is no longer a single number. The starter rate of 19 per cent applies to a narrow slice just above the personal allowance, the intermediate rate sits between basic and higher, and the advanced and top rates apply well above the point where the rest of the UK reaches 45 per cent.", "The practical effect is that a Scottish taxpayer on a modest salary pays marginally less than an English one, while a higher earner pays noticeably more, and the crossover has drifted upwards over recent years as thresholds moved. Anyone comparing job offers across the border should compare take-home pay for the specific salary rather than assuming the direction of the difference."]}, {"titre": "Where these figures come from", "paragraphes": ["Rates, thresholds and allowances come from the HMRC rates and thresholds guidance for employers and from the Scottish Government's income tax policy. Student loan thresholds come from the Student Loans Company's annual announcement, and pension figures from the auto-enrolment thresholds published each year. Each of those is a primary source rather than a press summary, which is why the figures here occasionally differ from early reporting of a Budget."]}, {"titre": "What to do when a rate changes", "paragraphes": ["Most changes reach a payslip automatically through payroll software, updated each March for the April start. What does not update automatically is your tax code: a new benefit in kind, a corrected underpayment or a change in circumstances all require HMRC to issue a new code, and until it does the old one keeps being applied.", "The practical routine is short. In April, check that the personal allowance in your code matches the published figure. After any change of job, benefit or pay, check the code again a month later. And if a code looks wrong, correct it through your personal tax account rather than waiting for the year-end reconciliation, which can leave the error running for months."]}, {"titre": "Why this page exists", "paragraphes": ["Tax changes are reported when they are announced and forgotten when they take effect, which is six months later and on a different set of numbers. This page tracks what actually applies in the current year, with the figure, the date it started and the source it comes from, so that a payslip can be checked against something firmer than a memory of a Budget headline.", "It covers only what reaches an ordinary payslip or self-assessment return: income tax, National Insurance, student loans, pensions and the thresholds around them. Corporation tax, VAT and the rest sit outside it, not because they do not matter but because they do not explain why a salary produced less than expected this month. Where a change affects both, such as the employer National Insurance rise of April 2025, it is covered here for the effect it has on pay offers rather than on company accounts."]}];
+
 ---
 
 <!DOCTYPE html>
@@ -147,6 +151,9 @@ const items: NewsItem[] = [
         All important UK tax and salary changes for the {TAX_YEAR} tax year, with links to affected calculators.
       </p>
     </header>
+    <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+      {resumeCitable}
+    </p>
 
     <div class="space-y-8">
       {items.map((item) => (
@@ -178,6 +185,31 @@ const items: NewsItem[] = [
           </details>
         ))}
       </div>
+    </section>
+
+
+    <section class="mt-10">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Sources</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+        Every rate and threshold used on this site comes from the following official publications:
+      </p>
+      <ul class="space-y-1 text-sm">
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" rel="noopener">HMRC, rates and thresholds for employers 2026/27</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/income-tax-rates" rel="noopener">GOV.UK, income tax rates and personal allowances</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/national-insurance-rates-letters" rel="noopener">GOV.UK, National Insurance rates and categories</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" rel="noopener">GOV.UK, student loan repayment thresholds</a></li>
+      </ul>
+    </section>
+
+    <section class="mt-12 space-y-8">
+      {corpsRedige.map((bloc) => (
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{bloc.titre}</h2>
+          {bloc.paragraphes.map((p) => (
+            <p class="mb-4 leading-relaxed text-gray-700 dark:text-gray-300">{p}</p>
+          ))}
+        </div>
+      ))}
     </section>
 
   </main>

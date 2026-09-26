@@ -278,6 +278,8 @@ const schemas = [
     })),
   },
 ];
+const resumeCitable = "This glossary defines the terms that appear on a UK payslip, in a tax code notice and in a loan offer, in plain language and with the figures that make them concrete. Four do most of the work. Gross pay is what the contract says; taxable pay is gross minus pre-tax deductions such as salary sacrifice; net pay is what reaches the account. The personal allowance is the slice taxed at nothing, \u00a312,570 for 2026/27, delivered through your tax code rather than claimed. The marginal rate is what the next pound is taxed at, while the effective rate averages the whole income, which is why a higher-rate taxpayer rarely pays anything close to 40 per cent overall. Each entry links to the calculator or guide that puts the term to work.";
+
 ---
 
 <!DOCTYPE html>
@@ -324,6 +326,9 @@ const schemas = [
         Every key UK tax, salary and payroll term explained in plain English, with links to the relevant calculators.
       </p>
     </header>
+    <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+      {resumeCitable}
+    </p>
 
     <nav class="mb-8 flex flex-wrap gap-2" aria-label="Alphabetical navigation">
       {[...new Set(entries.map(e => e.term[0].toUpperCase()))].sort().map((letter) => (
@@ -360,6 +365,20 @@ const schemas = [
     </div>
 
     <p class="mt-8 text-sm text-gray-400 dark:text-gray-500">{LAST_UPDATED}</p>
+
+    <section class="mt-10">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Sources</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+        Every rate and threshold on this page comes from the following official publications:
+      </p>
+      <ul class="space-y-1 text-sm">
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" rel="noopener">HMRC, rates and thresholds for employers 2026/27</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/income-tax-rates" rel="noopener">GOV.UK, income tax rates and personal allowances</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/national-insurance-rates-letters" rel="noopener">GOV.UK, National Insurance rates and categories</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" rel="noopener">GOV.UK, student loan repayment thresholds</a></li>
+      </ul>
+    </section>
+
   </main>
 
   <Footer />

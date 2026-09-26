@@ -1,5 +1,7 @@
 ---
 import GuideLayout from '../../layouts/GuideLayout.astro';
+const resumeCitable = "UK income tax is charged in bands, and each rate applies only to the slice of income inside its band. For 2026/27 in England, Wales and Northern Ireland the first \u00a312,570 is untaxed, income to \u00a350,270 is taxed at 20 per cent, income to \u00a3125,140 at 40 per cent, and anything above at 45 per cent. Scotland applies six bands from 19 to 48 per cent on earned income. Crossing into a higher band therefore never leaves you worse off overall: only the pounds above the threshold carry the higher rate. The exception is the taper between \u00a3100,000 and \u00a3125,140, where the personal allowance is withdrawn at \u00a31 for every \u00a32 earned and the effective marginal rate reaches 60 per cent. Several thresholds have been frozen rather than raised with inflation, which quietly moves more people into higher bands each year without any rate changing.";
+
 ---
 
 <GuideLayout
@@ -14,6 +16,9 @@ import GuideLayout from '../../layouts/GuideLayout.astro';
   ]}
 >
   <h1>UK Income Tax Bands Explained (2026/27)</h1>
+    <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+      {resumeCitable}
+    </p>
 
   <p>
     The UK income tax system is progressive, meaning different portions of your income are taxed at different rates. Understanding how tax bands work is essential for financial planning, salary negotiations, and making the most of tax relief opportunities. This guide explains the current bands, how they interact, and the key thresholds that affect your tax bill.

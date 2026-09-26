@@ -69,6 +69,10 @@ const guides = [
     category: 'Pensions',
   },
 ];
+const resumeCitable = "These guides cover the UK pay and tax system in the order most people meet it: how a payslip is built and why the net figure is so much lower than the salary, how to read and correct a tax code, what the income tax bands actually do, how National Insurance differs from income tax, and how student loans and pension contributions change the picture. Each rate quoted comes from the published HMRC figures or, for Scotland, from the Scottish Government, and every page carries the date of its last genuine check rather than the date it was served. Where a rule differs in Scotland, the guide says so in the paragraph concerned, because the difference changes the arithmetic rather than the principle. None of it substitutes for an accountant who can see your whole position, particularly where rental income or share options are involved.";
+
+const corpsRedige = [{"titre": "Where to start, depending on your question", "paragraphes": ["If you have just started a job and the first payslip looks wrong, read the PAYE guide and then check your tax code: between them they explain nine out of ten surprises. If you are trying to work out why a pay rise left less in hand than expected, the income tax bands guide covers the marginal rate and the two thresholds where the effect is sharpest.", "If you are weighing up a pension contribution, the salary sacrifice guide is the one that matters, because the choice of mechanism changes the saving by a third. And if you are self-employed or about to be, start with the National Insurance guide, which explains why the contribution classes differ and what each one buys."]}];
+
 ---
 
 <!DOCTYPE html>
@@ -115,6 +119,9 @@ const guides = [
         Plain English guides to UK taxes, payroll and personal finance, with worked examples and links to our free calculators.
       </p>
     </header>
+    <p class="mt-6 rounded-lg border-l-4 border-navy-600 bg-gray-50 p-4 text-base leading-relaxed text-gray-800 dark:border-navy-400 dark:bg-gray-800/40 dark:text-gray-200">
+      {resumeCitable}
+    </p>
 
     <div class="grid gap-4 sm:grid-cols-2">
       {guides.map((guide) => (
@@ -137,6 +144,31 @@ const guides = [
           </details>
         ))}
       </div>
+    </section>
+
+
+    <section class="mt-10">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Sources</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+        Every rate and threshold used on this site comes from the following official publications:
+      </p>
+      <ul class="space-y-1 text-sm">
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" rel="noopener">HMRC, rates and thresholds for employers 2026/27</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/income-tax-rates" rel="noopener">GOV.UK, income tax rates and personal allowances</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/national-insurance-rates-letters" rel="noopener">GOV.UK, National Insurance rates and categories</a></li>
+        <li><a class="text-navy-600 underline hover:no-underline dark:text-navy-400" href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" rel="noopener">GOV.UK, student loan repayment thresholds</a></li>
+      </ul>
+    </section>
+
+    <section class="mt-12 space-y-8">
+      {corpsRedige.map((bloc) => (
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{bloc.titre}</h2>
+          {bloc.paragraphes.map((p) => (
+            <p class="mb-4 leading-relaxed text-gray-700 dark:text-gray-300">{p}</p>
+          ))}
+        </div>
+      ))}
     </section>
 
   </main>
