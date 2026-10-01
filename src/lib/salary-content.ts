@@ -145,7 +145,7 @@ export function getCareerDescription(amount: number): string {
   const diffFromMedian = annual - UK_MEDIAN_SALARY;
   const diffDirection = diffFromMedian >= 0 ? `${formatCurrency(diffFromMedian)} above` : `${formatCurrency(Math.abs(diffFromMedian))} below`;
   const roleLevel = annual < 20000 ? 'entry-level skills and basic qualifications' : annual < 30000 ? 'demonstrated competence and a year or more of experience' : annual < 40000 ? 'specialist skills or supervisory responsibilities' : 'significant expertise or management experience';
-  const nlwComparison = Number(hourlyEquiv) > 12.21 ? `above the National Living Wage of £12.21` : `close to the National Living Wage`;
+  const nlwComparison = Number(hourlyEquiv) > 12.71 ? `above the National Living Wage of £12.71` : `close to the National Living Wage`;
 
   const idx = variationIndex(amount, 10);
 

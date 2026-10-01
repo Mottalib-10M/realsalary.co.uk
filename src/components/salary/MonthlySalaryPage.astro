@@ -96,7 +96,7 @@ if (page.tier === 'below-pa') {
     },
     {
       question: `Is ${page.monthlyFormatted} a month above minimum wage?`,
-      answer: `The National Living Wage for 2026/27 is £12.21 per hour for workers aged 21 and over, which equates to roughly £23,808 per year or £1,984 per month for a 37.5-hour week. At ${page.monthlyFormatted} per month (${page.hourlyGross} per hour), this salary is ${page.annual >= 23808 ? 'at or above' : 'below'} the full-time minimum wage equivalent.`,
+      answer: `The National Living Wage for 2026/27 is £12.71 per hour for workers aged 21 and over, which equates to roughly £24,785 per year or £2,065 per month for a 37.5-hour week. At ${page.monthlyFormatted} per month (${page.hourlyGross} per hour), this salary is ${page.annual >= 24785 ? 'at or above' : 'below'} the full-time minimum wage equivalent.`,
     },
   );
 } else {
@@ -758,7 +758,7 @@ const faqStructuredData = faqSchema([...faqsEtoffees, ...uniqueFaqsEtoffees]);
             {page.monthlyFormatted} salary. Keeping transport below £30 per month through walking, cycling, or lift
             sharing is realistic in many areas. Despite the modest size of this income, it is worth checking whether you
             qualify for the National Living Wage if you are employed, as workers aged 21 and over are entitled to at
-            least £12.21 per hour from April 2026.
+            least £12.71 per hour from April 2026.
           </p>
           <p>
             For those using this role as a stepping stone, the experience you gain matters more than the pay right now.
@@ -1115,11 +1115,11 @@ const faqStructuredData = faqSchema([...faqsEtoffees, ...uniqueFaqsEtoffees]);
               Allowance is £1,000, meaning the first £1,000 of savings interest is tax-free. You may also be eligible
               for the starting rate for savings of up to £5,000.
             </li>
-            {page.annual < 23808 && (
+            {page.annual < 24785 && (
               <li>
                 <strong>Minimum wage check:</strong> If you are working full-time (37.5 hours per week), check that
                 your hourly rate of {page.hourlyGross} meets the National Minimum Wage or National Living Wage for your
-                age group. The NLW for workers aged 21+ is £12.21 per hour from April 2026.
+                age group. The NLW for workers aged 21+ is £12.71 per hour from April 2026.
               </li>
             )}
             <li>

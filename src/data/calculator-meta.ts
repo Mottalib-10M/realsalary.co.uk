@@ -148,7 +148,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
       {
         titre: "What the minimum wage means in annual terms",
         paragraphes: [
-          "The National Living Wage applies to workers aged 21 and over and is set each April. At \u00a312.21 an hour, a 37.5-hour week works out at roughly \u00a323,800 a year, which sits above the personal allowance and therefore attracts both income tax and National Insurance. A 40-hour week at the same rate gives about \u00a325,400. Younger workers and apprentices have separate, lower rates, and the jump on a birthday can be substantial.",
+          "The National Living Wage applies to workers aged 21 and over and is set each April. At \u00a312.71 an hour, a 37.5-hour week works out at roughly \u00a324,800 a year, which sits above the personal allowance and therefore attracts both income tax and National Insurance. A 40-hour week at the same rate gives about \u00a326,400. Younger workers and apprentices have separate, lower rates, and the jump on a birthday can be substantial.",
           "Because the minimum wage is defined per hour, an employer cannot average it across a month: every pay reference period must clear the rate. That matters for salaried staff on low pay working long hours, for unpaid travel time between appointments in care work, and for deductions such as uniforms, all of which have produced enforcement cases where an apparently compliant salary fell below the legal floor once the hours were counted.",
         ],
       },
