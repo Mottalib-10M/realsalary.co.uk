@@ -94,7 +94,7 @@ export function readUrlParams<T extends Record<string, ParamValue>>(
     }
     const hashStr = hash.toString();
     url.hash = hashStr ? hashStr : '';
-    window.history.replaceState({}, '', url.toString());
+    History.prototype.replaceState.call(window.history, {}, '', url.toString());
   }
 
   return result as T;
@@ -138,6 +138,6 @@ export function writeUrlParams(
       url.searchParams.delete(key);
     }
     url.hash = hashStr ? hashStr : '';
-    window.history.replaceState({}, '', url.toString());
+    History.prototype.replaceState.call(window.history, {}, '', url.toString());
   }, debounceMs);
 }

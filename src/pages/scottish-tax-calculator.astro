@@ -83,7 +83,7 @@ const comparisons = comparisonSalaries.map((salary) => {
     if (!window.location.search.includes('region=')) {
       const url = new URL(window.location.href);
       url.searchParams.set('region', 'scotland');
-      window.history.replaceState({}, '', url.toString());
+      History.prototype.replaceState.call(window.history, {}, '', url.toString());
     }
   </script>
   <SalaryCalculator client:idle />

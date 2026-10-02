@@ -5,11 +5,11 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
 
 <GuideLayout
   title="Privacy Policy - UK Salary and Tax Calculator Website"
-  description="Our privacy policy explains how we handle your data. No cookies, no tracking and no salary data stored. All tax calculations run entirely in your browser."
+  description="How we handle your data: no salary data stored, calculations run in your browser, audience measured with Microsoft Clarity, Google Analytics and Plausible."
   slug="/privacy/"
 >
   <h1>Privacy Policy</h1>
-  <p><em>Last updated: June 2026</em></p>
+  <p><em>Last updated: October 2026</em></p>
 
   <p>
     This privacy policy explains how {SITE_NAME} ({SITE_URL}) handles your personal data in compliance
@@ -37,44 +37,56 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
 
   <h2>3. What Data We Collect</h2>
   <p>
-    <strong>Short answer: almost nothing.</strong> All calculator inputs are processed entirely in your
+    <strong>Short answer: nothing you type into a calculator.</strong> All calculator inputs are processed entirely in your
     browser using client-side JavaScript. We never see, store, or transmit your salary figures, tax
     codes, pension contributions, or any other financial information you enter into our calculators.
     The technical architecture is designed according to the principle of "privacy by design".
   </p>
   <p>
-    For clarity, the website does not collect or process the following categories of data:
+    To be precise, the website itself does not collect or process the following categories of data:
   </p>
   <ul>
     <li><strong>Financial data:</strong> salary, tax code, pension contributions, National Insurance number</li>
     <li><strong>Identification data:</strong> name, address, phone number (unless voluntarily provided by email)</li>
-    <li><strong>Browsing data:</strong> tracking cookies, unique device identifiers</li>
   </ul>
 
   <h2>4. Analytics</h2>
   <p>
-    We use <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a>,
-    a privacy-friendly analytics tool. Plausible does not use cookies, does not collect personal data,
-    does not store IP addresses, does not use fingerprinting, and is fully compliant with UK GDPR,
-    GDPR, CCPA, and PECR. This means <strong>no cookie banner is needed</strong>.
+    We measure traffic with three tools. Microsoft Clarity and Google Analytics load when a page
+    opens, with no prior cookie banner; Plausible Analytics runs on the calculator pages.
   </p>
   <p>
-    Plausible collects only aggregate, anonymous data: page views, referral sources, browser type,
-    device type, and country. No individual visitors can be identified. Plausible processes all data
-    on servers within the European Union. For more information:
-    <a href="https://plausible.io/data-policy" target="_blank" rel="noopener noreferrer">https://plausible.io/data-policy</a>.
+    <strong>Microsoft Clarity</strong> (Microsoft Corporation) records how pages are used: clicks,
+    scrolling, pages viewed and their address, as sessions and heatmaps. The content of input fields
+    is masked in your browser before anything is sent. More information:
+    <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener noreferrer">privacy.microsoft.com/privacystatement</a>.
+  </p>
+  <p>
+    <strong>Google Analytics 4</strong> (Google Ireland Limited) receives the pages viewed, the
+    referral source, the device type and an approximate location derived from the IP address. More
+    information:
+    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>.
+  </p>
+  <p>
+    <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a>
+    collects aggregate data only (page views, referral sources, browser type, device type, country)
+    and sets no cookies. More information:
+    <a href="https://plausible.io/data-policy" target="_blank" rel="noopener noreferrer">plausible.io/data-policy</a>.
   </p>
 
   <h2>5. Cookies</h2>
   <p>
-    We do not set any tracking cookies. No first-party cookies, no third-party cookies, no tracking
-    cookies. User preferences (such as dark/light mode) are stored in the browser's localStorage,
-    which is not a cookie and is never transmitted to our servers.
+    Microsoft Clarity and Google Analytics set analytics cookies as soon as a page opens:
+    <code>_clck</code> (one year) and <code>_clsk</code> (one day) for Clarity, to which Microsoft may
+    add <code>MUID</code> and <code>CLID</code> on its own domains, and <code>_ga</code> and
+    <code>_ga_1N5EQ2ENPS</code> (two years) for Google Analytics. No advertising cookies are set. You
+    can refuse or delete these cookies in your browser settings, or block the domains
+    <code>clarity.ms</code> and <code>googletagmanager.com</code>; the calculators work without them.
   </p>
   <p>
-    Our hosting provider Cloudflare may use a technical cookie (__cf_bm) for bot detection and DDoS
-    protection. This cookie is strictly necessary for security, contains no personal information,
-    expires after 30 minutes, and does not require consent under PECR.
+    User preferences (such as dark/light mode) are stored in the browser's localStorage, which is not
+    a cookie and is never transmitted to our servers. Our hosting provider Cloudflare may use a
+    technical cookie (__cf_bm) for bot detection and DDoS protection, which expires after 30 minutes.
   </p>
 
   <h2>6. Third-Party Services</h2>
@@ -87,11 +99,10 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
   <p>
     Google Fonts may be loaded for typography. Google may collect standard web request data. See
     <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's privacy policy</a>.
-    This usage is based on our legitimate interest in a uniform presentation of our website.
   </p>
   <p>
-    We do not integrate any third-party services that profile users. There are no social media buttons,
-    advertising widgets, remarketing services, or other tools that allow third parties to track users.
+    Apart from the analytics tools described in section 4, there are no social media buttons,
+    advertising widgets or remarketing services.
   </p>
 
   <h2>7. Server Log Files</h2>
@@ -106,9 +117,8 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
   <h2>8. Legal Basis for Processing</h2>
   <p>
     Since no identifiable personal data is processed through the calculators, no specific legal basis
-    is required under Article 6 of the UK GDPR. For the anonymous statistical data collected by
-    Plausible Analytics and for server log files, the applicable legal basis is legitimate interest
-    (Article 6(1)(f) UK GDPR).
+    is required under Article 6 of the UK GDPR. For the data collected by the analytics tools and for server log files, we rely on our legitimate
+    interest in improving the website (Article 6(1)(f) UK GDPR); you may object by contacting us.
   </p>
 
   <h2>9. Your Rights Under UK GDPR</h2>
@@ -126,24 +136,26 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
     <li><strong>Right to lodge a complaint</strong>: with the Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ico.org.uk</a>.</li>
   </ul>
   <p>
-    Since we don't collect personal data through our calculators, most of these rights are satisfied
-    by default. For any privacy-related questions, contact us at
+    These rights also apply to the data collected by the analytics tools. For any privacy-related
+    questions, contact us at
     <a href="mailto:contact@realsalary.co.uk">contact@realsalary.co.uk</a>. We undertake to respond
     within 30 days.
   </p>
 
   <h2>10. Data Transfer Outside the UK</h2>
   <p>
-    Cloudflare, our hosting provider, is certified under the EU-U.S. Data Privacy Framework, ensuring
-    compliance with data protection standards. Should it become necessary to use services outside
+    Data collected by Microsoft Clarity and Google Analytics may be processed on servers in the United
+    States. Microsoft, Google and Cloudflare, our hosting provider, are certified under the EU-U.S.
+    Data Privacy Framework. Should it become necessary to use services outside
     adequate jurisdictions, the controller will ensure appropriate safeguards are in place.
   </p>
 
   <h2>11. Data Retention</h2>
   <p>
     Since no personal data is stored from calculator usage, no specific retention period applies. Server
-    log files are automatically deleted after 30 days. Plausible Analytics data is aggregated and
-    anonymous, falling outside the scope of UK GDPR provisions on personal data retention.
+    log files are automatically deleted after 30 days. Clarity keeps session recordings for thirty days and aggregated data for no more than thirteen
+    months; Google Analytics keeps event data for the period set in the account, fourteen months at
+    most. Plausible Analytics data is aggregated.
   </p>
 
   <h2>12. Children's Privacy</h2>
