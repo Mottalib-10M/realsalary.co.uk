@@ -28,7 +28,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     slug: '/',
     title: 'UK Salary Calculator',
     // 54 chars
-    metaTitle: `UK Salary Calculator ${TAX_YEAR} - Take Home Pay After Tax`,
+    metaTitle: `Salary Calculator UK ${TAX_YEAR}: Take Home Pay After Tax`,
     // 155 chars
     metaDescription: `Free UK salary calculator updated for ${TAX_YEAR}. See your take home pay after income tax, National Insurance, student loans and pension deductions instantly.`,
     h1: `UK Salary Calculator ${TAX_YEAR}`,
@@ -82,7 +82,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     slug: '/take-home-pay/',
     title: 'Take-Home Pay Calculator',
     // 58 chars
-    metaTitle: `UK Take Home Pay Calculator ${TAX_YEAR} - Net Salary After Tax`,
+    metaTitle: `Take Home Pay Calculator UK ${TAX_YEAR}: Net Salary After Tax`,
     // 159 chars
     metaDescription: `Calculate your UK take home pay for ${TAX_YEAR}. Full breakdown of income tax, National Insurance, student loan repayments and pension deductions. Free HMRC rates.`,
     h1: `Take-Home Pay Calculator ${TAX_YEAR}`,
@@ -251,7 +251,7 @@ export const CALCULATOR_META: Record<string, CalculatorPageMeta> = {
     slug: '/income-tax/',
     title: 'Income Tax Calculator',
     // 57 chars
-    metaTitle: `UK Income Tax Calculator ${TAX_YEAR} - Tax Bands and Rates`,
+    metaTitle: `Income Tax Calculator UK ${TAX_YEAR}: Tax Bands and Rates`,
     // 158 chars
     metaDescription: `Calculate your UK income tax for ${TAX_YEAR} with a full band by band breakdown. See England, Wales, Northern Ireland and Scotland rates. Free HMRC figures.`,
     h1: `UK Income Tax Calculator ${TAX_YEAR}`,
