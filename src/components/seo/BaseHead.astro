@@ -1,37 +1,20 @@
 ---
 /**
- * Shared <head> snippet for Microsoft Clarity and Bing Webmaster verification.
- * Include this in every page's <head> to ensure consistent tracking.
+ * Shared <head> snippet: Microsoft Clarity (cookieless) and Bing Webmaster verification.
  */
-import { GA4_MEASUREMENT_ID, CLARITY_PROJECT_ID, BING_VERIFY_CODE } from '../../lib/seo';
+import { CLARITY_PROJECT_ID, BING_VERIFY_CODE } from '../../lib/seo';
 
 interface Props {
   slug: string;
   pageType?: string;
 }
-
-const { slug, pageType = 'page' } = Astro.props;
 ---
 
 {BING_VERIFY_CODE && <meta name="msvalidate.01" content={BING_VERIFY_CODE} />}
 
-{GA4_MEASUREMENT_ID && (
-  <Fragment>
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}></script>
-    <script type="text/javascript" set:html={`
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA4_MEASUREMENT_ID}');
-    `} />
-  </Fragment>
-)}
-
+{/* Mesure technique et anonyme de la stabilité (RECETTE §15.6, 2026-10-06) : aucun cookie.
+     consentv2 « denied » mis en file AVANT le script Clarity : mode sans cookie (ni _clck, _clsk,
+     MUID, CLID), un identifiant par page vue ; contenu masqué par data-clarity-mask sur <body>. */}
 {CLARITY_PROJECT_ID && (
-  <script type="text/javascript" set:html={`
-    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","${CLARITY_PROJECT_ID}");
-    clarity("set","language","en-GB");
-    clarity("set","page_type","${pageType}");
-    clarity("set","page_path","${slug}");
-  `} />
+  <script is:inline set:html={`(function(){window.clarity=window.clarity||function(){(window.clarity.q=window.clarity.q||[]).push(arguments);};window.clarity('consentv2',{ad_Storage:'denied',analytics_Storage:'denied'});var s=document.createElement('script');s.async=true;s.src='https://www.clarity.ms/tag/${CLARITY_PROJECT_ID}';document.head.appendChild(s);})();`} />
 )}
