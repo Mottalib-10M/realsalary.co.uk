@@ -25,9 +25,12 @@ interface State {
   period: Period;
 }
 
-export default function SalaryCalculator() {
+export default function SalaryCalculator({ defaultRegion = 'england' }: { defaultRegion?: Region }) {
   const [state, setState] = useState<State>(() => {
-    const params = readUrlParams<Record<string, unknown>>(URL_CONFIG);
+    const params = readUrlParams<Record<string, unknown>>({
+      ...URL_CONFIG,
+      region: { type: 'string', default: defaultRegion },
+    });
     return {
       gross: params.gross as number,
       region: params.region as Region,
@@ -51,7 +54,7 @@ export default function SalaryCalculator() {
   useEffect(() => {
     writeUrlParams({
       gross: state.gross,
-      region: state.region !== 'england' ? state.region : undefined,
+      region: state.region !== defaultRegion ? state.region : undefined,
       taxCode: state.taxCode !== DEFAULT_TAX_CODE ? state.taxCode : undefined,
       studentLoan: state.studentLoan.length > 0 ? state.studentLoan : undefined,
       pensionType: state.pensionType !== 'none' ? state.pensionType : undefined,

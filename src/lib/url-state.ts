@@ -102,11 +102,27 @@ export function readUrlParams<T extends Record<string, ParamValue>>(
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
+/*
+ * The address bar must stay exactly the page URL (same as the sitemap and the
+ * canonical, trailing slash included) until the visitor actually does something.
+ * Calculators call writeUrlParams from a useEffect, which also runs on mount: without
+ * this gate the default values were written into the hash on page load
+ * (/hourly-rate/ became /hourly-rate/#salary=30000). RECETTE-SITE.md §18,
+ * check-url-propre.mjs.
+ */
+let userInteracted = false;
+if (typeof window !== 'undefined') {
+  const mark = () => { userInteracted = true; };
+  for (const type of ['input', 'change', 'click', 'keydown']) {
+    window.addEventListener(type, mark, { capture: true, passive: true });
+  }
+}
+
 export function writeUrlParams(
   params: Record<string, ParamValue>,
   debounceMs: number = 300,
 ): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !userInteracted) return;
 
   if (debounceTimer) clearTimeout(debounceTimer);
 

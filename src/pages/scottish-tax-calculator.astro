@@ -78,15 +78,7 @@ const comparisons = comparisonSalaries.map((salary) => {
 ---
 
 <CalculatorLayout {...meta}>
-  <script>
-    // Default to Scotland if no region is set in URL
-    if (!window.location.search.includes('region=')) {
-      const url = new URL(window.location.href);
-      url.searchParams.set('region', 'scotland');
-      History.prototype.replaceState.call(window.history, {}, '', url.toString());
-    }
-  </script>
-  <SalaryCalculator client:idle />
+  <SalaryCalculator client:idle defaultRegion="scotland" />
 
   <Fragment slot="content">
     <article class="mt-12 max-w-4xl prose prose-gray dark:prose-invert">
