@@ -362,7 +362,7 @@ export default function EmployerCostCalculator() {
       <div className="lg:col-span-5">
         <div className="lg:sticky lg:top-20 space-y-4">
           {/* Total cost hero */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <div data-resultat className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
             <div className="text-center">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 Total employer cost

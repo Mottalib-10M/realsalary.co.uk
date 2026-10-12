@@ -12,7 +12,8 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check:cookies": "python3 scripts/check-cookies.py ."
+    "check:cookies": "python3 scripts/check-cookies.py .",
+    "check:premier-ecran": "node scripts/check-premier-ecran.mjs ."
   },
   "dependencies": {
     "@astrojs/react": "^5.0.4",

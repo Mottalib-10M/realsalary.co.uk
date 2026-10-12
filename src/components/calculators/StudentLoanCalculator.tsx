@@ -138,7 +138,7 @@ export default function StudentLoanCalculator() {
 
       <div className="lg:col-span-5">
         <div className="lg:sticky lg:top-20">
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <div data-resultat className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
             <div className="text-center">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total student loan repayment</p>
               <p className="mt-1 text-4xl font-bold tabular-nums text-blue-600 dark:text-blue-400" aria-live="polite">

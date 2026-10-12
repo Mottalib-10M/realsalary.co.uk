@@ -137,7 +137,7 @@ export default function TwoJobsCalculator() {
 
       <div className="lg:col-span-5">
         <div className="lg:sticky lg:top-20">
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <div data-resultat className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
             <div className="text-center">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Combined take-home pay</p>
               <p className="mt-1 text-4xl font-bold tabular-nums text-navy-700 dark:text-navy-300" aria-live="polite">
