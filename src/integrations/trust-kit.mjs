@@ -192,7 +192,20 @@ export default function trustKit(opts) {
               let at = h1;
               const open = html.lastIndexOf('<astro-island', h1);
               if (open >= 0 && html.lastIndexOf('</astro-island>', h1) < open) at = open;
-              html = html.slice(0, at) + top + html.slice(at);
+              // Date à droite sur la ligne fine du fil d'Ariane (RECETTE §10.3, contrôle 13) :
+              // seule sur sa ligne, avec ses marges, elle repoussait le titre (> 80 px de blanc).
+              const before = html.slice(0, at);
+              const navAt = before.search(/<nav aria-label="Breadcrumb"[^>]*>(?![\s\S]*<nav aria-label="Breadcrumb")/);
+              const navEnd = navAt >= 0 ? before.indexOf('</nav>', navAt) : -1;
+              const side = top.replace('class="trust-top" style="margin:0 0 0.5rem;', 'class="trust-top" style="margin:0 0 0 auto;');
+              if (navAt >= 0 && navEnd >= 0) {
+                const nav = before.slice(navAt, navEnd + 6).replace(/^(<nav[^>]*class=")([^"]*)"/, (m, a, c) => a + c.replace(/(^|\s)mb-\d+(?=\s|$)/, '').trim() + '"');
+                html = before.slice(0, navAt)
+                  + `<div data-trust-kit class="trust-line" style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:1.5rem;row-gap:0.125rem;margin-bottom:1rem">${nav}${side}</div>`
+                  + before.slice(navEnd + 6) + html.slice(at);
+              } else {
+                html = before + top.replace('style="margin:0 0 0.5rem;', 'style="margin:0 0 0.25rem;text-align:right;') + html.slice(at);
+              }
             } else html = html.includes('</header>') ? html.replace('</header>', `</header>${top}`)
                  : html.replace(/<body[^>]*>/, (m) => m + top);
             const i = html.lastIndexOf('</footer>');
