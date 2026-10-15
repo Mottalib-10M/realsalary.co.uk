@@ -6,7 +6,7 @@
  * leur en-tête et leur pied : le plus sûr est d'intervenir sur le HTML construit, une fois,
  * au lieu de retoucher des centaines de pages. Après le build, pour chaque page indexable :
  *
- *   - en haut, juste avant le <h1> (il en prend l'alignement) : « Mis à jour le AAAA-MM-JJ »
+ *   - en haut, juste avant le <h1>, sur une page de lecture seulement (Article) : « Mis à jour le 7 octobre 2026 »
  *   - en bas, dans le dernier <footer>, avec la classe du conteneur du pied (même alignement) :
  *     disclaimer, date, liens méthode et auteur (rel="author")
  *   - dans <head> : Organization (founder = Person complet, foundingDate,
@@ -161,7 +161,10 @@ export default function trustKit(opts) {
             const path = f.split('/dist')[1]?.replace(/index\.html$/, '') || '/';
             const { t, lang, about, method } = localeOf(path);
             const dateTexte = dateLisible(date, lang);
-            const top = `<p data-trust-kit class="trust-top" style="margin:0 0 0.5rem;font-size:0.8125rem;opacity:0.8">`
+            // Date en haut seulement sur une page de lecture (Article déclaré) ; sur un
+            // simulateur ou un accueil, elle reste en bas (RECETTE §8.4, 2026-10-15).
+            const lecture = /"@type"\s*:\s*"(?:Article|BlogPosting|NewsArticle)"/.test(html);
+            const top = !lecture ? '' : `<p data-trust-kit class="trust-top" style="margin:0 0 0.5rem;font-size:0.8125rem;opacity:0.8">`
               + `${t.updated} <time datetime="${date}">${dateTexte}</time></p>`;
             // Largeur du pied de page : on ne recopie la classe d'un div du pied que si
             // c'est un conteneur de mise en page. Sans ce filtre, un filet décoratif placé
@@ -187,27 +190,29 @@ export default function trustKit(opts) {
             html = html.replace('</head>', `<script type="application/ld+json" data-trust-kit>${JSON.stringify(ld)}</script></head>`);
             // Juste avant le premier <h1> ; si ce <h1> est dans un îlot React (<astro-island>),
             // avant l'îlot : React compare son rendu au HTML servi, on n'y insère jamais rien.
-            const h1 = html.search(/<h1[\s>]/);
-            if (h1 >= 0) {
-              let at = h1;
-              const open = html.lastIndexOf('<astro-island', h1);
-              if (open >= 0 && html.lastIndexOf('</astro-island>', h1) < open) at = open;
-              // Date à droite sur la ligne fine du fil d'Ariane (RECETTE §10.3, contrôle 13) :
-              // seule sur sa ligne, avec ses marges, elle repoussait le titre (> 80 px de blanc).
-              const before = html.slice(0, at);
-              const navAt = before.search(/<nav aria-label="Breadcrumb"[^>]*>(?![\s\S]*<nav aria-label="Breadcrumb")/);
-              const navEnd = navAt >= 0 ? before.indexOf('</nav>', navAt) : -1;
-              const side = top.replace('class="trust-top" style="margin:0 0 0.5rem;', 'class="trust-top" style="margin:0 0 0 auto;');
-              if (navAt >= 0 && navEnd >= 0) {
-                const nav = before.slice(navAt, navEnd + 6).replace(/^(<nav[^>]*class=")([^"]*)"/, (m, a, c) => a + c.replace(/(^|\s)mb-\d+(?=\s|$)/, '').trim() + '"');
-                html = before.slice(0, navAt)
-                  + `<div data-trust-kit class="trust-line" style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:1.5rem;row-gap:0.125rem;margin-bottom:1rem">${nav}${side}</div>`
-                  + before.slice(navEnd + 6) + html.slice(at);
-              } else {
-                html = before + top.replace('style="margin:0 0 0.5rem;', 'style="margin:0 0 0.25rem;text-align:right;') + html.slice(at);
-              }
-            } else html = html.includes('</header>') ? html.replace('</header>', `</header>${top}`)
-                 : html.replace(/<body[^>]*>/, (m) => m + top);
+            if (top) {
+              const h1 = html.search(/<h1[\s>]/);
+              if (h1 >= 0) {
+                let at = h1;
+                const open = html.lastIndexOf('<astro-island', h1);
+                if (open >= 0 && html.lastIndexOf('</astro-island>', h1) < open) at = open;
+                // Date à droite sur la ligne fine du fil d'Ariane (RECETTE §10.3, contrôle 13) :
+                // seule sur sa ligne, avec ses marges, elle repoussait le titre (> 80 px de blanc).
+                const before = html.slice(0, at);
+                const navAt = before.search(/<nav aria-label="Breadcrumb"[^>]*>(?![\s\S]*<nav aria-label="Breadcrumb")/);
+                const navEnd = navAt >= 0 ? before.indexOf('</nav>', navAt) : -1;
+                const side = top.replace('class="trust-top" style="margin:0 0 0.5rem;', 'class="trust-top" style="margin:0 0 0 auto;');
+                if (navAt >= 0 && navEnd >= 0) {
+                  const nav = before.slice(navAt, navEnd + 6).replace(/^(<nav[^>]*class=")([^"]*)"/, (m, a, c) => a + c.replace(/(^|\s)mb-\d+(?=\s|$)/, '').trim() + '"');
+                  html = before.slice(0, navAt)
+                    + `<div data-trust-kit class="trust-line" style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:1.5rem;row-gap:0.125rem;margin-bottom:1rem">${nav}${side}</div>`
+                    + before.slice(navEnd + 6) + html.slice(at);
+                } else {
+                  html = before + top.replace('style="margin:0 0 0.5rem;', 'style="margin:0 0 0.25rem;text-align:right;') + html.slice(at);
+                }
+              } else html = html.includes('</header>') ? html.replace('</header>', `</header>${top}`)
+                   : html.replace(/<body[^>]*>/, (m) => m + top);
+            }
             const i = html.lastIndexOf('</footer>');
             html = i >= 0 ? html.slice(0, i) + bottom + html.slice(i) : html.replace('</body>', `${bottom}</body>`);
             html = wrapTables(html);
