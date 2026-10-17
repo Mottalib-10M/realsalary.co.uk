@@ -1,8 +1,8 @@
 ---
 /**
- * Shared <head> snippet: Microsoft Clarity (cookieless) and Bing Webmaster verification.
+ * Shared <head> snippet: Google Analytics 4 (cookies, no banner), Microsoft Clarity (cookieless) and Bing Webmaster verification.
  */
-import { CLARITY_PROJECT_ID, BING_VERIFY_CODE } from '../../lib/seo';
+import { CLARITY_PROJECT_ID, BING_VERIFY_CODE, GA4_MEASUREMENT_ID } from '../../lib/seo';
 
 interface Props {
   slug: string;
@@ -12,7 +12,16 @@ interface Props {
 
 {BING_VERIFY_CODE && <meta name="msvalidate.01" content={BING_VERIFY_CODE} />}
 
-{/* Mesure technique et anonyme de la stabilité (RECETTE §15.6, 2026-10-06) : aucun cookie.
+{/* Google Analytics 4, régime « sans bandeau » (décision de l'éditeur du 2026-10-17) : cookies _ga et
+     _ga_<ID> de 13 mois au plus non prolongés, publicité refusée, IP anonymisée, adresse de page sans
+     paramètres. Décrit dans /privacy/. */}
+{GA4_MEASUREMENT_ID && (<>
+  <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',functionality_storage:'granted',security_storage:'granted'});`} />
+  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}></script>
+  <script is:inline set:html={`gtag('js',new Date());gtag('config','${GA4_MEASUREMENT_ID}',{anonymize_ip:true,page_location:location.origin+location.pathname,cookie_expires:33696000,cookie_update:false,allow_google_signals:false,allow_ad_personalization_signals:false});`} />
+</>)}
+
+{/* Mesure technique et anonyme de la stabilité (RECETTE §15.6, 2026-10-06) : Clarity sans cookie.
      consentv2 « denied » mis en file AVANT le script Clarity : mode sans cookie (ni _clck, _clsk,
      MUID, CLID), un identifiant par page vue ; contenu masqué par data-clarity-mask sur <body>. */}
 {CLARITY_PROJECT_ID && (

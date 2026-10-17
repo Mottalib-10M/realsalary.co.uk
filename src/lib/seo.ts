@@ -11,8 +11,9 @@ export const OG_IMAGE = `${SITE_URL}/og-default.png`;
 export const OG_IMAGE_WIDTH = '1200';
 export const OG_IMAGE_HEIGHT = '630';
 
-/** Google Analytics 4 : retiré (règle « sans cookie » du 2026-10-06). */
-export const GA4_MEASUREMENT_ID = '';
+/** Google Analytics 4, avec cookies et sans bandeau (décision de l'éditeur du 2026-10-17). */
+export const GA4_MEASUREMENT_ID = 'G-1N5EQ2ENPS';
+export const GA4_ID = GA4_MEASUREMENT_ID;
 
 /** Microsoft Clarity project ID — leave empty to disable */
 export const CLARITY_PROJECT_ID = 'xa15ozu4w9';

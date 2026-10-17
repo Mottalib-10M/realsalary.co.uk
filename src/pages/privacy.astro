@@ -5,7 +5,7 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
 
 <GuideLayout
   title="Privacy Policy - UK Salary and Tax Calculator Website"
-  description="No cookies and no salary data stored: UK take-home pay sums run in your browser, and only an anonymous stability check runs, via cookieless Microsoft Clarity."
+  description="Google Analytics audience measurement with cookies and no advertising; UK take-home pay sums run in your browser; cookieless Clarity stability check; your UK GDPR rights."
   slug="/privacy/"
 >
   <h1>Privacy Policy</h1>
@@ -50,15 +50,36 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
     <li><strong>Identification data:</strong> name, address, phone number (unless voluntarily provided by email)</li>
   </ul>
 
-  <h2>4. No Cookies</h2>
+  <h2>4. Cookies: Google Analytics Audience Measurement</h2>
   <p>
-    {SITE_NAME} places <strong>no cookies</strong> on your device, neither its own nor any third
-    party's, and the calculators use no local or session storage either. Your gross salary, tax code,
-    student loan plan or pension percentage disappears when you close the tab. Because nothing is
-    stored on or read from your device, PECR (regulation 6) has nothing for us to ask, so there is no
-    cookie banner. There is no advertising, no remarketing and no audience tool that follows you
-    between visits.
+    {SITE_NAME} uses Google Analytics 4 to count visits and see which pages are useful: pages viewed,
+    referring page, visit length, device and browser type, approximate country and city. To do so
+    Google Analytics sets two cookies on your device, and the site sets no others:
   </p>
+  <table>
+    <thead><tr><th>Name</th><th>Provider</th><th>Purpose</th><th>Lifetime</th></tr></thead>
+    <tbody>
+      <tr><td><code>_ga</code></td><td>Google Analytics</td><td>Tell visitors apart with a random identifier</td><td>13 months at most (390 days)</td></tr>
+      <tr><td><code>_ga_1N5EQ2ENPS</code></td><td>Google Analytics</td><td>Keep the state of the current visit</td><td>13 months at most (390 days)</td></tr>
+    </tbody>
+  </table>
+  <p>
+    These lifetimes are not extended on each visit; Google's default is 2 years. The IP address is
+    anonymised: Google Analytics 4 neither logs nor stores it, and only uses it at collection time to
+    derive an approximate country and city. The page address sent to Google Analytics is stripped of
+    its parameters, and the figures you type into a calculator are never sent. There is no advertising
+    and no remarketing: ad storage, ad user data, ad personalisation and Google signals are switched
+    off, and measurement data is shared with no advertiser. The calculators themselves use no local or
+    session storage: your gross salary, tax code, student loan plan or pension percentage disappears
+    when you close the tab.
+  </p>
+  <ul>
+    <li><strong>Provider:</strong> Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland, acting as our processor (Article 28 UK GDPR).</li>
+    <li><strong>Why:</strong> audience measurement, to know which salary calculators and guides people use.</li>
+    <li><strong>Lawful basis:</strong> legitimate interests (Article 6(1)(f) UK GDPR).</li>
+    <li><strong>How long:</strong> 14 months at Google for visit-level and identifier-level data, then deletion; only anonymous totals remain.</li>
+    <li><strong>How to object:</strong> block or delete cookies in your browser settings, or install the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics opt-out browser add-on</a>. Every calculator still works.</li>
+  </ul>
 
   <h2>5. Anonymous Stability Check (Microsoft Clarity, Cookieless)</h2>
   <p>
@@ -80,7 +101,7 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
   <p>
     More information:
     <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener noreferrer">privacy.microsoft.com/privacystatement</a>.
-    We, as publisher, record no personal data about you.
+    Apart from Google Analytics and Clarity, we, as publisher, record no personal data about you.
   </p>
 
   <h2>6. Hosting and Server Logs</h2>
@@ -118,13 +139,16 @@ import { SITE_NAME, SITE_URL } from '../lib/seo';
 
   <h2>9. Transfers Outside the UK</h2>
   <p>
-    Microsoft and GitHub may process technical data in the United States. Both are certified under the
-    EU-U.S. Data Privacy Framework and its UK Extension (the "UK-US data bridge").
+    Google Analytics data may be transferred to Google LLC in the United States, and Microsoft and
+    GitHub may process technical data there. These transfers rely on the EU–U.S. Data Privacy Framework
+    and its UK Extension (the "UK-US data bridge"), and on standard contractual clauses (with the UK
+    addendum).
   </p>
 
   <h2>10. Data Retention</h2>
   <p>
-    Calculator inputs are never stored. Clarity keeps recordings for 30 days and aggregated statistics
+    Calculator inputs are never stored. Google Analytics cookies last 13 months at most and Google keeps
+    the related data for 14 months. Clarity keeps recordings for 30 days and aggregated statistics
     for 13 months; emails are deleted within 12 months.
   </p>
 
